@@ -21,11 +21,14 @@ public class UserService extends Thread {
 	private Vector user_vc;
 	private String UserName = "";
 
-	public UserService(Socket client_socket, Vector UserVec) {
+	private final OnUserRemove onUserRemove;
+
+	public UserService(Socket client_socket, Vector UserVec, OnUserRemove onUserRemove) {
 		// TODO Auto-generated constructor stub
 		// 매개변수로 넘어온 자료 저장
 		this.client_socket = client_socket;
 		this.user_vc = UserVec;
+		this.onUserRemove = onUserRemove;
 		try {
 			is = client_socket.getInputStream();
 			dis = new DataInputStream(is);
@@ -73,8 +76,7 @@ public class UserService extends Thread {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			AcceptServer.UserVec.removeElement(this); // 에러가난 현재 객체를 벡터에서 지운다
-			Util.AppendText("사용자 퇴장. 현재 참가자 수 " + AcceptServer.UserVec.size());
+			onUserRemove.call(this); // 에러가난 현재 객체를 벡터에서 지운다
 		}
 	}
 
@@ -91,8 +93,7 @@ public class UserService extends Thread {
 						dos.close();
 						dis.close();
 						client_socket.close();
-						AcceptServer.UserVec.removeElement(this); // 에러가난 현재 객체를 벡터에서 지운다
-						Util.AppendText("사용자 퇴장. 남은 참가자 수 " + AcceptServer.UserVec.size());
+						onUserRemove.call(this);
 						break;
 					} catch (Exception ee) {
 						break;
@@ -141,8 +142,7 @@ public class UserService extends Thread {
 					dos.close();
 					dis.close();
 					client_socket.close();
-					AcceptServer.UserVec.removeElement(this); // 에러가난 현재 객체를 벡터에서 지운다
-					Util.AppendText("사용자 퇴장. 남은 참가자 수 " + AcceptServer.UserVec.size());
+					onUserRemove.call(this); // 에러가난 현재 객체를 벡터에서 지운다
 					break;
 				} catch (Exception ee) {
 					break;
