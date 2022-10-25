@@ -11,7 +11,7 @@ import javax.swing.SwingUtilities;
  */
 public class Navigator {
 	
-	private JFrame rootFrame;
+	private final JFrame rootFrame;
 	
 	private Navigator(JFrame rootFrame) {
 		this.rootFrame = rootFrame;
