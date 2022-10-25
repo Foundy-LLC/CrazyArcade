@@ -9,8 +9,8 @@ import java.net.Socket;
 import java.util.Arrays;
 import java.util.Vector;
 
-import model.Constants;
-import model.Util;
+import domain.constant.Protocol;
+import domain.util.Util;
 
 public class UserService extends Thread {
 	private InputStream is;
@@ -36,7 +36,7 @@ public class UserService extends Thread {
 			dos = new DataOutputStream(os);
 			// line1 = dis.readUTF();
 			// /login user1 ==> msg[0] msg[1]
-			byte[] b = new byte[Constants.BUF_LEN];
+			byte[] b = new byte[Protocol.BUF_LEN];
 			dis.read(b);
 			String line1 = new String(b);
 			String[] msg = line1.split(" ");
@@ -84,7 +84,7 @@ public class UserService extends Thread {
 		while (true) { // 사용자 접속을 계속해서 받기 위해 while문
 			try {
 				// String msg = dis.readUTF();
-				byte[] b = new byte[Constants.BUF_LEN];
+				byte[] b = new byte[Protocol.BUF_LEN];
 				int ret;
 				ret = dis.read(b);
 				if (ret < 0) {

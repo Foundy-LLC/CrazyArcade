@@ -1,4 +1,6 @@
-package model;
+package domain.util;
+
+import domain.constant.Protocol;
 
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
@@ -18,10 +20,10 @@ public class Util {
 	} // get
 
 	public static byte[] MakePacket(String msg) {
-		byte[] packet = new byte[Constants.BUF_LEN];
+		byte[] packet = new byte[Protocol.BUF_LEN];
 		byte[] bb = null;
 		int i;
-		for (i = 0; i < Constants.BUF_LEN; i++)
+		for (i = 0; i < Protocol.BUF_LEN; i++)
 			packet[i] = 0;
 		try {
 			bb = msg.getBytes("euc-kr");

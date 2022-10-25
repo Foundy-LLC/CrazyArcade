@@ -1,8 +1,11 @@
-package model;
+package domain.state;
 
 import java.io.Serializable;
 import java.util.List;
 
+import domain.model.Player;
+import domain.model.Wall;
+import domain.model.WaterBomb;
 import lombok.Data;
 
 @Data

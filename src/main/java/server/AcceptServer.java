@@ -5,8 +5,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Vector;
 
-import model.Constants;
-import model.Util;
+import domain.constant.Protocol;
+import domain.util.Util;
 
 public class AcceptServer extends Thread {
 	private ServerSocket socket; // 서버소켓
@@ -18,7 +18,7 @@ public class AcceptServer extends Thread {
 	@SuppressWarnings("unchecked")
 	public void run() {
 		try {
-			socket = new ServerSocket(Constants.PORT_NUMBER);
+			socket = new ServerSocket(Protocol.PORT_NUMBER);
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

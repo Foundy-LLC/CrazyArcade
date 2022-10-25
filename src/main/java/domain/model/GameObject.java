@@ -1,19 +1,16 @@
-package model;
+package domain.model;
 
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import domain.constant.Sizes;
 
-public abstract class GameObject extends JPanel {
+public abstract class GameObject {
 	
-	public static final int WIDTH = Constants.MAP_WIDTH / Constants.CELL_WIDTH_COUNT;
-	public static final int HEIGHT = Constants.MAP_HEIGHT / Constants.CELL_HEIGHT_COUNT;
+	public static final int WIDTH = Sizes.MAP_WIDTH / Sizes.CELL_WIDTH_COUNT;
+	public static final int HEIGHT = Sizes.MAP_HEIGHT / Sizes.CELL_HEIGHT_COUNT;
 	
 	protected Offset offset;
-	protected final JLabel imageLabel;
-	
-	public GameObject(int x, int y, JLabel imageLabel) {
+
+	public GameObject(int x, int y) {
 		this.offset = new Offset(x, y);
-		this.imageLabel = imageLabel;
 	}
 	
 	/**

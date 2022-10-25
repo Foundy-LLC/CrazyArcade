@@ -1,4 +1,4 @@
-package model;
+package domain.core;
 
 public interface Collidable {
 

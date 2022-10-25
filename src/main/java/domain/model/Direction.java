@@ -1,4 +1,4 @@
-package model;
+package domain.model;
 
 public enum Direction {
 	UP, DOWN, LEFT, RIGHT

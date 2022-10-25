@@ -1,6 +1,6 @@
 package client.service;
 
-import model.Messages;
+import domain.constant.Protocol;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -9,7 +9,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.Socket;
 import java.util.Set;
 
-import static model.Constants.BUF_LEN;
+import static domain.constant.Protocol.BUF_LEN;
 
 public class Api {
 
@@ -128,7 +128,7 @@ public class Api {
                     break;
                 }
             }
-            notifyToListeners(Messages.ERROR);
+            notifyToListeners(Protocol.ERROR);
         }
     }
 }

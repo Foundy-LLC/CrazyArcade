@@ -4,8 +4,7 @@ import client.base.BaseView;
 import client.service.Api;
 import client.service.MessageListener;
 import client.util.ImageIcons;
-import client.util.Toast;
-import model.Messages;
+import domain.constant.Protocol;
 
 public class LobbyView extends BaseView {
 
@@ -16,7 +15,7 @@ public class LobbyView extends BaseView {
 	}
 
 	private final MessageListener messageListener = message -> {
-		if (message.equals(Messages.ERROR)) {
+		if (message.equals(Protocol.ERROR)) {
 			showToast("서버와의 연결이 끊어졌습니다.");
 		}
 	};
