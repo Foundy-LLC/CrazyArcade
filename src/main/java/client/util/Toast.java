@@ -59,16 +59,14 @@ public class Toast extends JDialog {
 		panel.add(toastLabel);
 		toast.setVisible(true);
 		
-		new Thread(){
-		    public void run() {
-		        try {
-		            Thread.sleep(millisec);
-		            toast.dispose();
-		        } catch (InterruptedException e) {
-		            e.printStackTrace();
-		        }
-		    }
-		}.start();
+		new Thread(() -> {
+			try {
+				Thread.sleep(millisec);
+				toast.dispose();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}).start();
 	}
 	
 	/**
