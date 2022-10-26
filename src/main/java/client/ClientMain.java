@@ -2,6 +2,7 @@ package client;
 
 import javax.swing.JFrame;
 
+import client.view.LobbyView;
 import client.view.LoginView;
 import domain.constant.Sizes;
 
@@ -16,7 +17,7 @@ public class ClientMain extends JFrame {
 	private ClientMain() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(Sizes.SCREEN_WIDTH, Sizes.SCREEN_HEIGHT);
-		getContentPane().add(new LoginView());
+		getContentPane().add(new LobbyView());
 		setResizable(false);
 		setVisible(true);
 	}
