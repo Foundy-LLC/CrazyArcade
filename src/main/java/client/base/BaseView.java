@@ -27,8 +27,11 @@ public class BaseView extends JPanel {
         setOpaque(false);
 	}
 
+	protected void onRemoved() {}
+
 	protected void navigateTo(JPanel panel) {
 		Navigator.navigateTo(this, panel);
+		onRemoved();
 	}
 
 	protected void showToast(String message) {

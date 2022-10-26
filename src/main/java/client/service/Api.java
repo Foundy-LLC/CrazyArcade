@@ -7,6 +7,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.Socket;
+import java.util.HashSet;
 import java.util.Set;
 
 import static domain.constant.Protocol.BUF_LEN;
@@ -21,7 +22,7 @@ public class Api {
 
     private String userName;
 
-    private Set<MessageListener> listeners;
+    private final Set<MessageListener> listeners = new HashSet<>();
 
     private Api() {
     }

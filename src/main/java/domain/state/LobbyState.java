@@ -1,12 +1,18 @@
 package domain.state;
 
-import lombok.Data;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.List;
 
-@Data
+@Getter
+@ToString
 public class LobbyState implements Serializable {
 
+    @NonNull
     private final List<String> userNames;
+
+    public LobbyState(List<String> userNames) {
+        this.userNames = userNames;
+    }
 }
