@@ -1,7 +1,11 @@
 package client.view;
 
-import javax.swing.JPanel;
+import client.base.BaseView;
+import client.util.ImageIcons;
 
-public class GameView extends JPanel {
+public class GameView extends BaseView {
 
+    public GameView() {
+        super(ImageIcons.GAME_BACKGROUND);
+    }
 }
