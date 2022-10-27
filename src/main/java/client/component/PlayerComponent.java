@@ -11,10 +11,12 @@ import java.awt.*;
 
 public class PlayerComponent extends GameComponent<Player> {
 
-    public static final Dimension SIZE = new Dimension(64,76);
+    public static final Dimension SIZE = new Dimension(64, 76);
 
     @NonNull
     private Direction direction = Direction.DOWN;
+
+    private int frame;
 
     public PlayerComponent() {
         super(ImageIcons.BAZZI_DOWN);
@@ -29,18 +31,24 @@ public class PlayerComponent extends GameComponent<Player> {
     @Override
     public void updateState(Player player) {
         boolean isUpdated = false;
-        Offset oldOffset = this.getOffset();
-        Offset newOffset = player.getOffset();
-        if (!newOffset.equals(oldOffset)){
+        final Offset oldOffset = this.getOffset();
+        final Offset newOffset = player.getOffset();
+        final Direction newDirection = player.getDirection();
+
+        if (!newOffset.equals(oldOffset)) {
             setOffset(newOffset);
             isUpdated = true;
+
+            if (newDirection == direction) {
+                nextFrame();
+            }
         }
 
-        Direction newDirection = player.getDirection();
         if (newDirection != direction) {
             direction = newDirection;
             ImageIcon newIcon = getImageBy(direction);
             setImageIcon(newIcon);
+            nextFrame();
             isUpdated = true;
         }
 
@@ -56,5 +64,12 @@ public class PlayerComponent extends GameComponent<Player> {
             case LEFT -> ImageIcons.BAZZI_LEFT;
             case RIGHT -> ImageIcons.BAZZI_RIGHT;
         };
+    }
+
+    private void nextFrame() {
+        switch (direction) {
+            case UP, DOWN -> nextFrame(8);
+            case LEFT, RIGHT -> nextFrame(6);
+        }
     }
 }

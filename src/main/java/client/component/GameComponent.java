@@ -11,6 +11,8 @@ import static domain.constant.Sizes.TILE_SIZE;
 
 public abstract class GameComponent<STATE> extends JLabel {
 
+    private static final int FRAME_DELAY = 10;
+
     @NonNull
     private Image image;
 
@@ -19,7 +21,10 @@ public abstract class GameComponent<STATE> extends JLabel {
 
     @NonNull
     @Getter
-    private Offset offset = new Offset(0,0);
+    private Offset offset = new Offset(0, 0);
+
+    @NonNull
+    private Integer frame = 0;
 
     public GameComponent(ImageIcon imageIcon) {
         this.image = imageIcon.getImage();
@@ -32,7 +37,8 @@ public abstract class GameComponent<STATE> extends JLabel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.drawImage(image, 0, 0, null);
+        int imageWidth = getSizeOfImage().width;
+        g.drawImage(image, -imageWidth * (frame / FRAME_DELAY), 0, null);
         setOpaque(false);
     }
 
@@ -45,6 +51,7 @@ public abstract class GameComponent<STATE> extends JLabel {
 
     /**
      * 이미지 사이즈를 고려한 좌표를 설정한다.
+     *
      * @param newOffset 새로운 좌표
      */
     public void setOffset(Offset newOffset) {
@@ -62,4 +69,10 @@ public abstract class GameComponent<STATE> extends JLabel {
     protected abstract Dimension getSizeOfImage();
 
     public abstract void updateState(STATE state);
+
+    public void nextFrame(int maxFrame) {
+        frame++;
+        frame = frame % (maxFrame * FRAME_DELAY);
+        setOffset(offset);
+    }
 }
