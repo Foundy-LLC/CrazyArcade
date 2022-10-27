@@ -17,7 +17,7 @@ public class ClientMain extends JFrame {
 	private ClientMain() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(Sizes.SCREEN_WIDTH, Sizes.SCREEN_HEIGHT);
-		getContentPane().add(new LobbyView());
+		getContentPane().add(new LoginView());
 		setResizable(false);
 		setVisible(true);
 	}

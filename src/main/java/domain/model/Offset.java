@@ -8,4 +8,8 @@ public class Offset {
 		this.x = x;
 		this.y = y;
 	}
+
+	public boolean equals(Offset other) {
+		return this.x == other.x && this.y == other.y;
+	}
 }

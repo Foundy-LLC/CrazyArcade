@@ -57,6 +57,7 @@ public class LobbyView extends BaseView {
 
     private final ActionListener gameStartListener = (event) -> {
         navigateTo(new GameView());
+        Api.getInstance().startGame();
     };
 
     private final MessageListener messageListener = message -> {

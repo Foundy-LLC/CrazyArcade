@@ -1,6 +1,7 @@
 package client.component;
 
 import domain.model.Offset;
+import lombok.Getter;
 import lombok.NonNull;
 
 import javax.swing.*;
@@ -8,13 +9,17 @@ import java.awt.*;
 
 import static domain.constant.Sizes.TILE_SIZE;
 
-public abstract class GameObject extends JLabel {
+public abstract class GameObject<STATE> extends JLabel {
 
     @NonNull
     private final Image imageIcon;
 
     @NonNull
     private final Offset imageOffset = getImageOffset();
+
+    @NonNull
+    @Getter
+    private Offset offset = new Offset(0,0);
 
     public GameObject(ImageIcon imageIcon) {
         this.imageIcon = imageIcon.getImage();
@@ -38,7 +43,12 @@ public abstract class GameObject extends JLabel {
         return new Offset(x, y);
     }
 
+    /**
+     * 이미지 사이즈를 고려한 좌표를 설정한다.
+     * @param newOffset 새로운 좌표
+     */
     public void setOffset(Offset newOffset) {
+        offset = newOffset;
         int renderX = newOffset.x + imageOffset.x;
         int renderY = newOffset.y + imageOffset.y;
         setLocation(renderX, renderY);
@@ -47,4 +57,6 @@ public abstract class GameObject extends JLabel {
 
     @NonNull
     protected abstract Dimension getSizeOfImage();
+
+    public abstract void updateState(STATE state);
 }

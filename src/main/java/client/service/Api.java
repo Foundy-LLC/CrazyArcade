@@ -1,6 +1,7 @@
 package client.service;
 
 import domain.constant.Protocol;
+import domain.model.Direction;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -107,6 +108,14 @@ public class Api {
         sendMessage("/" + userName + " " + ipAddress + " " + portNumber);
     }
 
+    public void startGame() {
+        sendMessage("/" + userName + " startGame");
+    }
+
+    public void movePlayer(Direction direction) {
+        sendMessage("/" + userName + " " + direction.name().toLowerCase());
+    }
+
     class NetworkSubscriber extends Thread {
         public void run() {
             while (true) {
@@ -116,8 +125,17 @@ public class Api {
                     if (receiveSize < 0) {
                         throw new IOException();
                     }
+                    int messageLength;
+                    for (messageLength = 0 ; messageLength < BUF_LEN; ++messageLength) {
+                        if (packet[messageLength] == '\u0000') {
+                            break;
+                        }
+                    }
 
                     String message = new String(packet, "euc-kr".trim());
+                    System.out.println("============= MESSAGE ==============");
+                    System.out.println(message);
+                    message = message.substring(0, messageLength);
                     notifyToListeners(message);
                 } catch (IOException e) {
                     try {
