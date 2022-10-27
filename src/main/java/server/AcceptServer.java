@@ -11,11 +11,8 @@ import domain.util.Util;
 public class AcceptServer extends Thread {
 	private ServerSocket socket; // 서버소켓
 	private Socket client_socket; // accept() 에서 생성된 client 소켓
-	public final Vector UserVec = new Vector();
+	public final Vector<UserService> userVector = new Vector();
 
-	private final OnUserRemove userRemover = UserVec::removeElement;
-
-	@SuppressWarnings("unchecked")
 	public void run() {
 		try {
 			socket = new ServerSocket(Protocol.PORT_NUMBER);
@@ -30,9 +27,9 @@ public class AcceptServer extends Thread {
 				client_socket = socket.accept(); // accept가 일어나기 전까지는 무한 대기중
 				Util.AppendText("새로운 참가자 from " + client_socket);
 				// User 당 하나씩 Thread 생성
-				UserService new_user = new UserService(client_socket, UserVec, userRemover);
-				UserVec.add(new_user); // 새로운 참가자 배열에 추가
-				Util.AppendText("사용자 입장. 현재 참가자 수 " + UserVec.size());
+				UserService new_user = new UserService(client_socket, userVector, userVector::removeElement);
+				userVector.add(new_user); // 새로운 참가자 배열에 추가
+				Util.AppendText("사용자 입장. 현재 참가자 수 " + userVector.size());
 				new_user.start(); // 만든 객체의 스레드 실행
 			} catch (IOException e) {
 				Util.AppendText("!!!! accept 에러 발생... !!!!");

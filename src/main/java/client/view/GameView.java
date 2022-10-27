@@ -38,6 +38,8 @@ public class GameView extends BaseView {
         super(ImageIcons.GAME_BACKGROUND);
         initView();
         initListener();
+
+        new MyThread().start();
     }
 
     private void initView() {
@@ -61,10 +63,11 @@ public class GameView extends BaseView {
                 playerObjects.add(playerObject);
                 map.add(playerObject);
             });
-            map.repaint();
         }
 
         updatePlayerObjects(state.getPlayers());
+
+        map.repaint();
     }
 
     private void updatePlayerObjects(@NonNull List<Player> players) {
@@ -77,6 +80,20 @@ public class GameView extends BaseView {
     @Override
     protected void onRemoved() {
         api.removeListener(messageListener);
+    }
+
+    private class MyThread extends Thread {
+        @Override
+        public void run() {
+            while (true) {
+                try {
+                    sleep(50);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                Api.getInstance().movePlayer(Direction.DOWN);
+            }
+        }
     }
 
     private static class KeyboardListener extends KeyAdapter {

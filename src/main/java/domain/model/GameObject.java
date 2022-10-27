@@ -9,6 +9,8 @@ public abstract class GameObject {
 	public static final int WIDTH = Sizes.MAP_WIDTH / Sizes.TILE_ROW_COUNT;
 	public static final int HEIGHT = Sizes.MAP_HEIGHT / Sizes.TILE_COLUMN_COUNT;
 
+	public static final int SPEED = 10;
+
 	@Getter
 	@NonNull
 	protected Offset offset;
@@ -32,5 +34,24 @@ public abstract class GameObject {
 		int widthHalf = WIDTH / 2;
 		int heightHalf = HEIGHT / 2;
 		return new Offset(offset.x + widthHalf, offset.y +heightHalf);
+	}
+
+	public void move(Direction direction) {
+		switch (direction) {
+			case UP:
+				offset = new Offset(offset.x, offset.y - SPEED);
+				break;
+			case DOWN:
+				offset = new Offset(offset.x, offset.y + SPEED);
+				break;
+			case LEFT:
+				offset = new Offset(offset.x - SPEED, offset.y);
+				break;
+			case RIGHT:
+				offset = new Offset(offset.x + SPEED, offset.y);
+				break;
+			default:
+				throw new IllegalArgumentException();
+		}
 	}
 }
