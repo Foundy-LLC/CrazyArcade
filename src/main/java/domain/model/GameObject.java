@@ -1,12 +1,16 @@
 package domain.model;
 
 import domain.constant.Sizes;
+import lombok.Getter;
+import lombok.NonNull;
 
 public abstract class GameObject {
 	
-	public static final int WIDTH = Sizes.MAP_WIDTH / Sizes.CELL_WIDTH_COUNT;
-	public static final int HEIGHT = Sizes.MAP_HEIGHT / Sizes.CELL_HEIGHT_COUNT;
-	
+	public static final int WIDTH = Sizes.MAP_WIDTH / Sizes.TILE_ROW_COUNT;
+	public static final int HEIGHT = Sizes.MAP_HEIGHT / Sizes.TILE_COLUMN_COUNT;
+
+	@Getter
+	@NonNull
 	protected Offset offset;
 
 	public GameObject(int x, int y) {

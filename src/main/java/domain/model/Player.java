@@ -4,8 +4,8 @@ public class Player extends GameObject {
 	
 	private Direction direction;
 	
-	public Player(int x, int y, Direction direction) {
+	public Player(int x, int y) {
 		super(x, y);
-		this.direction = direction;
+		this.direction = Direction.DOWN;
 	}
 }

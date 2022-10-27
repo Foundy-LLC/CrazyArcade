@@ -1,6 +1,6 @@
 package client.view;
 
-import client.base.BaseView;
+import client.component.BaseView;
 import client.component.Button;
 import client.component.OutlinedLabel;
 import client.service.Api;
