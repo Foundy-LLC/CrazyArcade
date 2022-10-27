@@ -103,6 +103,7 @@ public class GameView extends BaseView {
                             case KeyEvent.VK_LEFT -> Api.getInstance().movePlayer(Direction.LEFT);
                             case KeyEvent.VK_RIGHT -> Api.getInstance().movePlayer(Direction.RIGHT);
                         }
+                        break;
                     }
                 }
             });
