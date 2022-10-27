@@ -7,11 +7,11 @@ import lombok.NonNull;
 
 import java.awt.*;
 
-public class PlayerObject extends GameObject<Player> {
+public class PlayerComponent extends GameComponent<Player> {
 
     public static final Dimension SIZE = new Dimension(64,76);
 
-    public PlayerObject() {
+    public PlayerComponent() {
         super(ImageIcons.BAZZI_DOWN);
     }
 

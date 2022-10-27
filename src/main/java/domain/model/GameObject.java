@@ -9,7 +9,7 @@ public abstract class GameObject {
 	public static final int WIDTH = Sizes.MAP_WIDTH / Sizes.TILE_ROW_COUNT;
 	public static final int HEIGHT = Sizes.MAP_HEIGHT / Sizes.TILE_COLUMN_COUNT;
 
-	public static final int SPEED = 10;
+	public static final int SPEED = 1;
 
 	@Getter
 	@NonNull

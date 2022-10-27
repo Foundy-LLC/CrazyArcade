@@ -2,28 +2,28 @@ package client.view;
 
 import client.component.BaseView;
 import client.component.Map;
-import client.component.PlayerObject;
+import client.component.PlayerComponent;
 import client.service.Api;
 import client.service.MessageListener;
 import client.util.ImageIcons;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import domain.mockup.MockPlayers;
 import domain.model.Direction;
 import domain.model.Offset;
 import domain.model.Player;
 import domain.state.GameState;
 import lombok.NonNull;
 
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import javax.swing.*;
+import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class GameView extends BaseView {
 
     @NonNull
-    private final List<PlayerObject> playerObjects = new ArrayList<>();
+    private final List<PlayerComponent> playerObjects = new ArrayList<>();
 
     @NonNull
     private final Map map = new Map();
@@ -34,12 +34,12 @@ public class GameView extends BaseView {
     @NonNull
     private final Api api = Api.getInstance();
 
+    private KeyboardListener keyboardListener;
+
     public GameView() {
         super(ImageIcons.GAME_BACKGROUND);
         initView();
         initListener();
-
-        new MyThread().start();
     }
 
     private void initView() {
@@ -47,7 +47,8 @@ public class GameView extends BaseView {
     }
 
     private void initListener() {
-        addKeyListener(new KeyboardListener());
+        keyboardListener = new KeyboardListener();
+        addKeyListener(keyboardListener);
         api.addListener(messageListener);
     }
 
@@ -57,12 +58,13 @@ public class GameView extends BaseView {
             List<Player> players = state.getPlayers();
             players.forEach((player) -> {
                 Offset offset = player.getOffset();
-                PlayerObject playerObject = new PlayerObject();
+                PlayerComponent playerObject = new PlayerComponent();
                 playerObject.setOffset(offset);
 
                 playerObjects.add(playerObject);
                 map.add(playerObject);
             });
+            requestFocus();
         }
 
         updatePlayerObjects(state.getPlayers());
@@ -80,33 +82,47 @@ public class GameView extends BaseView {
     @Override
     protected void onRemoved() {
         api.removeListener(messageListener);
+        keyboardListener.stop();
     }
 
-    private class MyThread extends Thread {
-        @Override
-        public void run() {
-            while (true) {
-                try {
-                    sleep(50);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
+    public static class KeyboardListener extends KeyAdapter {
+
+        /**
+         * Stores currently pressed keys
+         */
+        private final HashSet<Integer> pressedKeys = new HashSet<>();
+        private final Timer timer;
+
+        public KeyboardListener() {
+            timer = new Timer(6, arg0 -> {
+                if (!pressedKeys.isEmpty()) {
+                    for (Integer pressedKey : pressedKeys) {
+                        switch (pressedKey) {
+                            case KeyEvent.VK_UP -> Api.getInstance().movePlayer(Direction.UP);
+                            case KeyEvent.VK_DOWN -> Api.getInstance().movePlayer(Direction.DOWN);
+                            case KeyEvent.VK_LEFT -> Api.getInstance().movePlayer(Direction.LEFT);
+                            case KeyEvent.VK_RIGHT -> Api.getInstance().movePlayer(Direction.RIGHT);
+                        }
+                    }
                 }
-                Api.getInstance().movePlayer(Direction.DOWN);
-            }
+            });
+            timer.start();
         }
-    }
 
-    private static class KeyboardListener extends KeyAdapter {
+        public void stop() {
+            timer.stop();
+        }
+
         @Override
-        public void keyPressed(KeyEvent e) {
-            Direction direction = switch (e.getKeyCode()) {
-                case KeyEvent.VK_UP -> Direction.UP;
-                case KeyEvent.VK_DOWN -> Direction.DOWN;
-                case KeyEvent.VK_LEFT -> Direction.LEFT;
-                case KeyEvent.VK_RIGHT -> Direction.RIGHT;
-                default -> throw new IllegalStateException();
-            };
-            Api.getInstance().movePlayer(direction);
+        public void keyPressed(KeyEvent event) {
+            int keyCode = event.getKeyCode();
+            pressedKeys.add(keyCode);
+        }
+
+        @Override
+        public void keyReleased(KeyEvent event) {
+            int keyCode = event.getKeyCode();
+            pressedKeys.remove(keyCode);
         }
     }
 

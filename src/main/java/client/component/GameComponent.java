@@ -9,7 +9,7 @@ import java.awt.*;
 
 import static domain.constant.Sizes.TILE_SIZE;
 
-public abstract class GameObject<STATE> extends JLabel {
+public abstract class GameComponent<STATE> extends JLabel {
 
     @NonNull
     private final Image imageIcon;
@@ -21,7 +21,7 @@ public abstract class GameObject<STATE> extends JLabel {
     @Getter
     private Offset offset = new Offset(0,0);
 
-    public GameObject(ImageIcon imageIcon) {
+    public GameComponent(ImageIcon imageIcon) {
         this.imageIcon = imageIcon.getImage();
 
         Dimension size = getSizeOfImage();

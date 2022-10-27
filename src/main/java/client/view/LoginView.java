@@ -26,7 +26,7 @@ public class LoginView extends BaseView {
 		userNameTextField.setBounds(420, 360, 200, 60);
 		add(userNameTextField);
 		
-		this.ipTextField = new TextField("223.194.135.62");
+		this.ipTextField = new TextField("127.0.0.1");
 		ipTextField.setPlaceholder("주소");
 		ipTextField.setBounds(420, 440, 200, 60);
 		add(ipTextField);
