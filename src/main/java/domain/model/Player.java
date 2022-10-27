@@ -10,6 +10,7 @@ public class Player extends GameObject {
 	private final String name;
 
 	@NonNull
+	@Getter
 	private Direction direction;
 	
 	public Player(String name, int x, int y) {

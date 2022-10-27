@@ -12,7 +12,7 @@ import static domain.constant.Sizes.TILE_SIZE;
 public abstract class GameComponent<STATE> extends JLabel {
 
     @NonNull
-    private final Image imageIcon;
+    private Image image;
 
     @NonNull
     private final Offset imageOffset = getImageOffset();
@@ -22,7 +22,7 @@ public abstract class GameComponent<STATE> extends JLabel {
     private Offset offset = new Offset(0,0);
 
     public GameComponent(ImageIcon imageIcon) {
-        this.imageIcon = imageIcon.getImage();
+        this.image = imageIcon.getImage();
 
         Dimension size = getSizeOfImage();
         setSize(size.width, size.height);
@@ -32,7 +32,7 @@ public abstract class GameComponent<STATE> extends JLabel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.drawImage(imageIcon, 0, 0, null);
+        g.drawImage(image, 0, 0, null);
         setOpaque(false);
     }
 
@@ -52,7 +52,10 @@ public abstract class GameComponent<STATE> extends JLabel {
         int renderX = newOffset.x + imageOffset.x;
         int renderY = newOffset.y + imageOffset.y;
         setLocation(renderX, renderY);
-        invalidate();
+    }
+
+    public void setImageIcon(ImageIcon imageIcon) {
+        this.image = imageIcon.getImage();
     }
 
     @NonNull
