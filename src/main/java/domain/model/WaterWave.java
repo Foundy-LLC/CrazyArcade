@@ -6,13 +6,15 @@ import java.io.Serializable;
 
 public class WaterWave implements Serializable {
 
-    public static final int DURATION_MILLI = 1_000;
+    public static final int DURATION_MILLI = 600;
 
     @Getter
     private final Direction direction;
 
     @Getter
     private final boolean isEnd;
+
+    private final int maxFrame;
 
     private final long createdMilli = System.currentTimeMillis();
 
@@ -23,11 +25,13 @@ public class WaterWave implements Serializable {
     public WaterWave(Direction direction, boolean isEnd) {
         this.direction = direction;
         this.isEnd = isEnd;
+        this.maxFrame = direction != null ? 6 : 11;
     }
 
     public int getFrame() {
         long currentMilli = System.currentTimeMillis();
-        return (int) (((currentMilli - createdMilli) / 200) % 4);
+        int gap = (DURATION_MILLI / (maxFrame - 1));
+        return (int) (((currentMilli - createdMilli) / gap) % maxFrame);
     }
 
     public boolean shouldDisappear() {

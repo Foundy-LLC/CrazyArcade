@@ -70,7 +70,7 @@ public class MapView extends JPanel {
         }
     }
 
-    private void paintWaterCourses(Graphics g) {
+    private void paintWaterWaves(Graphics g) {
         WaterWave[][] waterWave2d = map.getWaterWave2d();
         final int tileWidth = Sizes.TILE_SIZE.width;
         final int tileHeight = Sizes.TILE_SIZE.height;
@@ -80,8 +80,9 @@ public class MapView extends JPanel {
                 if (waterWave2d[y][x] != null) {
                     WaterWave waterWave = waterWave2d[y][x];
                     int frame = waterWave.getFrame();
+                    ImageIcon imageIcon = getWaterWaveImageIcon(waterWave);
                     WaterWaveComponent waterWaveComponent = new WaterWaveComponent(
-                            ImageIcons.WATER_BOMB_POP,
+                            imageIcon,
                             new Dimension(52, 52),
                             new Offset(x, y));
                     Offset renderOffset = waterWaveComponent.getRenderOffset();
@@ -103,6 +104,19 @@ public class MapView extends JPanel {
         }
     }
 
+    private ImageIcon getWaterWaveImageIcon(WaterWave waterWave) {
+        Direction direction = waterWave.getDirection();
+        if (direction == null) {
+            return ImageIcons.WATER_BOMB_POP;
+        }
+        return switch (waterWave.getDirection()) {
+            case UP -> waterWave.isEnd() ? ImageIcons.WATER_WAVE_UP_END : ImageIcons.WATER_WAVE_UP;
+            case DOWN -> waterWave.isEnd() ? ImageIcons.WATER_WAVE_DOWN_END : ImageIcons.WATER_WAVE_DOWN;
+            case LEFT -> waterWave.isEnd() ? ImageIcons.WATER_WAVE_LEFT_END : ImageIcons.WATER_WAVE_LEFT;
+            case RIGHT -> waterWave.isEnd() ? ImageIcons.WATER_WAVE_RIGHT_END : ImageIcons.WATER_WAVE_RIGHT;
+        };
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -112,7 +126,7 @@ public class MapView extends JPanel {
         }
 
         paintBlocks(g);
-        paintWaterCourses(g);
+        paintWaterWaves(g);
         paintWaterBombs(g);
 
         setOpaque(false);

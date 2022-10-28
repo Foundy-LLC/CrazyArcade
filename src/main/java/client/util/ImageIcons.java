@@ -19,4 +19,13 @@ public class ImageIcons {
 
 	public static final ImageIcon WATER_BOMB_1 = new ImageIcon("assets/bomb/1.png");
 	public static final ImageIcon WATER_BOMB_POP = new ImageIcon("assets/bomb/pop.png");
+
+	public static final ImageIcon WATER_WAVE_UP_END = new ImageIcon("assets/wave/up_end.png");
+	public static final ImageIcon WATER_WAVE_DOWN_END = new ImageIcon("assets/wave/down_end.png");
+	public static final ImageIcon WATER_WAVE_LEFT_END = new ImageIcon("assets/wave/left_end.png");
+	public static final ImageIcon WATER_WAVE_RIGHT_END = new ImageIcon("assets/wave/right_end.png");
+	public static final ImageIcon WATER_WAVE_UP = new ImageIcon("assets/wave/up.png");
+	public static final ImageIcon WATER_WAVE_DOWN = new ImageIcon("assets/wave/down.png");
+	public static final ImageIcon WATER_WAVE_LEFT = new ImageIcon("assets/wave/left.png");
+	public static final ImageIcon WATER_WAVE_RIGHT = new ImageIcon("assets/wave/right.png");
 }
