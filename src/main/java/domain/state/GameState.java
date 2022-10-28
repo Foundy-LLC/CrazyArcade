@@ -3,6 +3,7 @@ package domain.state;
 import java.io.Serializable;
 import java.util.List;
 
+import domain.constant.Sizes;
 import domain.model.*;
 import lombok.*;
 
@@ -33,14 +34,37 @@ public class GameState implements Serializable {
                     continue;
                 }
                 if (waterBomb.shouldExplode()) {
-                    waterWave2d[y][x] = new WaterWave(null, false);
-                    // TODO: 물줄기 십자가 모양으로 생성하기(함수로 빼서)
+                    createWaterCourse(waterBomb, waterWave2d, x, y);
                     // TODO: 동시 폭발 구현하기
 
                     waterBomb2d[y][x] = null;
                 }
             }
         }
+    }
+
+    private void createWaterCourse(WaterBomb waterBomb, WaterWave[][] waterWave2d, int x, int y) {
+        int waterBombLength = waterBomb.getLength();
+        waterWave2d[y][x] = new WaterWave(null, false);
+        for (int i = 1; i <= waterBombLength; i++) {
+            boolean isEnd = i == waterBombLength;
+            if (inRange(y + i, x)) {
+                waterWave2d[y + i][x] = new WaterWave(Direction.DOWN, isEnd);
+            }
+            if (inRange(y - i, x)) {
+                waterWave2d[y - i][x] = new WaterWave(Direction.UP, isEnd);
+            }
+            if (inRange(y, x + i)) {
+                waterWave2d[y][x + i] = new WaterWave(Direction.RIGHT, isEnd);
+            }
+            if (inRange(y, x - i)) {
+                waterWave2d[y][x - i] = new WaterWave(Direction.LEFT, isEnd);
+            }
+        }
+    }
+
+    private boolean inRange(int y, int x) {
+        return 0 <= x && x < Sizes.TILE_ROW_COUNT && 0 <= y && y < Sizes.TILE_COLUMN_COUNT;
     }
 
     public void updateWaterCourseStates() {
