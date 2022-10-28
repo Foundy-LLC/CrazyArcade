@@ -106,6 +106,9 @@ public class GameView extends BaseView {
                             case KeyEvent.VK_DOWN -> api.movePlayer(Direction.DOWN);
                             case KeyEvent.VK_LEFT -> api.movePlayer(Direction.LEFT);
                             case KeyEvent.VK_RIGHT -> api.movePlayer(Direction.RIGHT);
+                            case KeyEvent.VK_SPACE -> {
+                                continue;
+                            }
                         }
                         break;
                     }
@@ -121,6 +124,12 @@ public class GameView extends BaseView {
         @Override
         public void keyPressed(KeyEvent event) {
             int keyCode = event.getKeyCode();
+            // 스페이스바를 꾹 누르고 있어도 처음 한 번만 호출한다.
+            if (!pressedKeys.contains(keyCode) && event.getKeyChar() == ' ') {
+                System.out.println("CPE!!!");
+                Api.getInstance().installWaterBomb();
+            }
+
             pressedKeys.add(keyCode);
         }
 
@@ -128,13 +137,6 @@ public class GameView extends BaseView {
         public void keyReleased(KeyEvent event) {
             int keyCode = event.getKeyCode();
             pressedKeys.remove(keyCode);
-        }
-
-        @Override
-        public void keyTyped(KeyEvent e) {
-            if (e.getKeyChar() == ' ') {
-                Api.getInstance().installWaterBomb();
-            }
         }
     }
 
