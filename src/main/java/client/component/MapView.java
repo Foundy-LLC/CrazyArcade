@@ -71,14 +71,14 @@ public class MapView extends JPanel {
     }
 
     private void paintWaterCourses(Graphics g) {
-        WaterWave[][] waterWave2D = map.getWaterWave2D();
+        WaterWave[][] waterWave2d = map.getWaterWave2d();
         final int tileWidth = Sizes.TILE_SIZE.width;
         final int tileHeight = Sizes.TILE_SIZE.height;
 
-        for (int y = 0; y < waterWave2D.length; ++y) {
-            for (int x = 0; x < waterWave2D[y].length; ++x) {
-                if (waterWave2D[y][x] != null) {
-                    WaterWave waterWave = waterWave2D[y][x];
+        for (int y = 0; y < waterWave2d.length; ++y) {
+            for (int x = 0; x < waterWave2d[y].length; ++x) {
+                if (waterWave2d[y][x] != null) {
+                    WaterWave waterWave = waterWave2d[y][x];
                     int frame = waterWave.getFrame();
                     WaterWaveComponent waterWaveComponent = new WaterWaveComponent(
                             ImageIcons.WATER_BOMB_POP,

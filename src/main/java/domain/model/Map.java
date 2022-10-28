@@ -16,18 +16,18 @@ public class Map implements Serializable {
     private final WaterBomb[][] waterBomb2d;
 
     @NonNull
-    private final WaterWave[][] waterWave2D;
+    private final WaterWave[][] waterWave2d;
 
-    public Map(Block[][] block2D, WaterBomb[][] waterBomb2d, WaterWave[][] waterWave2D) {
+    public Map(Block[][] block2D, WaterBomb[][] waterBomb2d, WaterWave[][] waterWave2d) {
         assert(block2D.length == Sizes.TILE_COLUMN_COUNT);
         assert(block2D[0].length == Sizes.TILE_ROW_COUNT);
         assert(waterBomb2d.length == Sizes.TILE_COLUMN_COUNT);
         assert(waterBomb2d[0].length == Sizes.TILE_ROW_COUNT);
-        assert(waterWave2D.length == Sizes.TILE_COLUMN_COUNT);
-        assert(waterWave2D[0].length == Sizes.TILE_ROW_COUNT);
+        assert(waterWave2d.length == Sizes.TILE_COLUMN_COUNT);
+        assert(waterWave2d[0].length == Sizes.TILE_ROW_COUNT);
 
         this.block2D = block2D;
         this.waterBomb2d = waterBomb2d;
-        this.waterWave2D = waterWave2D;
+        this.waterWave2d = waterWave2d;
     }
 }

@@ -24,7 +24,7 @@ public class GameState implements Serializable {
 
     public void updateWaterBombStates() {
         WaterBomb[][] waterBomb2d = map.getWaterBomb2d();
-        WaterWave[][] waterWave2D = map.getWaterWave2D();
+        WaterWave[][] waterWave2d = map.getWaterWave2d();
 
         for (int y = 0; y < waterBomb2d.length; ++y) {
             for (int x = 0; x < waterBomb2d[y].length; ++x) {
@@ -33,7 +33,7 @@ public class GameState implements Serializable {
                     continue;
                 }
                 if (waterBomb.shouldExplode()) {
-                    waterWave2D[y][x] = new WaterWave(null);
+                    waterWave2d[y][x] = new WaterWave(null);
                     // TODO: 물줄기 십자가 모양으로 생성하기(함수로 빼서)
                     // TODO: 동시 폭발 구현하기
 
@@ -44,16 +44,16 @@ public class GameState implements Serializable {
     }
 
     public void updateWaterCourseStates() {
-        WaterWave[][] waterWave2D = map.getWaterWave2D();
+        WaterWave[][] waterWave2d = map.getWaterWave2d();
 
-        for (int y = 0; y < waterWave2D.length; ++y) {
-            for (int x = 0; x < waterWave2D[y].length; ++x) {
-                WaterWave waterWave = waterWave2D[y][x];
+        for (int y = 0; y < waterWave2d.length; ++y) {
+            for (int x = 0; x < waterWave2d[y].length; ++x) {
+                WaterWave waterWave = waterWave2d[y][x];
                 if (waterWave == null) {
                     continue;
                 }
                 if (waterWave.shouldDisappear()) {
-                    waterWave2D[y][x] = null;
+                    waterWave2d[y][x] = null;
                 }
             }
         }
