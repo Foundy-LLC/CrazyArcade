@@ -1,7 +1,7 @@
 package client.view;
 
 import client.component.BaseView;
-import client.component.Map;
+import client.component.MapView;
 import client.component.PlayerComponent;
 import client.service.Api;
 import client.service.MessageListener;
@@ -26,7 +26,7 @@ public class GameView extends BaseView {
     private final List<PlayerComponent> playerObjects = new ArrayList<>();
 
     @NonNull
-    private final Map map = new Map();
+    private final MapView mapView = new MapView();
 
     private boolean isPlayerAdded = false;
 
@@ -42,7 +42,7 @@ public class GameView extends BaseView {
     }
 
     private void initView() {
-        add(map);
+        add(mapView);
     }
 
     private void initListener() {
@@ -61,14 +61,14 @@ public class GameView extends BaseView {
                 playerObject.setOffset(offset);
 
                 playerObjects.add(playerObject);
-                map.add(playerObject);
+                mapView.add(playerObject);
             });
             requestFocus();
         }
 
         updatePlayerObjects(state.getPlayers());
 
-        map.repaint();
+        mapView.repaint();
     }
 
     private void updatePlayerObjects(@NonNull List<Player> players) {
