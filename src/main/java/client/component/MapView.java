@@ -34,6 +34,10 @@ public class MapView extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
+        if (map == null) {
+            return;
+        }
+
         Block[][] block2d = map.getBlock2D();
         for (int y = 0; y < block2d.length; ++y) {
             for (int x = 0; x < block2d[y].length; ++x) {
