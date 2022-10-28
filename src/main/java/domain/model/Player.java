@@ -145,7 +145,7 @@ public class Player extends GameObject {
     /**
      * @return 오브젝트의 중앙 위치를 셀로 치환한 {@link Offset}을 반환한다. 이는 오브젝트 좌표와 크기를 이용하여 계산된다.
      */
-    private Offset getCenterTileOffset() {
+    public Offset getCenterTileOffset() {
         Offset centerOffset = getCenterOffset();
         return new Offset(centerOffset.x / WIDTH, centerOffset.y / HEIGHT);
     }

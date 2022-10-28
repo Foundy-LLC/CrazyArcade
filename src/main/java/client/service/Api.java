@@ -92,6 +92,10 @@ public class Api {
         sendMessage("/" + userName + " " + direction.name().toLowerCase());
     }
 
+    public void installWaterBomb() {
+        sendMessage("/" + userName + " waterBomb");
+    }
+
     class NetworkSubscriber extends Thread {
         public void run() {
             while (true) {

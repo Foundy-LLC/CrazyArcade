@@ -14,6 +14,7 @@ public abstract class GameComponent<STATE> extends JLabel {
     private static final int FRAME_DELAY = 10;
 
     @NonNull
+    @Getter
     private Image image;
 
     @NonNull
@@ -59,6 +60,12 @@ public abstract class GameComponent<STATE> extends JLabel {
         int renderX = newOffset.x + imageOffset.x;
         int renderY = newOffset.y + imageOffset.y;
         setLocation(renderX, renderY);
+    }
+
+    public Offset getRenderOffset() {
+        int renderX = offset.x + imageOffset.x;
+        int renderY = offset.y + imageOffset.y;
+        return new Offset(renderX, renderY);
     }
 
     public void setImageIcon(ImageIcon imageIcon) {

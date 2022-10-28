@@ -1,7 +1,6 @@
 package client.view;
 
 import client.component.BaseView;
-import client.component.BlockComponent;
 import client.component.MapView;
 import client.component.PlayerComponent;
 import client.service.Api;
@@ -9,7 +8,6 @@ import client.service.MessageListener;
 import client.util.ImageIcons;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import domain.constant.Sizes;
 import domain.model.*;
 import domain.state.GameState;
 import lombok.NonNull;
@@ -62,27 +60,16 @@ public class GameView extends BaseView {
         });
     }
 
-    private void initMapComponent(Map map) {
-        Block[][] block2D = map.getBlock2D();
-        for (int i = 0; i < Sizes.TILE_COLUMN_COUNT; ++i) {
-            for (int j = 0; j < Sizes.TILE_ROW_COUNT; ++j) {
-                if (block2D[i][j] != null) {
-                    mapView.add(new BlockComponent(new Offset(j, i)));
-                }
-            }
-        }
-    }
-
     private void updateView(@NonNull GameState state) {
         if (!isComponentInitialized) {
             isComponentInitialized = true;
             initPlayerComponents(state.getPlayers());
-            initMapComponent(state.getMap());
 
             requestFocus();
         }
 
         updatePlayerObjects(state.getPlayers());
+        mapView.updateMap(state.getMap());
 
         mapView.repaint();
     }
@@ -98,6 +85,7 @@ public class GameView extends BaseView {
     protected void onDestroyed() {
         api.removeListener(messageListener);
         keyboardListener.stop();
+        mapView.dispose();
     }
 
     public static class KeyboardListener extends KeyAdapter {
@@ -109,14 +97,15 @@ public class GameView extends BaseView {
         private final Timer timer;
 
         public KeyboardListener() {
+            final Api api = Api.getInstance();
             timer = new Timer(6, arg0 -> {
                 if (!pressedKeys.isEmpty()) {
                     for (Integer pressedKey : pressedKeys) {
                         switch (pressedKey) {
-                            case KeyEvent.VK_UP -> Api.getInstance().movePlayer(Direction.UP);
-                            case KeyEvent.VK_DOWN -> Api.getInstance().movePlayer(Direction.DOWN);
-                            case KeyEvent.VK_LEFT -> Api.getInstance().movePlayer(Direction.LEFT);
-                            case KeyEvent.VK_RIGHT -> Api.getInstance().movePlayer(Direction.RIGHT);
+                            case KeyEvent.VK_UP -> api.movePlayer(Direction.UP);
+                            case KeyEvent.VK_DOWN -> api.movePlayer(Direction.DOWN);
+                            case KeyEvent.VK_LEFT -> api.movePlayer(Direction.LEFT);
+                            case KeyEvent.VK_RIGHT -> api.movePlayer(Direction.RIGHT);
                         }
                         break;
                     }
@@ -139,6 +128,13 @@ public class GameView extends BaseView {
         public void keyReleased(KeyEvent event) {
             int keyCode = event.getKeyCode();
             pressedKeys.remove(keyCode);
+        }
+
+        @Override
+        public void keyTyped(KeyEvent e) {
+            if (e.getKeyChar() == ' ') {
+                Api.getInstance().installWaterBomb();
+            }
         }
     }
 

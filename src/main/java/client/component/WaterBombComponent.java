@@ -8,12 +8,12 @@ import lombok.NonNull;
 
 import java.awt.*;
 
-public class BlockComponent extends GameComponent<Block>{
+public class WaterBombComponent extends GameComponent<Block>{
 
-    private static final Dimension SIZE = new Dimension(68, 67);
+    public static final Dimension SIZE = new Dimension(56, 54);
 
-    public BlockComponent(Offset tileOffset) {
-        super(ImageIcons.BLOCK1);
+    public WaterBombComponent(Offset tileOffset) {
+        super(ImageIcons.WATER_BOMB_1);
         int x = tileOffset.x * Sizes.TILE_SIZE.width;
         int y = tileOffset.y * Sizes.TILE_SIZE.height;
         Offset offset = new Offset(x, y);

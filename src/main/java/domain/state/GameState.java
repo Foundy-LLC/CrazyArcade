@@ -19,9 +19,6 @@ public class GameState implements Serializable {
 	private List<Player> players;
 
 	@NonNull
-	private List<WaterBomb> waterBombs;
-
-	@NonNull
 	private Map map;
 
 	@NonNull

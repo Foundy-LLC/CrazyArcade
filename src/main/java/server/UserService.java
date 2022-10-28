@@ -104,7 +104,11 @@ public class UserService extends Thread {
                             String stateJson = new Gson().toJson(newState);
                             writeAll(stateJson);
                         }
-                        case "bomb" -> {
+                        case "waterBomb" -> {
+                            String playerName = msgArr[0].substring(1);
+                            GameState newState = gameStateRepository.installWaterBomb(playerName);
+                            String stateJson = new Gson().toJson(newState);
+                            writeAll(stateJson);
                         }
                     }
                 } catch (Exception e) {
