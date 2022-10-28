@@ -45,7 +45,7 @@ public abstract class GameComponent<STATE> extends JLabel {
     private Offset getImageOffset() {
         Dimension size = getSizeOfImage();
         int x = -(size.width - TILE_SIZE.width) / 2;
-        int y = -(size.height - TILE_SIZE.height) / 2;
+        int y = -(size.height - TILE_SIZE.height);
         return new Offset(x, y);
     }
 
