@@ -28,6 +28,7 @@ public abstract class GameComponent<STATE> extends JLabel {
     private Integer frame = 0;
 
     @NonNull
+    @Getter
     private final Dimension imageSize;
 
     public GameComponent(@NonNull ImageIcon imageIcon, @NonNull Dimension imageSize) {

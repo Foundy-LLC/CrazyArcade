@@ -16,7 +16,7 @@ public class GameStateRepository {
     @Getter
     private GameState gameState;
 
-    private WaterBombStateChecker waterBombStateChecker;
+    private StateChecker stateChecker;
 
     private GameStateRepository() {
     }
@@ -42,8 +42,8 @@ public class GameStateRepository {
                 .map(MockMaps.map1)
                 .build();
 
-        waterBombStateChecker = new WaterBombStateChecker(gameState);
-        waterBombStateChecker.start();
+        stateChecker = new StateChecker(gameState);
+        stateChecker.start();
 
         return gameState;
     }
@@ -80,15 +80,15 @@ public class GameStateRepository {
     }
 
     public void clear() {
-        waterBombStateChecker.interrupt();
-        waterBombStateChecker = null;
+        stateChecker.interrupt();
+        stateChecker = null;
     }
 
-    private static class WaterBombStateChecker extends Thread {
+    private static class StateChecker extends Thread {
 
         private final GameState state;
 
-        private WaterBombStateChecker(GameState state) {
+        private StateChecker(GameState state) {
             this.state = state;
         }
 
@@ -102,6 +102,7 @@ public class GameStateRepository {
                 }
 
                 state.updateWaterBombStates();
+                state.updateWaterCourseStates();
             }
         }
     }

@@ -1,11 +1,7 @@
 package client.component;
 
-import client.util.ImageIcons;
 import domain.constant.Sizes;
-import domain.model.Block;
-import domain.model.Map;
-import domain.model.Offset;
-import domain.model.WaterBomb;
+import domain.model.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -52,21 +48,13 @@ public class MapView extends JPanel {
             for (int x = 0; x < waterBomb2d[y].length; ++x) {
                 if (waterBomb2d[y][x] != null) {
                     WaterBomb waterBomb = waterBomb2d[y][x];
-                    WaterBomb.State state = waterBomb.getState();
                     int frame = waterBomb.getFrame();
-                    Dimension renderSize = switch (state) {
-                        case WAITING -> new Dimension(56, 54);
-                        case EXPOSING, DESTROYED -> new Dimension(52, 52);
-                    };
-                    ImageIcon imageIcon = switch (state) {
-                        case WAITING -> ImageIcons.WATER_BOMB_1;
-                        case EXPOSING, DESTROYED -> ImageIcons.WATER_BOMB_POP;
-                    };
-                    WaterBombComponent waterBombComponent = new WaterBombComponent(imageIcon, renderSize, new Offset(x, y));
+                    WaterBombComponent waterBombComponent = new WaterBombComponent(new Offset(x, y));
                     Offset renderOffset = waterBombComponent.getRenderOffset();
+                    Dimension renderSize = waterBombComponent.getImageSize();
 
                     g.drawImage(
-                            imageIcon.getImage(),
+                            waterBombComponent.getImage(),
                             renderOffset.x,
                             renderOffset.y,
                             renderOffset.x + tileWidth,
@@ -79,6 +67,11 @@ public class MapView extends JPanel {
                 }
             }
         }
+    }
+
+    private void paintWaterCourses(Graphics g) {
+        WaterCourse[][] waterCourse2d = map.getWaterCourse2d();
+        // TODO : 물줄기 렌더링하기
     }
 
     @Override
