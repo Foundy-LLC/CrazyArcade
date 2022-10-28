@@ -7,7 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Util {
-	public static void AppendText(String str) {
+	public static void appendText(String str) {
 		System.out.println(getTime() + str);
 		// textArea.append("사용자로부터 들어온 메세지 : " + str+"\n");
 //		textArea.append(str + "\n");
@@ -19,7 +19,7 @@ public class Util {
 		return f.format(new Date());
 	} // get
 
-	public static byte[] MakePacket(String msg) {
+	public static byte[] makePacket(String msg) {
 		byte[] packet = new byte[Protocol.BUF_LEN];
 		byte[] bb = null;
 		int i;
