@@ -1,10 +1,6 @@
 package server;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,10 +8,8 @@ import java.util.List;
 import java.util.Vector;
 
 import com.google.gson.Gson;
-import domain.constant.Protocol;
 import domain.model.Direction;
 import domain.state.GameState;
-import domain.util.Util;
 
 public class UserService extends Thread {
     private DataInputStream dis;
@@ -27,8 +21,6 @@ public class UserService extends Thread {
     private final OnUserRemove onUserRemove;
 
     public UserService(Socket clientSocket, Vector<UserService> users, OnUserRemove onUserRemove) {
-        // TODO Auto-generated constructor stub
-        // 매개변수로 넘어온 자료 저장
         this.clientSocket = clientSocket;
         this.users = users;
         this.onUserRemove = onUserRemove;
@@ -37,13 +29,9 @@ public class UserService extends Thread {
             dis = new DataInputStream(is);
             OutputStream os = clientSocket.getOutputStream();
             dos = new DataOutputStream(os);
-            // line1 = dis.readUTF();
-            // /login user1 ==> msg[0] msg[1]
-            byte[] b = new byte[Protocol.BUF_LEN];
-            dis.read(b);
-            String line1 = new String(b);
-            String[] msg = line1.split(" ");
-            UserName = msg[0].trim().substring(1);
+            String line = dis.readUTF();
+            String[] msgArr = line.split(" ");
+            UserName = msgArr[0].trim().substring(1);
         } catch (Exception e) {
             // AppendText("userService error");
         }
@@ -59,15 +47,12 @@ public class UserService extends Thread {
 
     public void writeOne(String msg) {
         try {
-            // dos.writeUTF(msg);
-            byte[] bb;
-            bb = Util.makePacket(msg);
-            dos.write(bb, 0, bb.length);
+            dos.writeUTF(msg);
             System.out.println("--------------send----------------");
             System.out.println(msg);
             System.out.println("-------------------------------------");
         } catch (IOException e) {
-            Util.appendText("dos.write() error");
+            System.out.println("dos.write() error");
             try {
                 dos.close();
                 dis.close();
@@ -80,27 +65,18 @@ public class UserService extends Thread {
         }
     }
 
+    private void closeAll() throws IOException {
+        dos.close();
+        dis.close();
+        clientSocket.close();
+        onUserRemove.call(this);
+    }
+
     public void run() {
         while (true) { // 사용자 접속을 계속해서 받기 위해 while문
             try {
-                // String msg = dis.readUTF();
-                byte[] b = new byte[Protocol.BUF_LEN];
-                int ret;
-                ret = dis.read(b);
-                if (ret < 0) {
-                    Util.appendText("dis.read() < 0 error");
-                    try {
-                        dos.close();
-                        dis.close();
-                        clientSocket.close();
-                        onUserRemove.call(this);
-                        break;
-                    } catch (Exception ee) {
-                        break;
-                    } // catch문 끝
-                }
-                String msg = new String(b, "euc-kr");
-                msg = msg.trim(); // 앞뒤 blank NULL, \n 모두 제거
+                String msg = dis.readUTF();
+                msg = msg.trim();
                 System.out.println("--------------receive----------------");
                 System.out.println(msg);
                 System.out.println("-------------------------------------");
@@ -136,12 +112,9 @@ public class UserService extends Thread {
                     e.printStackTrace();
                 }
             } catch (IOException e) {
-                Util.appendText("dis.read() error");
+                System.out.println("dis.read() error");
                 try {
-                    dos.close();
-                    dis.close();
-                    clientSocket.close();
-                    onUserRemove.call(this); // 에러가난 현재 객체를 벡터에서 지운다
+                    closeAll();
                     break;
                 } catch (Exception ee) {
                     break;

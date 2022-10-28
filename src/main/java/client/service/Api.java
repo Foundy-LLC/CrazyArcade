@@ -70,32 +70,11 @@ public class Api {
         assert (outputStream != null);
     }
 
-    private byte[] makePacket(String message) {
-        byte[] packet = new byte[BUF_LEN];
-        byte[] bb = null;
-        int i;
-        for (i = 0; i < BUF_LEN; i++) {
-            packet[i] = 0;
-        }
-        try {
-            bb = message.getBytes("euc-kr");
-        } catch (UnsupportedEncodingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            System.exit(0);
-        }
-        for (i = 0; i < bb.length; i++) {
-            packet[i] = bb[i];
-        }
-        return packet;
-    }
-
     private void sendMessage(String message) {
         assertDidInit();
 
-        byte[] packet = makePacket(message);
         try {
-            outputStream.write(packet, 0, packet.length);
+            outputStream.writeUTF(message);
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -120,22 +99,9 @@ public class Api {
         public void run() {
             while (true) {
                 try {
-                    byte[] packet = new byte[BUF_LEN];
-                    int receiveSize = inputStream.read(packet);
-                    if (receiveSize < 0) {
-                        throw new IOException();
-                    }
-                    int messageLength;
-                    for (messageLength = 0 ; messageLength < BUF_LEN; ++messageLength) {
-                        if (packet[messageLength] == '\u0000') {
-                            break;
-                        }
-                    }
-
-                    String message = new String(packet, "euc-kr".trim());
+                    String message = inputStream.readUTF();
                     System.out.println("============= MESSAGE ==============");
                     System.out.println(message);
-                    message = message.substring(0, messageLength);
                     notifyToListeners(message);
                 } catch (IOException e) {
                     try {
