@@ -48,7 +48,7 @@ public class Api {
         subscriber.start();
     }
 
-    public void     addListener(MessageListener listener) {
+    public void addListener(MessageListener listener) {
         listeners.add(listener);
     }
 
