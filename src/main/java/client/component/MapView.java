@@ -30,14 +30,7 @@ public class MapView extends JPanel {
         this.map = map;
     }
 
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-
-        if (map == null) {
-            return;
-        }
-
+    private void paintBlocks(Graphics g) {
         Block[][] block2d = map.getBlock2D();
         for (int y = 0; y < block2d.length; ++y) {
             for (int x = 0; x < block2d[y].length; ++x) {
@@ -48,7 +41,9 @@ public class MapView extends JPanel {
                 }
             }
         }
+    }
 
+    private void paintWaterBombs(Graphics g) {
         WaterBomb[][] waterBomb2d = map.getWaterBomb2d();
         final int tileWidth = Sizes.TILE_SIZE.width;
         final int tileHeight = Sizes.TILE_SIZE.height;
@@ -84,6 +79,18 @@ public class MapView extends JPanel {
                 }
             }
         }
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        if (map == null) {
+            return;
+        }
+
+        paintBlocks(g);
+        paintWaterBombs(g);
 
         setOpaque(false);
     }
