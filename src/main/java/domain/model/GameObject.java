@@ -5,53 +5,43 @@ import lombok.Getter;
 import lombok.NonNull;
 
 public abstract class GameObject {
-	
-	public static final int WIDTH = Sizes.MAP_WIDTH / Sizes.TILE_ROW_COUNT;
-	public static final int HEIGHT = Sizes.MAP_HEIGHT / Sizes.TILE_COLUMN_COUNT;
 
-	public static final int SPEED = 1;
+    public static final int WIDTH = Sizes.MAP_WIDTH / Sizes.TILE_ROW_COUNT;
+    public static final int HEIGHT = Sizes.MAP_HEIGHT / Sizes.TILE_COLUMN_COUNT;
 
-	@Getter
-	@NonNull
-	protected Offset offset;
+    public static final int SPEED = 1;
 
-	public GameObject(int x, int y) {
-		this.offset = new Offset(x, y);
-	}
-	
-	/**
-	 * @return 오브젝트의 중앙 위치를 셀로 치환한 {@link Offset}을 반환한다. 이는 오브젝트 좌표와 크기를 이용하여 계산된다.
-	 */
-	protected Offset getCellOffset() {
-		Offset centerOffset = getCenterOffset();
-		return new Offset(centerOffset.x / WIDTH, centerOffset.y / HEIGHT);
-	}
-	
-	/**
-	 * @return 오브젝트의 중앙 위치를 반환한다. 이는 오브젝트 좌표와 크기를 이용하여 계산된다.
-	 */
-	private Offset getCenterOffset() {
-		int widthHalf = WIDTH / 2;
-		int heightHalf = HEIGHT / 2;
-		return new Offset(offset.x + widthHalf, offset.y +heightHalf);
-	}
+    @Getter
+    @NonNull
+    protected Offset offset;
 
-	public void move(Direction direction) {
-		switch (direction) {
-			case UP:
-				offset = new Offset(offset.x, offset.y - SPEED);
-				break;
-			case DOWN:
-				offset = new Offset(offset.x, offset.y + SPEED);
-				break;
-			case LEFT:
-				offset = new Offset(offset.x - SPEED, offset.y);
-				break;
-			case RIGHT:
-				offset = new Offset(offset.x + SPEED, offset.y);
-				break;
-			default:
-				throw new IllegalArgumentException();
-		}
-	}
+    public GameObject(int x, int y) {
+        this.offset = new Offset(x, y);
+    }
+
+    /**
+     * @return 오브젝트의 중앙 위치를 셀로 치환한 {@link Offset}을 반환한다. 이는 오브젝트 좌표와 크기를 이용하여 계산된다.
+     */
+    protected Offset getCellOffset() {
+        Offset centerOffset = getCenterOffset();
+        return new Offset(centerOffset.x / WIDTH, centerOffset.y / HEIGHT);
+    }
+
+    /**
+     * @return 오브젝트의 중앙 위치를 반환한다. 이는 오브젝트 좌표와 크기를 이용하여 계산된다.
+     */
+    private Offset getCenterOffset() {
+        int widthHalf = WIDTH / 2;
+        int heightHalf = HEIGHT / 2;
+        return new Offset(offset.x + widthHalf, offset.y + heightHalf);
+    }
+
+    public void move(Direction direction) {
+        offset = switch (direction) {
+            case UP -> new Offset(offset.x, offset.y - SPEED);
+            case DOWN -> new Offset(offset.x, offset.y + SPEED);
+            case LEFT -> new Offset(offset.x - SPEED, offset.y);
+            case RIGHT -> new Offset(offset.x + SPEED, offset.y);
+        };
+    }
 }
