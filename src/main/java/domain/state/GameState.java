@@ -44,21 +44,43 @@ public class GameState implements Serializable {
     }
 
     private void createWaterCourse(WaterBomb waterBomb, WaterWave[][] waterWave2d, int x, int y) {
+        Block[][] block2d = map.getBlock2D();
         int waterBombLength = waterBomb.getLength();
+        boolean isUpEnded = false;
+        boolean isDownEnded = false;
+        boolean isLeftEnded = false;
+        boolean isRightEnded = false;
+
         waterWave2d[y][x] = new WaterWave(null, false);
         for (int i = 1; i <= waterBombLength; i++) {
             boolean isEnd = i == waterBombLength;
-            if (inRange(y + i, x)) {
-                waterWave2d[y + i][x] = new WaterWave(Direction.DOWN, isEnd);
+            if (inRange(y + i, x) && !isDownEnded) {
+                if (block2d[y + i][x] != null) {
+                    isDownEnded = true;
+                } else {
+                    waterWave2d[y + i][x] = new WaterWave(Direction.DOWN, isEnd);
+                }
             }
-            if (inRange(y - i, x)) {
-                waterWave2d[y - i][x] = new WaterWave(Direction.UP, isEnd);
+            if (inRange(y - i, x) && !isUpEnded) {
+                if (block2d[y - i][x] != null) {
+                    isUpEnded = true;
+                } else {
+                    waterWave2d[y - i][x] = new WaterWave(Direction.UP, isEnd);
+                }
             }
-            if (inRange(y, x + i)) {
-                waterWave2d[y][x + i] = new WaterWave(Direction.RIGHT, isEnd);
+            if (inRange(y, x + i) && !isRightEnded) {
+                if (block2d[y][x + i] != null) {
+                    isRightEnded = true;
+                } else {
+                    waterWave2d[y][x + i] = new WaterWave(Direction.RIGHT, isEnd);
+                }
             }
-            if (inRange(y, x - i)) {
-                waterWave2d[y][x - i] = new WaterWave(Direction.LEFT, isEnd);
+            if (inRange(y, x - i) && !isLeftEnded) {
+                if (block2d[y][x - i] != null) {
+                    isLeftEnded = true;
+                } else {
+                    waterWave2d[y][x - i] = new WaterWave(Direction.LEFT, isEnd);
+                }
             }
         }
     }
