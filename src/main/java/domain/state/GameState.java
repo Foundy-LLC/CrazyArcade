@@ -44,7 +44,7 @@ public class GameState implements Serializable {
 	public boolean canInstallWaterBombAt(Offset tileOffset) {
 		WaterBomb[][] waterBomb2d = map.getWaterBomb2d();
 		WaterBomb waterBomb = waterBomb2d[tileOffset.y][tileOffset.x];
-		return waterBomb == null || waterBomb.isWaiting();
+		return waterBomb == null || !waterBomb.isWaiting();
 	}
 
 	public void installWaterBomb(WaterBomb waterBomb, Offset tileOffset) {
