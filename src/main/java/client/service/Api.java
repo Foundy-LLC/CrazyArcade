@@ -6,12 +6,9 @@ import domain.model.Direction;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.Socket;
 import java.util.HashSet;
 import java.util.Set;
-
-import static domain.constant.Protocol.BUF_LEN;
 
 public class Api {
 
