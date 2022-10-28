@@ -170,7 +170,7 @@ public class Player extends GameObject {
         final int maxY = Sizes.MAP_HEIGHT - Sizes.TILE_SIZE.height;
 
         return 0 <= offset.x && 0 <= offset.y &&
-                offset.x < maxX && offset.y < maxY;
+                offset.x <= maxX && offset.y <= maxY;
     }
 
     private Rectangle getPlayerRectangleAt(Offset offset) {
