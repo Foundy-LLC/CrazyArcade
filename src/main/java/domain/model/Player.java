@@ -20,6 +20,10 @@ public class Player extends GameObject {
     @Getter
     private Direction direction;
 
+    @NonNull
+    @Getter
+    private Integer waterBombLength = 3;
+
     public Player(String name, int x, int y) {
         super(x, y);
         this.name = name;
@@ -204,5 +208,9 @@ public class Player extends GameObject {
             result[i] = arr[i].clone();
         }
         return result;
+    }
+
+    public WaterBomb createWaterBomb() {
+        return new WaterBomb(waterBombLength);
     }
 }

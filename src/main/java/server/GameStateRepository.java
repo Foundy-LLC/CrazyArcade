@@ -54,7 +54,7 @@ public class GameStateRepository {
         if (player != null) {
             Offset playerCenterTileOffset = player.getCenterTileOffset();
             if (waterBomb2d[playerCenterTileOffset.y][playerCenterTileOffset.x] == null) {
-                waterBomb2d[playerCenterTileOffset.y][playerCenterTileOffset.x] = new WaterBomb();
+                waterBomb2d[playerCenterTileOffset.y][playerCenterTileOffset.x] = player.createWaterBomb();
             }
         }
         return gameState;

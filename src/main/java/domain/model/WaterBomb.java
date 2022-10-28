@@ -1,5 +1,7 @@
 package domain.model;
 
+import lombok.Getter;
+
 import java.io.Serializable;
 import java.util.Calendar;
 
@@ -9,7 +11,11 @@ public class WaterBomb implements Serializable {
 
 	private final long installedMilli = System.currentTimeMillis();
 
-	public WaterBomb() {
+	@Getter
+	private final int length;
+
+	public WaterBomb(int length) {
+		this.length = length;
 	}
 
 	public int getFrame() {
