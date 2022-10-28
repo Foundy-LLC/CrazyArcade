@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NonNull;
 
 import java.awt.Rectangle;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Player extends GameObject {
@@ -38,18 +39,25 @@ public class Player extends GameObject {
         };
 
         if (isInRange(newOffset)) {
-            Rectangle newRectangle = getPlayerRectangleAt(newOffset);
+            Rectangle rectangle = getPlayerRectangleAt(newOffset);
             Block[][] block2d = map.getBlock2D();
+            WaterBomb[][] waterBomb2d = deepCopy(map.getWaterBomb2d());
 
-            Offset leftTopTile = getTileOffsetBy(new Offset(newRectangle.x, newRectangle.y));
-            Offset leftBottomTile = getTileOffsetBy(new Offset(newRectangle.x, newRectangle.y + newRectangle.height));
-            Offset rightBottomTile = getTileOffsetBy(new Offset(newRectangle.x + newRectangle.width, newRectangle.y + newRectangle.height));
-            Offset rightTopTile = getTileOffsetBy(new Offset(newRectangle.x + newRectangle.width, newRectangle.y));
+            // 플레이어가 물폭탄을 설치하여 플레이어 밑에 물폭탄이 있는 경우 충돌에서 제외한다.
+            ArrayList<Offset> waterBombUnderUserOffsets = getWaterBombUnderUserOffsets(waterBomb2d);
+            for (Offset waterBombUnderUserOffset : waterBombUnderUserOffsets) {
+                waterBomb2d[waterBombUnderUserOffset.y][waterBombUnderUserOffset.x] = null;
+            }
 
-            Boolean collideLeftTop = block2d[leftTopTile.y][leftTopTile.x] != null;
-            Boolean collideLeftBottom = block2d[leftBottomTile.y][leftBottomTile.x] != null;
-            Boolean collideRightBottom = block2d[rightBottomTile.y][rightBottomTile.x] != null;
-            Boolean collideRightTop = block2d[rightTopTile.y][rightTopTile.x] != null;
+            Offset leftTopTile = getTileOffsetBy(new Offset(rectangle.x, rectangle.y));
+            Offset leftBottomTile = getTileOffsetBy(new Offset(rectangle.x, rectangle.y + rectangle.height));
+            Offset rightBottomTile = getTileOffsetBy(new Offset(rectangle.x + rectangle.width, rectangle.y + rectangle.height));
+            Offset rightTopTile = getTileOffsetBy(new Offset(rectangle.x + rectangle.width, rectangle.y));
+
+            Boolean collideLeftTop = isCollide(leftTopTile, block2d) || isCollide(leftTopTile, waterBomb2d);
+            Boolean collideLeftBottom = isCollide(leftBottomTile, block2d) || isCollide(leftBottomTile, waterBomb2d);
+            Boolean collideRightBottom = isCollide(rightBottomTile, block2d) || isCollide(rightBottomTile, waterBomb2d);
+            Boolean collideRightTop = isCollide(rightTopTile, block2d) || isCollide(rightTopTile, waterBomb2d);
 
             List<Boolean> collideList = List.of(collideLeftTop, collideLeftBottom, collideRightBottom, collideRightTop);
             int collideCount = 0;
@@ -64,66 +72,97 @@ public class Player extends GameObject {
                     case UP -> {
                         if (collideLeftTop) {
                             int blockRightX = Sizes.TILE_SIZE.width * (leftTopTile.x + 1);
-                            int diff = blockRightX - newRectangle.x;
+                            int diff = blockRightX - rectangle.x;
                             if (diff < COLLIDE_TOLERANCES) {
-                                offset = new Offset(newRectangle.x + diff, newRectangle.y);
+                                offset = new Offset(rectangle.x + diff, rectangle.y);
                             }
                         } else if (collideRightTop) {
                             int blockLeftX = Sizes.TILE_SIZE.width * rightTopTile.x;
-                            int diff = (newRectangle.x + newRectangle.width) - blockLeftX;
+                            int diff = (rectangle.x + rectangle.width) - blockLeftX;
                             if (diff < COLLIDE_TOLERANCES) {
-                                offset = new Offset(newRectangle.x - diff - 1, newRectangle.y);
+                                offset = new Offset(rectangle.x - diff - 1, rectangle.y);
                             }
                         }
                     }
                     case DOWN -> {
                         if (collideLeftBottom) {
                             int blockRightX = Sizes.TILE_SIZE.width * (leftBottomTile.x + 1);
-                            int diff = blockRightX - newRectangle.x;
+                            int diff = blockRightX - rectangle.x;
                             if (diff < COLLIDE_TOLERANCES) {
-                                offset = new Offset(newRectangle.x + diff, newRectangle.y);
+                                offset = new Offset(rectangle.x + diff, rectangle.y);
                             }
                         } else if (collideRightBottom) {
                             int blockLeftX = Sizes.TILE_SIZE.width * rightBottomTile.x;
-                            int diff = (newRectangle.x + newRectangle.width) - blockLeftX;
+                            int diff = (rectangle.x + rectangle.width) - blockLeftX;
                             if (diff < COLLIDE_TOLERANCES) {
-                                offset = new Offset(newRectangle.x - diff - 1, newRectangle.y);
+                                offset = new Offset(rectangle.x - diff - 1, rectangle.y);
                             }
                         }
                     }
                     case LEFT -> {
                         if (collideLeftTop) {
                             int blockTopY = Sizes.TILE_SIZE.height * (leftTopTile.y + 1);
-                            int diff = blockTopY - newRectangle.y;
+                            int diff = blockTopY - rectangle.y;
                             if (diff < COLLIDE_TOLERANCES) {
-                                offset = new Offset(newRectangle.x, newRectangle.y + diff);
+                                offset = new Offset(rectangle.x, rectangle.y + diff);
                             }
                         } else if (collideLeftBottom) {
                             int blockBottomY = Sizes.TILE_SIZE.height * leftBottomTile.y;
-                            int diff = (newRectangle.y + newRectangle.width) - blockBottomY;
+                            int diff = (rectangle.y + rectangle.width) - blockBottomY;
                             if (diff < COLLIDE_TOLERANCES) {
-                                offset = new Offset(newRectangle.x, newRectangle.y - diff - 1);
+                                offset = new Offset(rectangle.x, rectangle.y - diff - 1);
                             }
                         }
                     }
                     case RIGHT -> {
                         if (collideRightTop) {
                             int blockTopY = Sizes.TILE_SIZE.height * (leftTopTile.y + 1);
-                            int diff = blockTopY - newRectangle.y;
+                            int diff = blockTopY - rectangle.y;
                             if (diff < COLLIDE_TOLERANCES) {
-                                offset = new Offset(newRectangle.x, newRectangle.y + diff);
+                                offset = new Offset(rectangle.x, rectangle.y + diff);
                             }
                         } else if (collideRightBottom) {
                             int blockBottomY = Sizes.TILE_SIZE.height * leftBottomTile.y;
-                            int diff = (newRectangle.y + newRectangle.width) - blockBottomY;
+                            int diff = (rectangle.y + rectangle.width) - blockBottomY;
                             if (diff < COLLIDE_TOLERANCES) {
-                                offset = new Offset(newRectangle.x, newRectangle.y - diff - 1);
+                                offset = new Offset(rectangle.x, rectangle.y - diff - 1);
                             }
                         }
                     }
                 }
             }
         }
+    }
+
+    private boolean isCollide(Offset offset, Block[][] block2d) {
+        return block2d[offset.y][offset.x] != null;
+    }
+
+    private boolean isCollide(Offset offset, WaterBomb[][] waterBomb2d) {
+        return waterBomb2d[offset.y][offset.x] != null;
+    }
+
+    private @NonNull ArrayList<Offset> getWaterBombUnderUserOffsets(WaterBomb[][] waterBomb2d) {
+        ArrayList<Offset> result = new ArrayList<>(4);
+        Rectangle rectangle = getPlayerRectangleAt(offset);
+        Offset leftTopTile = getTileOffsetBy(new Offset(rectangle.x, rectangle.y));
+        Offset leftBottomTile = getTileOffsetBy(new Offset(rectangle.x, rectangle.y + rectangle.height));
+        Offset rightBottomTile = getTileOffsetBy(new Offset(rectangle.x + rectangle.width, rectangle.y + rectangle.height));
+        Offset rightTopTile = getTileOffsetBy(new Offset(rectangle.x + rectangle.width, rectangle.y));
+
+        if (isCollide(leftTopTile, waterBomb2d)) {
+            result.add(leftTopTile);
+        }
+        if (isCollide(leftBottomTile, waterBomb2d)) {
+            result.add(leftBottomTile);
+        }
+        if (isCollide(rightBottomTile, waterBomb2d)) {
+            result.add(rightBottomTile);
+        }
+        if (isCollide(rightTopTile, waterBomb2d)) {
+            result.add(rightTopTile);
+        }
+        return result;
     }
 
     private boolean isInRange(Offset offset) {
@@ -157,5 +196,13 @@ public class Player extends GameObject {
         int widthHalf = WIDTH / 2;
         int heightHalf = HEIGHT / 2;
         return new Offset(offset.x + widthHalf, offset.y + heightHalf);
+    }
+
+    private static WaterBomb[][] deepCopy(WaterBomb[][] arr) {
+        WaterBomb[][] result = new WaterBomb[arr.length][arr[0].length];
+        for (int i = 0; i < arr.length; i++) {
+            result[i] = arr[i].clone();
+        }
+        return result;
     }
 }
