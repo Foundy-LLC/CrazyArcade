@@ -11,14 +11,18 @@ public class WaterWave implements Serializable {
     @Getter
     private final Direction direction;
 
+    @Getter
+    private final boolean isEnd;
+
     private final long createdMilli = System.currentTimeMillis();
 
     /**
      *
      * @param direction `null`인 경우 정중앙에 위치한 물줄기이다.
      */
-    public WaterWave(Direction direction) {
+    public WaterWave(Direction direction, boolean isEnd) {
         this.direction = direction;
+        this.isEnd = isEnd;
     }
 
     public int getFrame() {

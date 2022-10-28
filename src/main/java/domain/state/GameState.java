@@ -33,7 +33,7 @@ public class GameState implements Serializable {
                     continue;
                 }
                 if (waterBomb.shouldExplode()) {
-                    waterWave2d[y][x] = new WaterWave(null);
+                    waterWave2d[y][x] = new WaterWave(null, false);
                     // TODO: 물줄기 십자가 모양으로 생성하기(함수로 빼서)
                     // TODO: 동시 폭발 구현하기
 
