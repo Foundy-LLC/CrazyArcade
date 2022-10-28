@@ -20,6 +20,8 @@ public class UserService extends Thread {
 
     private final OnUserRemove onUserRemove;
 
+    private GameStateTicker gameStateTicker;
+
     public UserService(Socket clientSocket, Vector<UserService> users, OnUserRemove onUserRemove) {
         this.clientSocket = clientSocket;
         this.users = users;
@@ -95,6 +97,9 @@ public class UserService extends Thread {
                             GameState initGameState = gameStateRepository.initState(userNames);
                             String stateJson = new Gson().toJson(initGameState);
                             writeAll(stateJson);
+
+                            gameStateTicker = new GameStateTicker();
+                            gameStateTicker.start();
                         }
                         case "up", "down", "left", "right" -> {
                             String name = msgArr[0].substring(1);
@@ -123,6 +128,22 @@ public class UserService extends Thread {
                 } catch (Exception ee) {
                     break;
                 }
+            }
+        }
+    }
+
+    private class GameStateTicker extends Thread {
+        @Override
+        public void run() {
+            while (true) {
+                try {
+                    sleep(100);
+                } catch (InterruptedException e) {
+                    break;
+                }
+                GameState state = GameStateRepository.getInstance().getGameState();
+                String stateJson = new Gson().toJson(state);
+                writeAll(stateJson);
             }
         }
     }

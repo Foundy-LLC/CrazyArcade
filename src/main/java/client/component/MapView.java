@@ -56,20 +56,30 @@ public class MapView extends JPanel {
         for (int y = 0; y < waterBomb2d.length; ++y) {
             for (int x = 0; x < waterBomb2d[y].length; ++x) {
                 if (waterBomb2d[y][x] != null) {
-                    WaterBomb waterBombState = waterBomb2d[y][x];
-                    int frame = waterBombState.getFrame();
-                    WaterBombComponent blockComponent = new WaterBombComponent(new Offset(x, y));
-                    Offset renderOffset = blockComponent.getRenderOffset();
+                    WaterBomb waterBomb = waterBomb2d[y][x];
+                    WaterBomb.State state = waterBomb.getState();
+                    int frame = waterBomb.getFrame();
+                    Dimension renderSize = switch (state) {
+                        case WAITING -> new Dimension(56, 54);
+                        case EXPOSING, DESTROYED -> new Dimension(52, 52);
+                    };
+                    ImageIcon imageIcon = switch (state) {
+                        case WAITING -> ImageIcons.WATER_BOMB_1;
+                        case EXPOSING, DESTROYED -> ImageIcons.WATER_BOMB_POP;
+                    };
+                    WaterBombComponent waterBombComponent = new WaterBombComponent(imageIcon, renderSize, new Offset(x, y));
+                    Offset renderOffset = waterBombComponent.getRenderOffset();
+
                     g.drawImage(
-                            blockComponent.getImage(),
+                            imageIcon.getImage(),
                             renderOffset.x,
                             renderOffset.y,
                             renderOffset.x + tileWidth,
                             renderOffset.y + tileHeight,
-                            frame * WaterBombComponent.SIZE.width,
+                            frame * renderSize.width,
                             0,
-                            (frame + 1) * WaterBombComponent.SIZE.width,
-                            WaterBombComponent.SIZE.height,
+                            (frame + 1) * renderSize.width,
+                            renderSize.height,
                             null);
                 }
             }

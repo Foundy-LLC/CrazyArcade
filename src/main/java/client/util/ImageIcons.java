@@ -18,4 +18,5 @@ public class ImageIcons {
 	public static final ImageIcon BLOCK1 = new ImageIcon("assets/map/forest/block/block_1.png");
 
 	public static final ImageIcon WATER_BOMB_1 = new ImageIcon("assets/bomb/1.png");
+	public static final ImageIcon WATER_BOMB_POP = new ImageIcon("assets/bomb/pop.png");
 }

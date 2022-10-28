@@ -18,7 +18,7 @@ public abstract class GameComponent<STATE> extends JLabel {
     private Image image;
 
     @NonNull
-    private final Offset imageOffset = getImageOffset();
+    private final Offset imageOffset;
 
     @NonNull
     @Getter
@@ -27,26 +27,29 @@ public abstract class GameComponent<STATE> extends JLabel {
     @NonNull
     private Integer frame = 0;
 
-    public GameComponent(ImageIcon imageIcon) {
-        this.image = imageIcon.getImage();
+    @NonNull
+    private final Dimension imageSize;
 
-        Dimension size = getSizeOfImage();
-        setSize(size.width, size.height);
+    public GameComponent(@NonNull ImageIcon imageIcon, @NonNull Dimension imageSize) {
+        this.image = imageIcon.getImage();
+        this.imageSize = imageSize;
+        this.imageOffset = getImageOffset();
+
+        setSize(imageSize.width, imageSize.height);
         setLayout(null);
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        int imageWidth = getSizeOfImage().width;
+        int imageWidth = imageSize.width;
         g.drawImage(image, -imageWidth * (frame / FRAME_DELAY), 0, null);
         setOpaque(false);
     }
 
     private Offset getImageOffset() {
-        Dimension size = getSizeOfImage();
-        int x = -(size.width - TILE_SIZE.width) / 2;
-        int y = -(size.height - TILE_SIZE.height);
+        int x = -(imageSize.width - TILE_SIZE.width) / 2;
+        int y = -(imageSize.height - TILE_SIZE.height);
         return new Offset(x, y);
     }
 
@@ -71,9 +74,6 @@ public abstract class GameComponent<STATE> extends JLabel {
     public void setImageIcon(ImageIcon imageIcon) {
         this.image = imageIcon.getImage();
     }
-
-    @NonNull
-    protected abstract Dimension getSizeOfImage();
 
     public abstract void updateState(STATE state);
 

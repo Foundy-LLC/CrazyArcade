@@ -143,7 +143,8 @@ public class Player extends GameObject {
     }
 
     private boolean isCollide(Offset offset, WaterBomb[][] waterBomb2d) {
-        return waterBomb2d[offset.y][offset.x] != null;
+        WaterBomb waterBomb = waterBomb2d[offset.y][offset.x];
+        return waterBomb != null && waterBomb.isWaiting();
     }
 
     private @NonNull ArrayList<Offset> getWaterBombUnderUserOffsets(WaterBomb[][] waterBomb2d) {

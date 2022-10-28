@@ -19,13 +19,7 @@ public class PlayerComponent extends GameComponent<Player> {
     private int frame;
 
     public PlayerComponent() {
-        super(ImageIcons.BAZZI_DOWN);
-    }
-
-    @Override
-    @NonNull
-    protected Dimension getSizeOfImage() {
-        return SIZE;
+        super(ImageIcons.BAZZI_DOWN, SIZE);
     }
 
     @Override

@@ -6,15 +6,20 @@ import domain.model.Offset;
 import domain.model.Player;
 import domain.model.WaterBomb;
 import domain.state.GameState;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class GameStateRepository {
 
+    @Getter
     private GameState gameState;
 
-    private GameStateRepository() {}
+    private WaterBombStateChecker waterBombStateChecker;
+
+    private GameStateRepository() {
+    }
 
     public static GameStateRepository getInstance() {
         return Holder.INSTANCE;
@@ -36,6 +41,10 @@ public class GameStateRepository {
                 .remainingTimeSec(3 * 60)
                 .map(MockMaps.map1)
                 .build();
+
+        waterBombStateChecker = new WaterBombStateChecker(gameState);
+        waterBombStateChecker.start();
+
         return gameState;
     }
 
@@ -50,11 +59,11 @@ public class GameStateRepository {
 
     public GameState installWaterBomb(String playerName) {
         Player player = findPlayer(playerName);
-        WaterBomb[][] waterBomb2d = gameState.getMap().getWaterBomb2d();
         if (player != null) {
             Offset playerCenterTileOffset = player.getCenterTileOffset();
-            if (waterBomb2d[playerCenterTileOffset.y][playerCenterTileOffset.x] == null) {
-                waterBomb2d[playerCenterTileOffset.y][playerCenterTileOffset.x] = player.createWaterBomb();
+            if (gameState.canInstallWaterBombAt(playerCenterTileOffset)) {
+                WaterBomb waterBomb = player.createWaterBomb();
+                gameState.installWaterBomb(waterBomb, playerCenterTileOffset);
             }
         }
         return gameState;
@@ -68,5 +77,32 @@ public class GameStateRepository {
             }
         }
         return null;
+    }
+
+    public void clear() {
+        waterBombStateChecker.interrupt();
+        waterBombStateChecker = null;
+    }
+
+    private static class WaterBombStateChecker extends Thread {
+
+        private final GameState state;
+
+        private WaterBombStateChecker(GameState state) {
+            this.state = state;
+        }
+
+        @Override
+        public void run() {
+            while (true) {
+                try {
+                    sleep(100);
+                } catch (InterruptedException e) {
+                    break;
+                }
+
+                state.updateWaterBombStates();
+            }
+        }
     }
 }
