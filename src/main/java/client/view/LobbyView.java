@@ -56,13 +56,17 @@ public class LobbyView extends BaseView {
     }
 
     private final ActionListener gameStartListener = (event) -> {
-        navigateTo(new GameView());
         Api.getInstance().startGame();
     };
 
     private final MessageListener messageListener = message -> {
         if (message.equals(Protocol.ERROR)) {
             showToast("서버와의 연결이 끊어졌습니다.");
+        }
+
+        if (message.startsWith("/startGame")) {
+            navigateTo(new GameView());
+            return;
         }
 
         try {

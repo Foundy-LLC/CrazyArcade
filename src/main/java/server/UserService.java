@@ -88,12 +88,12 @@ public class UserService extends Thread {
 
                     switch (msgArr[1]) {
                         case "startGame" -> {
+                            writeAll("/startGame");
+
                             List<String> userNames = new ArrayList<>(8);
-                            users.forEach((userService -> {
-                                userNames.add(userService.UserName);
-                            }));
-                            GameState gameState = gameStateRepository.createGameState(userNames);
-                            String stateJson = new Gson().toJson(gameState);
+                            users.forEach((userService -> userNames.add(userService.UserName)));
+                            GameState initGameState = gameStateRepository.createGameState(userNames);
+                            String stateJson = new Gson().toJson(initGameState);
                             writeAll(stateJson);
                         }
                         case "up", "down", "left", "right" -> {
