@@ -14,4 +14,6 @@ public class ImageIcons {
 	public static final ImageIcon BAZZI_DOWN = new ImageIcon("assets/player/bazzi/down.png");
 	public static final ImageIcon BAZZI_LEFT = new ImageIcon("assets/player/bazzi/left.png");
 	public static final ImageIcon BAZZI_RIGHT = new ImageIcon("assets/player/bazzi/right.png");
+
+	public static final ImageIcon BLOCK1 = new ImageIcon("assets/map/forest/block/block_1.png");
 }

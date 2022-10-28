@@ -1,5 +1,6 @@
 package server;
 
+import domain.mockup.MockMaps;
 import domain.model.Direction;
 import domain.model.Player;
 import domain.state.GameState;
@@ -21,7 +22,7 @@ public class GameStateRepository {
         private static final GameStateRepository INSTANCE = new GameStateRepository();
     }
 
-    public GameState createGameState(List<String> names) {
+    public GameState initState(List<String> names) {
         List<Player> players = new ArrayList<>(8);
         names.forEach((name) -> {
             // TODO 위치 지정하기
@@ -31,7 +32,7 @@ public class GameStateRepository {
         gameState = GameState.builder()
                 .players(players)
                 .remainingTimeSec(3 * 60)
-                .walls(new ArrayList<>(8))
+                .map(MockMaps.map1)
                 .waterBombs(new ArrayList<>(8))
                 .build();
         return gameState;

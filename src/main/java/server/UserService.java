@@ -92,7 +92,7 @@ public class UserService extends Thread {
 
                             List<String> userNames = new ArrayList<>(8);
                             users.forEach((userService -> userNames.add(userService.UserName)));
-                            GameState initGameState = gameStateRepository.createGameState(userNames);
+                            GameState initGameState = gameStateRepository.initState(userNames);
                             String stateJson = new Gson().toJson(initGameState);
                             writeAll(stateJson);
                         }

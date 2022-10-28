@@ -1,15 +1,12 @@
 package domain.state;
 
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.List;
 
+import domain.model.Map;
 import domain.model.Player;
-import domain.model.Wall;
 import domain.model.WaterBomb;
 import lombok.*;
-
-import static java.util.Collections.emptyList;
 
 @Getter
 @ToString
@@ -25,17 +22,8 @@ public class GameState implements Serializable {
 	private List<WaterBomb> waterBombs;
 
 	@NonNull
-	private List<Wall> walls;
+	private Map map;
 
 	@NonNull
 	private Integer remainingTimeSec;
-
-	public static GameState getInitState(List<Player> players) {
-		return new GameStateBuilder()
-				.players(players)
-				.waterBombs(emptyList())
-				.walls(emptyList())
-				.remainingTimeSec(60 * 3)
-				.build();
-	}
 }

@@ -1,6 +1,7 @@
 package client.view;
 
 import client.component.BaseView;
+import client.component.BlockComponent;
 import client.component.MapView;
 import client.component.PlayerComponent;
 import client.service.Api;
@@ -8,9 +9,8 @@ import client.service.MessageListener;
 import client.util.ImageIcons;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import domain.model.Direction;
-import domain.model.Offset;
-import domain.model.Player;
+import domain.constant.Sizes;
+import domain.model.*;
 import domain.state.GameState;
 import lombok.NonNull;
 
@@ -28,7 +28,7 @@ public class GameView extends BaseView {
     @NonNull
     private final MapView mapView = new MapView();
 
-    private boolean isPlayerAdded = false;
+    private boolean isComponentInitialized = false;
 
     @NonNull
     private final Api api = Api.getInstance();
@@ -51,18 +51,34 @@ public class GameView extends BaseView {
         api.addListener(messageListener);
     }
 
-    private void updateView(@NonNull GameState state) {
-        if (!isPlayerAdded) {
-            isPlayerAdded = true;
-            List<Player> players = state.getPlayers();
-            players.forEach((player) -> {
-                Offset offset = player.getOffset();
-                PlayerComponent playerObject = new PlayerComponent();
-                playerObject.setOffset(offset);
+    private void initPlayerComponents(List<Player> players) {
+        players.forEach((player) -> {
+            Offset offset = player.getOffset();
+            PlayerComponent playerObject = new PlayerComponent();
+            playerObject.setOffset(offset);
 
-                playerObjects.add(playerObject);
-                mapView.add(playerObject);
-            });
+            playerObjects.add(playerObject);
+            mapView.add(playerObject);
+        });
+    }
+
+    private void initMapComponent(Map map) {
+        Block[][] block2D = map.getBlock2D();
+        for (int i = 0; i < Sizes.TILE_COLUMN_COUNT; ++i) {
+            for (int j = 0; j < Sizes.TILE_ROW_COUNT; ++j) {
+                if (block2D[i][j] != null) {
+                    mapView.add(new BlockComponent(new Offset(j, i)));
+                }
+            }
+        }
+    }
+
+    private void updateView(@NonNull GameState state) {
+        if (!isComponentInitialized) {
+            isComponentInitialized = true;
+            initPlayerComponents(state.getPlayers());
+            initMapComponent(state.getMap());
+
             requestFocus();
         }
 
