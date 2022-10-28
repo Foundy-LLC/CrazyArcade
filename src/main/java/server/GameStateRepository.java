@@ -43,7 +43,7 @@ public class GameStateRepository {
         players.forEach((player) -> {
             if (player.getName().equals(name)) {
                 player.setDirection(direction);
-                player.move(direction);
+                player.move(direction, gameState.getMap());
             }
         });
         return gameState;

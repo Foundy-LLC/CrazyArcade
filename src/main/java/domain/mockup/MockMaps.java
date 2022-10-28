@@ -5,12 +5,12 @@ import domain.model.Block;
 
 public class MockMaps {
     private static final Block[][] WALLS_1 = {
-            {new Block(), null, null, null, null, null, null, null, null, null, null, null, null, null, new Block()},
+            {null, null, null, null, null, null, null, null, null, null, null, null, null, null, new Block()},
+            {null, null, null, null, null, null, new Block(), null, null, null, null, null, null, null, null},
             {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+            {null, null, null, null, new Block(), null, new Block(), null, null, null, null, null, null, null, null},
             {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-            {null, null, null, null, null, new Block(), null, null, null, null, null, null, null, null, null},
-            {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-            {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+            {null, null, null, null, new Block(), null, new Block(), null, null, null, null, null, null, null, null},
             {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
             {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
             {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
