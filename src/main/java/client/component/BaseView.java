@@ -21,11 +21,11 @@ public class BaseView extends JPanel {
 		setLayout(null);
 	}
 	
-	protected void onRemoved() {}
+	protected void onDestroyed() {}
 
 	protected void navigateTo(JComponent panel) {
 		Navigator.navigateTo(this, panel);
-		onRemoved();
+		onDestroyed();
 	}
 
 	protected void showToast(String message) {

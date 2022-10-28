@@ -51,7 +51,7 @@ public class LobbyView extends BaseView {
     }
 
     @Override
-    protected void onRemoved() {
+    protected void onDestroyed() {
         Api.getInstance().removeListener(messageListener);
     }
 

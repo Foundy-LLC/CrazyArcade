@@ -79,7 +79,7 @@ public class GameView extends BaseView {
     }
 
     @Override
-    protected void onRemoved() {
+    protected void onDestroyed() {
         api.removeListener(messageListener);
         keyboardListener.stop();
     }
