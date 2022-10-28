@@ -4,7 +4,7 @@ import domain.constant.Sizes;
 import domain.model.Map;
 import domain.model.Block;
 import domain.model.WaterBomb;
-import domain.model.WaterCourse;
+import domain.model.WaterWave;
 
 public class MockMaps {
     private static final Block[][] WALLS_1 = {
@@ -25,7 +25,7 @@ public class MockMaps {
 
     private static final WaterBomb[][] WATER_BOMBS_1 = new WaterBomb[Sizes.TILE_COLUMN_COUNT][Sizes.TILE_ROW_COUNT];
 
-    private static final WaterCourse[][] WATER_COURSES = new WaterCourse[Sizes.TILE_COLUMN_COUNT][Sizes.TILE_ROW_COUNT];
+    private static final WaterWave[][] WATER_WAVES = new WaterWave[Sizes.TILE_COLUMN_COUNT][Sizes.TILE_ROW_COUNT];
 
-    public static final Map map1 = new Map(WALLS_1, WATER_BOMBS_1, WATER_COURSES);
+    public static final Map map1 = new Map(WALLS_1, WATER_BOMBS_1, WATER_WAVES);
 }
