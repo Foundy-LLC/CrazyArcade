@@ -1,5 +1,6 @@
 package client.component;
 
+import client.util.ImageIcons;
 import domain.constant.Sizes;
 import domain.model.*;
 
@@ -71,7 +72,35 @@ public class MapView extends JPanel {
 
     private void paintWaterCourses(Graphics g) {
         WaterCourse[][] waterCourse2d = map.getWaterCourse2d();
-        // TODO : 물줄기 렌더링하기
+        final int tileWidth = Sizes.TILE_SIZE.width;
+        final int tileHeight = Sizes.TILE_SIZE.height;
+
+        for (int y = 0; y < waterCourse2d.length; ++y) {
+            for (int x = 0; x < waterCourse2d[y].length; ++x) {
+                if (waterCourse2d[y][x] != null) {
+                    WaterCourse waterCourse = waterCourse2d[y][x];
+                    int frame = waterCourse.getFrame();
+                    WaterCourseComponent waterCourseComponent = new WaterCourseComponent(
+                            ImageIcons.WATER_BOMB_POP,
+                            new Dimension(52, 52),
+                            new Offset(x, y));
+                    Offset renderOffset = waterCourseComponent.getRenderOffset();
+                    Dimension renderSize = waterCourseComponent.getImageSize();
+
+                    g.drawImage(
+                            waterCourseComponent.getImage(),
+                            renderOffset.x,
+                            renderOffset.y,
+                            renderOffset.x + tileWidth,
+                            renderOffset.y + tileHeight,
+                            frame * renderSize.width,
+                            0,
+                            (frame + 1) * renderSize.width,
+                            renderSize.height,
+                            null);
+                }
+            }
+        }
     }
 
     @Override
@@ -83,6 +112,7 @@ public class MapView extends JPanel {
         }
 
         paintBlocks(g);
+        paintWaterCourses(g);
         paintWaterBombs(g);
 
         setOpaque(false);

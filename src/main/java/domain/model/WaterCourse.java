@@ -21,6 +21,11 @@ public class WaterCourse implements Serializable {
         this.direction = direction;
     }
 
+    public int getFrame() {
+        long currentMilli = System.currentTimeMillis();
+        return (int) (((currentMilli - createdMilli) / 200) % 4);
+    }
+
     public boolean shouldDisappear() {
         long currentMilli = System.currentTimeMillis();
         long passedMilli = currentMilli - createdMilli;
