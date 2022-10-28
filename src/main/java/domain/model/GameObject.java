@@ -35,13 +35,4 @@ public abstract class GameObject {
         int heightHalf = HEIGHT / 2;
         return new Offset(offset.x + widthHalf, offset.y + heightHalf);
     }
-
-    public void move(Direction direction) {
-        offset = switch (direction) {
-            case UP -> new Offset(offset.x, offset.y - SPEED);
-            case DOWN -> new Offset(offset.x, offset.y + SPEED);
-            case LEFT -> new Offset(offset.x - SPEED, offset.y);
-            case RIGHT -> new Offset(offset.x + SPEED, offset.y);
-        };
-    }
 }

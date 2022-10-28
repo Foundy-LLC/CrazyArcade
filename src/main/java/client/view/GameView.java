@@ -28,7 +28,6 @@ public class GameView extends BaseView {
     @NonNull
     private final Map map = new Map();
 
-    @NonNull
     private boolean isPlayerAdded = false;
 
     @NonNull
