@@ -13,7 +13,6 @@ import domain.model.*;
 import domain.state.GameState;
 import lombok.NonNull;
 
-import javax.swing.*;
 import javax.swing.Timer;
 import java.awt.event.*;
 import java.util.*;
@@ -77,7 +76,9 @@ public class GameView extends BaseView {
         if (gameState.isEnded()) {
             isGameEnded = true;
             showGameEndText(gameState.getWinner());
-            setTimerToNavigateLobbyView();
+            Timer timer = new Timer(3_000, arg0 -> navigateTo(new LobbyView()));
+            timer.setRepeats(false);
+            timer.start();
             return;
         }
 
@@ -130,9 +131,6 @@ public class GameView extends BaseView {
         repaint();
     }
 
-    private void setTimerToNavigateLobbyView() {
-    }
-
     @Override
     protected void onDestroyed() {
         api.removeListener(messageListener);
@@ -178,7 +176,6 @@ public class GameView extends BaseView {
             int keyCode = event.getKeyCode();
             // 스페이스바를 꾹 누르고 있어도 처음 한 번만 호출한다.
             if (!pressedKeys.contains(keyCode) && event.getKeyChar() == ' ') {
-                System.out.println("CPE!!!");
                 Api.getInstance().installWaterBomb();
             }
 

@@ -48,17 +48,17 @@ public class Api {
         subscriber.start();
     }
 
-    public void addListener(MessageListener listener) {
+    public synchronized void addListener(MessageListener listener) {
         listeners.add(listener);
     }
 
-    private void notifyToListeners(String message) {
+    private synchronized void notifyToListeners(String message) {
         for (MessageListener listener : listeners) {
             listener.onReceive(message);
         }
     }
 
-    public void removeListener(MessageListener listener) {
+    public synchronized void removeListener(MessageListener listener) {
         listeners.remove(listener);
     }
 

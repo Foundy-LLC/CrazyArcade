@@ -25,7 +25,7 @@ public class GameStateRepository {
     }
 
     public boolean isEnded() {
-        return gameState.isEnded();
+        return gameState == null || gameState.isEnded();
     }
 
     public GameState initState(List<String> names) {
