@@ -53,8 +53,8 @@ public class GameState implements Serializable {
             return;
         }
         int length = waterBomb.getLength();
-        waterBomb2d[y][x] = null;
 
+        waterBomb2d[y][x] = null;
         createWaterWave(y, x, length);
 
         for (int dir = 0; dir < DIRECTIONS.length; ++dir) {
@@ -74,8 +74,9 @@ public class GameState implements Serializable {
 
     /**
      * 십자가 모양의 물줄기를 생성한다.
-     * @param y 물줄기의 중앙 y값 좌표
-     * @param x 물줄기의 중앙 x값 좌표
+     *
+     * @param y      물줄기의 중앙 y값 좌표
+     * @param x      물줄기의 중앙 x값 좌표
      * @param length 물줄기의 길이
      */
     private void createWaterWave(int y, int x, int length) {
