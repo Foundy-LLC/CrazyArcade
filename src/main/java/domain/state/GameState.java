@@ -124,16 +124,18 @@ public class GameState implements Serializable {
     }
 
     private void updatePlayersState() {
-        players.forEach((player) -> {
+        for (int i = 0; i < players.size(); ++i) {
+            Player player = players.get(i);
             Offset tileOffset = player.getCenterTileOffset();
 
             if (!player.isTrapped() && isOnWave(tileOffset)) {
                 player.trapIntoWaterWave();
             }
-            if (player.isDead()) {
-                // TODO implements
+            if (player.shouldBeRemoved()) {
+                players.remove(player);
+                --i;
             }
-        });
+        }
     }
 
     private boolean isOnWave(Offset tileOffset) {

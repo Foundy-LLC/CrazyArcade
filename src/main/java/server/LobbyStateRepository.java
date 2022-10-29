@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LobbyStateRepository {
-    private final List<String> userNames = new ArrayList<>(8);
 
     @Getter
     private LobbyState lobbyState;
@@ -28,7 +27,7 @@ public class LobbyStateRepository {
     }
 
     public void initState() {
-        lobbyState = new LobbyState(this.userNames);
+        lobbyState = new LobbyState(new ArrayList<>(8));
     }
 
     public List<String> getLobbyUserNames() {

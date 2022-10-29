@@ -1,10 +1,12 @@
 package domain.model;
 
+import client.util.ImageIcons;
 import domain.constant.Sizes;
 import lombok.Getter;
 import lombok.NonNull;
 
-import java.awt.Rectangle;
+import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +14,14 @@ public class Player extends GameObject {
 
     private static final int COLLIDE_TOLERANCES = 16;
     private static final int MAX_ALIVE_TIME_IN_TRAP = 7_000;
+    private static final int DEAD_ANIMATION_MILLI = 600;
+
     private static final int TRAP_IMAGE_MAX_FRAME = 13;
+    private static final int DEAD_IMAGE_MAX_FRAME = 14;
+
+    public static final Dimension NORMAL_IMAGE_SIZE = new Dimension(64, 76);
+    public static final Dimension TRAP_IMAGE_SIZE = new Dimension(88, 82);
+    public static final Dimension DIE_IMAGE_SIZE = new Dimension(88, 144);
 
     @NonNull
     @Getter
@@ -44,6 +53,9 @@ public class Player extends GameObject {
     }
 
     public boolean isTrapped() {
+        if (isDead()) {
+            return false;
+        }
         return trappedTimeMilli != null;
     }
 
@@ -56,6 +68,16 @@ public class Player extends GameObject {
         return (int) ((currentMilli - trappedTimeMilli) / gap) % TRAP_IMAGE_MAX_FRAME;
     }
 
+    public int getFrameOfDeadImage() {
+        if (!isDead()) {
+            throw new IllegalStateException();
+        }
+        long currentMilli = System.currentTimeMillis();
+        long passedMilli = currentMilli - trappedTimeMilli - MAX_ALIVE_TIME_IN_TRAP;
+        long gap = DEAD_ANIMATION_MILLI / (DEAD_IMAGE_MAX_FRAME - 1);
+        return (int) (passedMilli / gap) % DEAD_IMAGE_MAX_FRAME;
+    }
+
     public boolean isDead() {
         if (trappedTimeMilli == null) {
             return false;
@@ -64,14 +86,51 @@ public class Player extends GameObject {
         return currentMilli - trappedTimeMilli >= MAX_ALIVE_TIME_IN_TRAP;
     }
 
+    public boolean shouldBeRemoved() {
+        if (trappedTimeMilli == null) {
+            return false;
+        }
+        long currentMilli = System.currentTimeMillis();
+        return currentMilli - trappedTimeMilli - MAX_ALIVE_TIME_IN_TRAP >= DEAD_ANIMATION_MILLI;
+    }
+
+    public ImageIcon getImage() {
+        if (isDead()) {
+            return ImageIcons.BAZZI_DIE;
+        }
+        if (isTrapped()) {
+            return ImageIcons.BAZZI_TRAP;
+        }
+        return switch (direction) {
+            case UP -> ImageIcons.BAZZI_UP;
+            case DOWN -> ImageIcons.BAZZI_DOWN;
+            case LEFT -> ImageIcons.BAZZI_LEFT;
+            case RIGHT -> ImageIcons.BAZZI_RIGHT;
+        };
+    }
+
+    public Dimension getImageSize() {
+        if (isDead()) {
+            return DIE_IMAGE_SIZE;
+        }
+        if (isTrapped()) {
+            return TRAP_IMAGE_SIZE;
+        }
+        return NORMAL_IMAGE_SIZE;
+    }
+
     public int getSpeed() {
         if (isTrapped()) {
             return 1;
         }
-        return 3;
+        return 4;
     }
 
     public void move(Direction direction, Map map) {
+        if (isDead()) {
+            return;
+        }
+
         int speed = getSpeed();
         Offset newOffset = switch (direction) {
             case UP -> new Offset(offset.x, offset.y - speed);

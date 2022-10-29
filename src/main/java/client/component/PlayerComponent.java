@@ -9,11 +9,11 @@ import lombok.NonNull;
 import javax.swing.*;
 import java.awt.*;
 
+import static domain.model.Player.NORMAL_IMAGE_SIZE;
+
 public class PlayerComponent extends GameComponent<Player> {
 
     private static final int NORMAL_FRAME_DELAY = 10;
-    public static final Dimension NORMAL_IMAGE_SIZE = new Dimension(64, 76);
-    public static final Dimension TRAP_IMAGE_SIZE = new Dimension(88, 82);
 
     @NonNull
     private Direction direction = Direction.DOWN;
@@ -27,12 +27,17 @@ public class PlayerComponent extends GameComponent<Player> {
     @Override
     public void updateState(Player player) {
         boolean isUpdated = false;
-        final ImageIcon oldImageIcon = getImageIcon();
-        final ImageIcon newImageIcon = player.isTrapped() ? ImageIcons.BAZZI_TRAP : getImageBy(direction);
-        final Dimension imageSize = player.isTrapped() ? TRAP_IMAGE_SIZE : NORMAL_IMAGE_SIZE;
+
+        final ImageIcon oldImageIcon = this.getImageIcon();
+        final ImageIcon newImageIcon = player.getImage();
+
+        final Dimension imageSize = player.getImageSize();
+
         final Offset oldOffset = this.getOffset();
         final Offset newOffset = player.getOffset();
+
         final Direction newDirection = player.getDirection();
+
         final boolean isTrapped = player.isTrapped();
 
         if (!newOffset.equals(oldOffset)) {
@@ -67,18 +72,18 @@ public class PlayerComponent extends GameComponent<Player> {
             }
         }
 
+        if (player.isDead()) {
+            int newFrame = player.getFrameOfDeadImage();
+            int oldFrame = getFrame();
+            if (oldFrame != newFrame) {
+                setFrame(newFrame);
+                isUpdated = true;
+            }
+        }
+
         if (isUpdated) {
             repaint();
         }
-    }
-
-    private ImageIcon getImageBy(Direction direction) {
-        return switch (direction) {
-            case UP -> ImageIcons.BAZZI_UP;
-            case DOWN -> ImageIcons.BAZZI_DOWN;
-            case LEFT -> ImageIcons.BAZZI_LEFT;
-            case RIGHT -> ImageIcons.BAZZI_RIGHT;
-        };
     }
 
     private void moveToNextFrameWhenNormal() {

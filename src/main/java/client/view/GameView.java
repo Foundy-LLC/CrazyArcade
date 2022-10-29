@@ -12,16 +12,14 @@ import domain.model.*;
 import domain.state.GameState;
 import lombok.NonNull;
 
-import javax.swing.*;
+import javax.swing.Timer;
 import java.awt.event.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 public class GameView extends BaseView {
 
     @NonNull
-    private final List<PlayerComponent> playerObjects = new ArrayList<>();
+    private final HashMap<String, PlayerComponent> playerMap = new HashMap<>();
 
     @NonNull
     private final MapView mapView = new MapView();
@@ -55,7 +53,7 @@ public class GameView extends BaseView {
             PlayerComponent playerObject = new PlayerComponent();
             playerObject.setOffset(offset);
 
-            playerObjects.add(playerObject);
+            playerMap.put(player.getName(), playerObject);
             mapView.add(playerObject);
         });
     }
@@ -75,9 +73,25 @@ public class GameView extends BaseView {
     }
 
     private void updatePlayerObjects(@NonNull List<Player> players) {
-        final int size = players.size();
-        for (int i = 0; i < size; ++i) {
-            playerObjects.get(i).updateState(players.get(i));
+        // 사망자가 발생한 경우
+        if (players.size() != playerMap.size()) {
+            List<String> deadPlayerNames = new ArrayList<>(List.copyOf(playerMap.keySet()));
+            for (Player alivePlayer : players) {
+                deadPlayerNames.remove(alivePlayer.getName());
+            }
+
+            deadPlayerNames.forEach((deadPlayerName) -> {
+                PlayerComponent deadPlayerComponent = playerMap.get(deadPlayerName);
+                playerMap.remove(deadPlayerName);
+                mapView.remove(deadPlayerComponent);
+            });
+        }
+
+        for (var entry : playerMap.entrySet()) {
+            String name = entry.getKey();
+            PlayerComponent component = entry.getValue();
+            Optional<Player> player = players.stream().filter((element) -> element.getName().equals(name)).findFirst();
+            player.ifPresent(component::updateState);
         }
     }
 
@@ -98,7 +112,7 @@ public class GameView extends BaseView {
 
         public KeyboardListener() {
             final Api api = Api.getInstance();
-            timer = new Timer(16, arg0 -> {
+            timer = new Timer(24, arg0 -> {
                 if (!pressedKeys.isEmpty()) {
                     for (Integer pressedKey : pressedKeys) {
                         switch (pressedKey) {
