@@ -16,10 +16,12 @@ public class ImageIcons {
     public static final ImageIcon BAZZI_RIGHT = new ImageIcon("assets/player/bazzi/right.png");
     public static final ImageIcon BAZZI_TRAP = new ImageIcon("assets/player/bazzi/trap.png");
 
-    public static final ImageIcon BLOCK1 = new ImageIcon("assets/map/forest/block/block_1.png");
-    public static final ImageIcon BLOCK2 = new ImageIcon("assets/map/forest/block/block_2.png");
-    public static final ImageIcon BLOCK3 = new ImageIcon("assets/map/forest/block/block_3.png");
-    public static final ImageIcon BLOCK4 = new ImageIcon("assets/map/forest/block/block_4.png");
+    public static final ImageIcon[] BLOCKS = {
+            new ImageIcon("assets/map/forest/block/block_1.png"),
+            new ImageIcon("assets/map/forest/block/block_2.png"),
+            new ImageIcon("assets/map/forest/block/block_3.png"),
+            new ImageIcon("assets/map/forest/block/block_4.png")
+    };
 
     public static final ImageIcon TILE1 = new ImageIcon("assets/map/forest/tile/tile_1.png");
     public static final ImageIcon TILE2 = new ImageIcon("assets/map/forest/tile/tile_2.png");

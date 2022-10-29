@@ -22,19 +22,19 @@ public class MockMaps {
     };
 
     private static final Block[][] WALLS_1 = {
-            {null, null, null, null, null, null, null, null, null, null, null, null, null, null, new Block()},
-            {null, null, null, null, null, null, new Block(), null, null, null, null, null, null, null, null},
-            {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-            {null, null, null, null, new Block(), null, new Block(), null, null, null, null, null, null, null, null},
-            {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-            {null, null, null, null, new Block(), null, new Block(), null, null, null, null, null, null, null, null},
-            {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-            {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-            {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-            {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-            {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-            {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-            {new Block(), null, null, null, null, null, null, null, null, null, null, null, null, null, new Block()},
+            {new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block()},
+            {new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block()},
+            {new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block()},
+            {new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block()},
+            {new Block(), new Block(), new Block(), new Block(), new Block(), null, null, null, null, null, new Block(), new Block(), new Block(), new Block(), new Block()},
+            {new Block(), new Block(), new Block(), new Block(), null, null, null, null, null, null, null, new Block(), new Block(), new Block(), new Block()},
+            {new Block(), new Block(), new Block(), new Block(), null, null, null, null, null, null, null, new Block(), new Block(), new Block(), new Block()},
+            {new Block(), new Block(), new Block(), new Block(), null, null, null, null, null, null, null, new Block(), new Block(), new Block(), new Block()},
+            {new Block(), new Block(), new Block(), new Block(), new Block(), null, null, null, null, null, new Block(), new Block(), new Block(), new Block(), new Block()},
+            {new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block()},
+            {new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block()},
+            {new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block()},
+            {new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block()},
     };
 
     private static final WaterBomb[][] WATER_BOMBS_1 = new WaterBomb[Sizes.TILE_COLUMN_COUNT][Sizes.TILE_ROW_COUNT];

@@ -45,8 +45,9 @@ public class MapView extends JPanel {
         Block[][] block2d = map.getBlock2D();
         for (int y = 0; y < block2d.length; ++y) {
             for (int x = 0; x < block2d[y].length; ++x) {
-                if (block2d[y][x] != null) {
-                    BlockComponent blockComponent = new BlockComponent(new Offset(x, y));
+                Block block = block2d[y][x];
+                if (block != null) {
+                    BlockComponent blockComponent = new BlockComponent(block.getImageIcon(), new Offset(x, y));
                     Offset renderOffset = blockComponent.getRenderOffset();
                     g.drawImage(blockComponent.getImage(), renderOffset.x, renderOffset.y, null);
                 }
