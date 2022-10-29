@@ -8,6 +8,7 @@ import java.util.Vector;
 import com.google.gson.Gson;
 import domain.model.Direction;
 import domain.state.GameState;
+import domain.state.LobbyState;
 
 public class UserService extends Thread {
     private DataInputStream dis;
@@ -32,6 +33,9 @@ public class UserService extends Thread {
             userName = msgArr[0].trim().substring(1);
             LobbyStateRepository lobbyStateRepository = LobbyStateRepository.getInstance();
             lobbyStateRepository.addUserName(userName);
+            LobbyState lobbyState = lobbyStateRepository.getLobbyState();
+            String stateJson = new Gson().toJson(lobbyState);
+            writeAll(stateJson);
         } catch (Exception e) {
             // AppendText("userService error");
         }
@@ -90,6 +94,12 @@ public class UserService extends Thread {
                     GameStateRepository gameStateRepository = GameStateRepository.getInstance();
 
                     switch (msgArr[1]) {
+                        case "getLobbyState" -> {
+                            LobbyStateRepository lobbyStateRepository = LobbyStateRepository.getInstance();
+                            LobbyState lobbyState = lobbyStateRepository.getLobbyState();
+                            String stateJson = new Gson().toJson(lobbyState);
+                            writeOne(stateJson);
+                        }
                         case "startGame" -> {
                             LobbyStateRepository lobbyStateRepository = LobbyStateRepository.getInstance();
 

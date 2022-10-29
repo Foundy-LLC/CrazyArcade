@@ -15,16 +15,19 @@ import domain.state.LobbyState;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.util.List;
 import java.util.Optional;
 
 public class LobbyView extends BaseView {
 
     private final JTextArea userListTextArea = new JTextArea();
 
+    private final Button startGameButton = new Button("게임 시작");
+
     public LobbyView() {
         super(ImageIcons.LOBBY_BACKGROUND);
         initView();
-        initListener();
+        initApi();
     }
 
     private void initView() {
@@ -36,18 +39,28 @@ public class LobbyView extends BaseView {
         add(userListTitle);
 
         userListTextArea.setEditable(false);
-        userListTextArea.setFont(Fonts.BODY1);
+        userListTextArea.setFont(Fonts.H6);
         userListTextArea.setBounds(420, 360, 200, 120);
         add(userListTextArea);
 
-        Button startGameButton = new Button("게임 시작");
+        startGameButton.setEnabled(false);
         startGameButton.setBounds(420, 600, 200, 60);
         startGameButton.addActionListener(gameStartListener);
         add(startGameButton);
     }
 
-    private void initListener() {
-        Api.getInstance().addListener(messageListener);
+    private void initApi() {
+        Api api = Api.getInstance();
+        api.addListener(messageListener);
+        api.requestLobbyState();
+    }
+
+    private void updateView(LobbyState state) {
+        List<String> userNames = state.getUserNames();
+        Optional<String> users = userNames.stream().reduce((prev, next) -> prev + "\n" + next);
+        users.ifPresent(userListTextArea::setText);
+
+        startGameButton.setEnabled(userNames.size() >= 2);
     }
 
     @Override
@@ -71,8 +84,7 @@ public class LobbyView extends BaseView {
 
         try {
             LobbyState state = new Gson().fromJson(message, LobbyState.class);
-            Optional<String> users = state.getUserNames().stream().reduce((user, prev) -> user + "\n");
-            users.ifPresent(userListTextArea::setText);
+            updateView(state);
         } catch (JsonSyntaxException e) {
             e.printStackTrace();
             showToast("잘못된 `LobbyState`가 서버로부터 전달되었습니다.");

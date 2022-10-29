@@ -1,12 +1,15 @@
 package server;
 
 import domain.state.LobbyState;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class LobbyStateRepository {
     private final List<String> userNames = new ArrayList<>(8);
+
+    @Getter
     private LobbyState lobbyState;
 
     public LobbyStateRepository() {

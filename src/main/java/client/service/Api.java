@@ -84,6 +84,10 @@ public class Api {
         sendMessage("/" + userName + " " + ipAddress + " " + portNumber);
     }
 
+    public void requestLobbyState() {
+        sendMessage("/" + userName + " getLobbyState");
+    }
+
     public void startGame() {
         sendMessage("/" + userName + " startGame");
     }
