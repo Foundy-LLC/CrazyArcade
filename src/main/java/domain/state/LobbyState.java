@@ -15,4 +15,8 @@ public class LobbyState implements Serializable {
     public LobbyState(List<String> userNames) {
         this.userNames = userNames;
     }
+
+    public int getUserCount() {
+        return getUserNames().size();
+    }
 }
