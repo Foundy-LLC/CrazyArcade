@@ -16,7 +16,7 @@ public class Player extends GameObject {
     private static final int MAX_ALIVE_TIME_IN_TRAP = 7_000;
     private static final int DEAD_ANIMATION_MILLI = 600;
 
-    private static final int TRAP_IMAGE_MAX_FRAME = 13;
+    private static final int TRAP_IMAGE_MAX_FRAME = 23;
     private static final int DEAD_IMAGE_MAX_FRAME = 14;
 
     public static final Dimension NORMAL_IMAGE_SIZE = new Dimension(64, 76);
