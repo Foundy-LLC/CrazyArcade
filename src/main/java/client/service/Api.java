@@ -2,6 +2,7 @@ package client.service;
 
 import domain.constant.Protocol;
 import domain.model.Direction;
+import lombok.Getter;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -19,6 +20,7 @@ public class Api {
     private DataInputStream inputStream;
     private DataOutputStream outputStream;
 
+    @Getter
     private String userName;
 
     private final Set<MessageListener> listeners = new HashSet<>();

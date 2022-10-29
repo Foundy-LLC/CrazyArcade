@@ -1,5 +1,6 @@
 package client.view;
 
+import client.component.GameEndTextLabel;
 import client.core.BaseView;
 import client.component.MapView;
 import client.component.PlayerComponent;
@@ -12,6 +13,7 @@ import domain.model.*;
 import domain.state.GameState;
 import lombok.NonNull;
 
+import javax.swing.*;
 import javax.swing.Timer;
 import java.awt.event.*;
 import java.util.*;
@@ -30,6 +32,8 @@ public class GameView extends BaseView {
     private final Api api = Api.getInstance();
 
     private KeyboardListener keyboardListener;
+
+    private boolean isGameEnded = false;
 
     public GameView() {
         super(ImageIcons.GAME_BACKGROUND);
@@ -58,16 +62,27 @@ public class GameView extends BaseView {
         });
     }
 
-    private void updateView(@NonNull GameState state) {
+    private void updateView(GameState gameState) {
+        if (isGameEnded) {
+            return;
+        }
+
         if (!isComponentInitialized) {
             isComponentInitialized = true;
-            initPlayerComponents(state.getPlayers());
+            initPlayerComponents(gameState.getPlayers());
 
             requestFocus();
         }
 
-        updatePlayerObjects(state.getPlayers());
-        mapView.updateMap(state.getMap());
+        if (gameState.isEnded()) {
+            isGameEnded = true;
+            showGameEndText(gameState.getWinner());
+            setTimerToNavigateLobbyView();
+            return;
+        }
+
+        updatePlayerObjects(gameState.getPlayers());
+        mapView.updateMap(gameState.getMap());
 
         mapView.repaint();
     }
@@ -93,6 +108,29 @@ public class GameView extends BaseView {
             Optional<Player> player = players.stream().filter((element) -> element.getName().equals(name)).findFirst();
             player.ifPresent(component::updateState);
         }
+    }
+
+    private void showGameEndText(Player winner) {
+        GameEndTextLabel.Type type;
+        boolean draw = winner == null;
+        if (draw) {
+            type = GameEndTextLabel.Type.DRAW;
+        } else {
+            boolean win = winner.getName().equals(api.getUserName());
+            if (win) {
+                type = GameEndTextLabel.Type.WIN;
+            } else {
+                type = GameEndTextLabel.Type.LOSE;
+            }
+        }
+
+        GameEndTextLabel gameEndTextLabel = new GameEndTextLabel(type);
+        add(gameEndTextLabel);
+        setComponentZOrder(gameEndTextLabel, 0);
+        repaint();
+    }
+
+    private void setTimerToNavigateLobbyView() {
     }
 
     @Override

@@ -27,10 +27,28 @@ public class GameState implements Serializable {
     @NonNull
     private Integer remainingTimeSec;
 
+    @Getter
+    private boolean isEnded;
+
     public void updateState() {
         updateWaterBombsState();
         updateWaterWavesState();
         updatePlayersState();
+
+        if (isGameEnded()) {
+            isEnded = true;
+        }
+    }
+
+    private boolean isGameEnded() {
+        return players.size() <= 1;
+    }
+
+    public Player getWinner() {
+        if (!isEnded) {
+            throw new IllegalStateException();
+        }
+        return players.isEmpty() ? null : players.get(0);
     }
 
     private void updateWaterBombsState() {
@@ -131,7 +149,7 @@ public class GameState implements Serializable {
             Offset tileOffset = player.getCenterTileOffset();
 
             if (player.isAlive()) {
-                for (var otherPlayer: players) {
+                for (var otherPlayer : players) {
                     if (otherPlayer != player &&
                             otherPlayer.isTrapped() &&
                             player.distance(otherPlayer) <= KILL_DISTANCE

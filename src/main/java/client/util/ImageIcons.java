@@ -46,4 +46,8 @@ public class ImageIcons {
     public static final ImageIcon WATER_WAVE_DOWN = new ImageIcon("assets/wave/down.png");
     public static final ImageIcon WATER_WAVE_LEFT = new ImageIcon("assets/wave/left.png");
     public static final ImageIcon WATER_WAVE_RIGHT = new ImageIcon("assets/wave/right.png");
+
+    public static final ImageIcon WIN_TEXT = new ImageIcon("assets/game_end/win.png");
+    public static final ImageIcon LOSE_TEXT = new ImageIcon("assets/game_end/lose.png");
+    public static final ImageIcon DRAW_TEXT = new ImageIcon("assets/game_end/draw.png");
 }

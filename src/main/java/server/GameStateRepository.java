@@ -13,8 +13,6 @@ public class GameStateRepository {
     @Getter
     private GameState gameState;
 
-    private StateUpdater stateUpdater;
-
     private GameStateRepository() {
     }
 
@@ -24,6 +22,10 @@ public class GameStateRepository {
 
     private static class Holder {
         private static final GameStateRepository INSTANCE = new GameStateRepository();
+    }
+
+    public boolean isEnded() {
+        return gameState.isEnded();
     }
 
     public GameState initState(List<String> names) {
@@ -42,13 +44,17 @@ public class GameStateRepository {
                 .map(MockMaps.map1)
                 .build();
 
-        stateUpdater = new StateUpdater(gameState);
-        stateUpdater.start();
-
         return gameState;
     }
 
+    public void updateState() {
+        gameState.updateState();
+    }
+
     public GameState movePlayer(String name, Direction direction) {
+        if (gameState.isEnded()) {
+            return null;
+        }
         Player player = findPlayer(name);
         if (player != null) {
             player.setDirection(direction);
@@ -58,6 +64,9 @@ public class GameStateRepository {
     }
 
     public GameState installWaterBomb(String playerName) {
+        if (gameState.isEnded()) {
+            return null;
+        }
         Player player = findPlayer(playerName);
         if (player != null && !player.isTrapped()) {
             Offset playerCenterTileOffset = player.getCenterTileOffset();
@@ -80,29 +89,6 @@ public class GameStateRepository {
     }
 
     public void clear() {
-        stateUpdater.interrupt();
-        stateUpdater = null;
-    }
-
-    private static class StateUpdater extends Thread {
-
-        private final GameState state;
-
-        private StateUpdater(GameState state) {
-            this.state = state;
-        }
-
-        @Override
-        public void run() {
-            while (true) {
-                try {
-                    sleep(100);
-                } catch (InterruptedException e) {
-                    break;
-                }
-
-                state.updateState();
-            }
-        }
+        gameState = null;
     }
 }

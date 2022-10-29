@@ -128,6 +128,9 @@ public class UserService extends Thread {
                             gameStateTicker.start();
                         }
                         case "up", "down", "left", "right" -> {
+                            if (gameStateRepository.isEnded()) {
+                                continue;
+                            }
                             String name = msgArr[0].substring(1);
                             String action = msgArr[1];
                             Direction direction = Direction.valueOf(action.toUpperCase());
@@ -136,6 +139,9 @@ public class UserService extends Thread {
                             writeAll.call(stateJson);
                         }
                         case "waterBomb" -> {
+                            if (gameStateRepository.isEnded()) {
+                                continue;
+                            }
                             String playerName = msgArr[0].substring(1);
                             GameState newState = gameStateRepository.installWaterBomb(playerName);
                             String stateJson = new Gson().toJson(newState);
@@ -164,9 +170,18 @@ public class UserService extends Thread {
                 } catch (InterruptedException e) {
                     break;
                 }
-                GameState state = GameStateRepository.getInstance().getGameState();
+
+                GameStateRepository stateRepository = GameStateRepository.getInstance();
+                stateRepository.updateState();
+
+                GameState state = stateRepository.getGameState();
                 String stateJson = new Gson().toJson(state);
                 writeAll.call(stateJson);
+
+                if (state.isEnded()) {
+                    stateRepository.clear();
+                    break;
+                }
             }
         }
     }
