@@ -25,7 +25,7 @@ public class GameState implements Serializable {
     @NonNull
     private Integer remainingTimeSec;
 
-    public void updateWaterBombStates() {
+    public void updateWaterBombsState() {
         WaterBomb[][] waterBomb2d = map.getWaterBomb2d();
 
         for (int y = 0; y < waterBomb2d.length; ++y) {
@@ -100,7 +100,7 @@ public class GameState implements Serializable {
         return 0 > x || x >= Sizes.TILE_ROW_COUNT || 0 > y || y >= Sizes.TILE_COLUMN_COUNT;
     }
 
-    public void updateWaterCourseStates() {
+    public void updateWaterWavesState() {
         WaterWave[][] waterWave2d = map.getWaterWave2d();
 
         for (int y = 0; y < waterWave2d.length; ++y) {

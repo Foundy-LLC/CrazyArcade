@@ -101,8 +101,8 @@ public class GameStateRepository {
                     break;
                 }
 
-                state.updateWaterBombStates();
-                state.updateWaterCourseStates();
+                state.updateWaterBombsState();
+                state.updateWaterWavesState();
             }
         }
     }
