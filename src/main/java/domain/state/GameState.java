@@ -16,6 +16,8 @@ public class GameState implements Serializable {
 
     private static final Direction[] DIRECTIONS = Direction.values();
 
+    public static final double KILL_DISTANCE = 20;
+
     @NonNull
     private List<Player> players;
 
@@ -128,6 +130,16 @@ public class GameState implements Serializable {
             Player player = players.get(i);
             Offset tileOffset = player.getCenterTileOffset();
 
+            if (player.isAlive()) {
+                for (var otherPlayer: players) {
+                    if (otherPlayer != player &&
+                            otherPlayer.isTrapped() &&
+                            player.distance(otherPlayer) <= KILL_DISTANCE
+                    ) {
+                        otherPlayer.die();
+                    }
+                }
+            }
             if (!player.isTrapped() && isOnWave(tileOffset)) {
                 player.trapIntoWaterWave();
             }

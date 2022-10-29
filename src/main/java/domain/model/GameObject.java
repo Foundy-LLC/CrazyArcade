@@ -18,4 +18,10 @@ public abstract class GameObject implements Serializable {
     public GameObject(int x, int y) {
         this.offset = new Offset(x, y);
     }
+
+    public double distance(GameObject other) {
+        double yd = Math.pow((offset.y - other.offset.y), 2);
+        double xd = Math.pow((offset.x - other.offset.x), 2);
+        return Math.sqrt(yd + xd);
+    }
 }

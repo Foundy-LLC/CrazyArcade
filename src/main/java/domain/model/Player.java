@@ -52,6 +52,10 @@ public class Player extends GameObject {
         trappedTimeMilli = System.currentTimeMillis();
     }
 
+    public boolean isAlive() {
+        return trappedTimeMilli == null;
+    }
+
     public boolean isTrapped() {
         if (isDead()) {
             return false;
@@ -84,6 +88,11 @@ public class Player extends GameObject {
         }
         long currentMilli = System.currentTimeMillis();
         return currentMilli - trappedTimeMilli >= MAX_ALIVE_TIME_IN_TRAP;
+    }
+
+    public void die() {
+        long currentMilli = System.currentTimeMillis();
+        trappedTimeMilli = currentMilli - MAX_ALIVE_TIME_IN_TRAP;
     }
 
     public boolean shouldBeRemoved() {
