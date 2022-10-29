@@ -27,6 +27,20 @@ public class MapView extends JPanel {
         this.map = map;
     }
 
+    private void paintTiles(Graphics g) {
+        Tile[][] tile2d = map.getTile2d();
+        for (int y = 0; y < tile2d.length; ++y) {
+            for (int x = 0; x < tile2d[y].length; ++x) {
+                Tile tile = tile2d[y][x];
+                if (tile != null) {
+                    TileComponent tileComponent = new TileComponent(tile.getImageIcon(), new Offset(x, y));
+                    Offset renderOffset = tileComponent.getRenderOffset();
+                    g.drawImage(tileComponent.getImage(), renderOffset.x, renderOffset.y, null);
+                }
+            }
+        }
+    }
+
     private void paintBlocks(Graphics g) {
         Block[][] block2d = map.getBlock2D();
         for (int y = 0; y < block2d.length; ++y) {
@@ -125,9 +139,10 @@ public class MapView extends JPanel {
             return;
         }
 
-        paintBlocks(g);
+        paintTiles(g);
         paintWaterWaves(g);
         paintWaterBombs(g);
+        paintBlocks(g);
 
         setOpaque(false);
     }

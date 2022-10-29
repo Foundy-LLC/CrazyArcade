@@ -17,6 +17,20 @@ public class ImageIcons {
     public static final ImageIcon BAZZI_TRAP = new ImageIcon("assets/player/bazzi/trap.png");
 
     public static final ImageIcon BLOCK1 = new ImageIcon("assets/map/forest/block/block_1.png");
+    public static final ImageIcon BLOCK2 = new ImageIcon("assets/map/forest/block/block_2.png");
+    public static final ImageIcon BLOCK3 = new ImageIcon("assets/map/forest/block/block_3.png");
+    public static final ImageIcon BLOCK4 = new ImageIcon("assets/map/forest/block/block_4.png");
+
+    public static final ImageIcon TILE1 = new ImageIcon("assets/map/forest/tile/tile_1.png");
+    public static final ImageIcon TILE2 = new ImageIcon("assets/map/forest/tile/tile_2.png");
+    public static final ImageIcon TILE3 = new ImageIcon("assets/map/forest/tile/tile_3.png");
+    public static final ImageIcon TILE4 = new ImageIcon("assets/map/forest/tile/tile_4.png");
+    public static final ImageIcon TILE5 = new ImageIcon("assets/map/forest/tile/tile_5.png");
+    public static final ImageIcon TILE6 = new ImageIcon("assets/map/forest/tile/tile_6.png");
+    public static final ImageIcon TILE7 = new ImageIcon("assets/map/forest/tile/tile_7.png");
+    public static final ImageIcon TILE8 = new ImageIcon("assets/map/forest/tile/tile_8.png");
+    public static final ImageIcon TILE9 = new ImageIcon("assets/map/forest/tile/tile_9.png");
+    public static final ImageIcon TILE10 = new ImageIcon("assets/map/forest/tile/tile_10.png");
 
     public static final ImageIcon WATER_BOMB_1 = new ImageIcon("assets/bomb/1.png");
     public static final ImageIcon WATER_BOMB_POP = new ImageIcon("assets/bomb/pop.png");

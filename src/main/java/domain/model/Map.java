@@ -10,6 +10,9 @@ import java.io.Serializable;
 public class Map implements Serializable {
 
     @NonNull
+    private final Tile[][] tile2d;
+
+    @NonNull
     private final Block[][] block2D;
 
     @NonNull
@@ -18,7 +21,9 @@ public class Map implements Serializable {
     @NonNull
     private final WaterWave[][] waterWave2d;
 
-    public Map(Block[][] block2D, WaterBomb[][] waterBomb2d, WaterWave[][] waterWave2d) {
+    public Map(Tile[][] tile2d, Block[][] block2D, WaterBomb[][] waterBomb2d, WaterWave[][] waterWave2d) {
+        assert(tile2d.length == Sizes.TILE_COLUMN_COUNT);
+        assert(tile2d[0].length == Sizes.TILE_ROW_COUNT);
         assert(block2D.length == Sizes.TILE_COLUMN_COUNT);
         assert(block2D[0].length == Sizes.TILE_ROW_COUNT);
         assert(waterBomb2d.length == Sizes.TILE_COLUMN_COUNT);
@@ -26,6 +31,7 @@ public class Map implements Serializable {
         assert(waterWave2d.length == Sizes.TILE_COLUMN_COUNT);
         assert(waterWave2d[0].length == Sizes.TILE_ROW_COUNT);
 
+        this.tile2d = tile2d;
         this.block2D = block2D;
         this.waterBomb2d = waterBomb2d;
         this.waterWave2d = waterWave2d;
