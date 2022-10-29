@@ -1,8 +1,8 @@
 package client.view;
 
-import client.component.BaseView;
-import client.component.Button;
-import client.component.OutlinedLabel;
+import client.core.BaseView;
+import client.core.Button;
+import client.core.OutlinedLabel;
 import client.service.Api;
 import client.service.MessageListener;
 import client.util.Fonts;

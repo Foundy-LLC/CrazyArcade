@@ -1,4 +1,4 @@
-package client.component;
+package client.core;
 
 import lombok.NonNull;
 

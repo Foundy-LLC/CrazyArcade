@@ -1,6 +1,6 @@
 package client.view;
 
-import client.component.BaseView;
+import client.core.BaseView;
 import client.component.MapView;
 import client.component.PlayerComponent;
 import client.service.Api;

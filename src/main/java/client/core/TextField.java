@@ -1,4 +1,4 @@
-package client.component;
+package client.core;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;

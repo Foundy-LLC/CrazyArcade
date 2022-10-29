@@ -4,9 +4,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
-import client.component.BaseView;
-import client.component.Button;
-import client.component.TextField;
+import client.core.BaseView;
+import client.core.Button;
+import client.core.TextField;
 import client.service.Api;
 import client.util.ImageIcons;
 
