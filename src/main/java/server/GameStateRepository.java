@@ -59,7 +59,7 @@ public class GameStateRepository {
 
     public GameState installWaterBomb(String playerName) {
         Player player = findPlayer(playerName);
-        if (player != null) {
+        if (player != null && !player.isTrapped()) {
             Offset playerCenterTileOffset = player.getCenterTileOffset();
             if (gameState.canInstallWaterBombAt(playerCenterTileOffset)) {
                 WaterBomb waterBomb = player.createWaterBomb();
