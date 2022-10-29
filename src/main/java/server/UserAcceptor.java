@@ -14,6 +14,8 @@ public class UserAcceptor extends Thread {
 	public void run() {
 		try {
 			socket = new ServerSocket(Protocol.PORT_NUMBER);
+			LobbyStateRepository lobbyStateRepository = LobbyStateRepository.getInstance();
+			lobbyStateRepository.initState();
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}

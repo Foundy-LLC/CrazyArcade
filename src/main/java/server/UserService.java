@@ -2,9 +2,7 @@ package server;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Vector;
 
 import com.google.gson.Gson;
@@ -16,11 +14,9 @@ public class UserService extends Thread {
     private DataOutputStream dos;
     private final Socket clientSocket;
     private final Vector<UserService> users;
-    private String UserName = "";
+    private String userName = "";
 
     private final OnUserRemove onUserRemove;
-
-    private GameStateTicker gameStateTicker;
 
     public UserService(Socket clientSocket, Vector<UserService> users, OnUserRemove onUserRemove) {
         this.clientSocket = clientSocket;
@@ -33,7 +29,9 @@ public class UserService extends Thread {
             dos = new DataOutputStream(os);
             String line = dis.readUTF();
             String[] msgArr = line.split(" ");
-            UserName = msgArr[0].trim().substring(1);
+            userName = msgArr[0].trim().substring(1);
+            LobbyStateRepository lobbyStateRepository = LobbyStateRepository.getInstance();
+            lobbyStateRepository.addUserName(userName);
         } catch (Exception e) {
             // AppendText("userService error");
         }
@@ -54,7 +52,7 @@ public class UserService extends Thread {
             System.out.println(msg);
             System.out.println("-------------------------------------");
         } catch (IOException e) {
-            System.out.println("dos.write() error");
+            System.out.println("writeOne error");
             try {
                 dos.close();
                 dis.close();
@@ -71,6 +69,9 @@ public class UserService extends Thread {
         dos.close();
         dis.close();
         clientSocket.close();
+
+        LobbyStateRepository lobbyStateRepository = LobbyStateRepository.getInstance();
+        lobbyStateRepository.removeLobbyUser(this.userName);
         onUserRemove.call(this);
     }
 
@@ -90,15 +91,22 @@ public class UserService extends Thread {
 
                     switch (msgArr[1]) {
                         case "startGame" -> {
+                            LobbyStateRepository lobbyStateRepository = LobbyStateRepository.getInstance();
+
+                            if (lobbyStateRepository.getLobbyUserCounts() < 2) {
+                                System.out.println("----------------error----------------");
+                                System.out.println("인원 부족");
+                                System.out.println("-------------------------------------");
+                                continue;
+                            }
+
                             writeAll("/startGame");
 
-                            List<String> userNames = new ArrayList<>(8);
-                            users.forEach((userService -> userNames.add(userService.UserName)));
-                            GameState initGameState = gameStateRepository.initState(userNames);
+                            GameState initGameState = gameStateRepository.initState(lobbyStateRepository.getLobbyUserNames());
                             String stateJson = new Gson().toJson(initGameState);
                             writeAll(stateJson);
 
-                            gameStateTicker = new GameStateTicker();
+                            GameStateTicker gameStateTicker = new GameStateTicker();
                             gameStateTicker.start();
                         }
                         case "up", "down", "left", "right" -> {
@@ -145,6 +153,7 @@ public class UserService extends Thread {
                 String stateJson = new Gson().toJson(state);
                 writeAll(stateJson);
             }
+
         }
     }
 }
