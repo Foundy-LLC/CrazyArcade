@@ -14,14 +14,15 @@ public class UserService extends Thread {
     private DataInputStream dis;
     private DataOutputStream dos;
     private final Socket clientSocket;
-    private final Vector<UserService> users;
     private String userName = "";
 
-    private final OnUserRemove onUserRemove;
+    private final Callback<String> writeAll;
 
-    public UserService(Socket clientSocket, Vector<UserService> users, OnUserRemove onUserRemove) {
+    private final Callback<UserService> onUserRemove;
+
+    public UserService(Socket clientSocket, Callback<String> writeAll, Callback<UserService> onUserRemove) {
         this.clientSocket = clientSocket;
-        this.users = users;
+        this.writeAll = writeAll;
         this.onUserRemove = onUserRemove;
         try {
             InputStream is = clientSocket.getInputStream();
@@ -35,17 +36,9 @@ public class UserService extends Thread {
             lobbyStateRepository.addUserName(userName);
             LobbyState lobbyState = lobbyStateRepository.getLobbyState();
             String stateJson = new Gson().toJson(lobbyState);
-            writeAll(stateJson);
+            writeAll.call(stateJson);
         } catch (Exception e) {
             // AppendText("userService error");
-        }
-    }
-
-    // 모든 User들에게 방송. 각각의 UserService Thread의 WriteONe() 을 호출한다.
-    public void writeAll(String str) {
-        for (int i = 0; i < users.size(); i++) {
-            UserService user = users.elementAt(i);
-            user.writeOne(str);
         }
     }
 
@@ -110,11 +103,11 @@ public class UserService extends Thread {
                                 continue;
                             }
 
-                            writeAll("/startGame");
+                            writeAll.call("/startGame");
 
                             GameState initGameState = gameStateRepository.initState(lobbyStateRepository.getLobbyUserNames());
                             String stateJson = new Gson().toJson(initGameState);
-                            writeAll(stateJson);
+                            writeAll.call(stateJson);
 
                             GameStateTicker gameStateTicker = new GameStateTicker();
                             gameStateTicker.start();
@@ -125,13 +118,13 @@ public class UserService extends Thread {
                             Direction direction = Direction.valueOf(action.toUpperCase());
                             GameState newState = gameStateRepository.movePlayer(name, direction);
                             String stateJson = new Gson().toJson(newState);
-                            writeAll(stateJson);
+                            writeAll.call(stateJson);
                         }
                         case "waterBomb" -> {
                             String playerName = msgArr[0].substring(1);
                             GameState newState = gameStateRepository.installWaterBomb(playerName);
                             String stateJson = new Gson().toJson(newState);
-                            writeAll(stateJson);
+                            writeAll.call(stateJson);
                         }
                     }
                 } catch (Exception e) {
@@ -161,9 +154,8 @@ public class UserService extends Thread {
                 }
                 GameState state = GameStateRepository.getInstance().getGameState();
                 String stateJson = new Gson().toJson(state);
-                writeAll(stateJson);
+                writeAll.call(stateJson);
             }
-
         }
     }
 }
