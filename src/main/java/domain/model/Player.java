@@ -2,6 +2,7 @@ package domain.model;
 
 import client.util.ImageIcons;
 import domain.constant.Sizes;
+import domain.core.Pair;
 import lombok.Getter;
 import lombok.NonNull;
 
@@ -18,6 +19,10 @@ public class Player extends GameObject {
 
     private static final int TRAP_IMAGE_MAX_FRAME = 23;
     private static final int DEAD_IMAGE_MAX_FRAME = 14;
+
+    private static final int FEET_DISTANCE_FROM_BOTTOM_OF_IMAGE = 8;
+
+    private static final int GAP_BETWEEN_FEET = 4;
 
     public static final Dimension NORMAL_IMAGE_SIZE = new Dimension(64, 76);
     public static final Dimension TRAP_IMAGE_SIZE = new Dimension(88, 82);
@@ -299,6 +304,20 @@ public class Player extends GameObject {
     public Offset getCenterTileOffset() {
         Offset centerOffset = getCenterOffset();
         return new Offset(centerOffset.x / WIDTH, centerOffset.y / HEIGHT);
+    }
+
+    /**
+     * @return 타일 좌표 기준으로 플레이어의 발 위치를 반환한다.
+     */
+    public Pair<Offset> getFeetTileOffset() {
+        Offset centerOffset = getCenterOffset();
+        int feetY = offset.y + HEIGHT - FEET_DISTANCE_FROM_BOTTOM_OF_IMAGE;
+        int halfGapBetweenFeet = GAP_BETWEEN_FEET / 2;
+
+        return new Pair<>(
+                new Offset((centerOffset.x - halfGapBetweenFeet) / WIDTH, feetY / HEIGHT),
+                new Offset((centerOffset.x + halfGapBetweenFeet) / WIDTH, feetY / HEIGHT)
+        );
     }
 
     /**

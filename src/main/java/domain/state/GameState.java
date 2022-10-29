@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import domain.constant.Sizes;
+import domain.core.Pair;
 import domain.model.*;
 import lombok.*;
 
@@ -146,7 +147,6 @@ public class GameState implements Serializable {
     private void updatePlayersState() {
         for (int i = 0; i < players.size(); ++i) {
             Player player = players.get(i);
-            Offset tileOffset = player.getCenterTileOffset();
 
             if (player.isAlive()) {
                 for (var otherPlayer : players) {
@@ -158,7 +158,9 @@ public class GameState implements Serializable {
                     }
                 }
             }
-            if (!player.isTrapped() && isOnWave(tileOffset)) {
+
+            Pair<Offset> feetOffset = player.getFeetTileOffset();
+            if (!player.isTrapped() && isOnWave(feetOffset)) {
                 player.trapIntoWaterWave();
             }
             if (player.shouldBeRemoved()) {
@@ -168,10 +170,15 @@ public class GameState implements Serializable {
         }
     }
 
+    private boolean isOnWave(Pair<Offset> feetOffset) {
+        return isOnWave(feetOffset.getFirst()) && isOnWave(feetOffset.getSecond());
+    }
+
     private boolean isOnWave(Offset tileOffset) {
         WaterWave[][] waterWave2d = map.getWaterWave2d();
         return waterWave2d[tileOffset.y][tileOffset.x] != null;
     }
+
 
     public boolean canInstallWaterBombAt(Offset tileOffset) {
         WaterBomb[][] waterBomb2d = map.getWaterBomb2d();
