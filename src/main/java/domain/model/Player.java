@@ -12,6 +12,7 @@ public class Player extends GameObject {
 
     private static final int COLLIDE_TOLERANCES = 10;
     private static final int MAX_ALIVE_TIME_IN_TRAP = 7_000;
+    private static final int TRAP_IMAGE_MAX_FRAME = 13;
 
     @NonNull
     @Getter
@@ -25,6 +26,7 @@ public class Player extends GameObject {
     @Getter
     private Integer waterBombLength = 3;
 
+    @Getter
     private Long trappedTimeMilli = null;
 
     public Player(String name, int x, int y) {
@@ -43,6 +45,15 @@ public class Player extends GameObject {
 
     public boolean isTrapped() {
         return trappedTimeMilli != null;
+    }
+
+    public int getFrameOfTrapImage() {
+        if (!isTrapped()) {
+            throw new IllegalStateException();
+        }
+        long currentMilli = System.currentTimeMillis();
+        long gap = MAX_ALIVE_TIME_IN_TRAP / (TRAP_IMAGE_MAX_FRAME - 1);
+        return (int) ((currentMilli - trappedTimeMilli) / gap) % TRAP_IMAGE_MAX_FRAME;
     }
 
     public boolean isDead() {

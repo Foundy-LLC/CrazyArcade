@@ -11,30 +11,25 @@ import static domain.constant.Sizes.TILE_SIZE;
 
 public abstract class GameComponent<STATE> extends JLabel {
 
-    private static final int FRAME_DELAY = 10;
-
     @NonNull
     @Getter
-    private Image image;
-
-    @NonNull
-    private final Offset imageOffset;
+    private ImageIcon imageIcon;
 
     @NonNull
     @Getter
     private Offset offset = new Offset(0, 0);
 
     @NonNull
+    @Getter
     private Integer frame = 0;
 
     @NonNull
     @Getter
-    private final Dimension imageSize;
+    private Dimension imageSize;
 
     public GameComponent(@NonNull ImageIcon imageIcon, @NonNull Dimension imageSize) {
-        this.image = imageIcon.getImage();
+        this.imageIcon = imageIcon;
         this.imageSize = imageSize;
-        this.imageOffset = getImageOffset();
 
         setSize(imageSize.width, imageSize.height);
         setLayout(null);
@@ -44,7 +39,7 @@ public abstract class GameComponent<STATE> extends JLabel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         int imageWidth = imageSize.width;
-        g.drawImage(image, -imageWidth * (frame / FRAME_DELAY), 0, null);
+        g.drawImage(imageIcon.getImage(), -imageWidth * frame, 0, null);
         setOpaque(false);
     }
 
@@ -61,26 +56,34 @@ public abstract class GameComponent<STATE> extends JLabel {
      */
     public void setOffset(Offset newOffset) {
         offset = newOffset;
+
+        Offset imageOffset = getImageOffset();
         int renderX = newOffset.x + imageOffset.x;
         int renderY = newOffset.y + imageOffset.y;
         setLocation(renderX, renderY);
     }
 
     public Offset getRenderOffset() {
+        Offset imageOffset = getImageOffset();
         int renderX = offset.x + imageOffset.x;
         int renderY = offset.y + imageOffset.y;
         return new Offset(renderX, renderY);
     }
 
-    public void setImageIcon(ImageIcon imageIcon) {
-        this.image = imageIcon.getImage();
+    public void setImageIcon(ImageIcon imageIcon, Dimension imageSize) {
+        this.imageIcon = imageIcon;
+        this.imageSize = imageSize;
+        setSize(imageSize.width, imageSize.height);
+    }
+
+    public Image getImage() {
+        return imageIcon.getImage();
     }
 
     public abstract void updateState(STATE state);
 
-    public void nextFrame(int maxFrame) {
-        frame++;
-        frame = frame % (maxFrame * FRAME_DELAY);
+    public void setFrame(int frame) {
+        this.frame = frame;
         setOffset(offset);
     }
 }
