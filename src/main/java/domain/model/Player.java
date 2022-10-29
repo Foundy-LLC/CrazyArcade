@@ -24,13 +24,13 @@ public class Player extends GameObject {
 
     @NonNull
     @Getter
-    private Integer waterBombLength = 3;
+    private Integer waterBombLength = 1;
 
     @Getter
     private Long trappedTimeMilli = null;
 
-    public Player(String name, int x, int y) {
-        super(x, y);
+    public Player(String name, int tileX, int tileY) {
+        super(tileX * Sizes.TILE_SIZE.width, tileY * Sizes.TILE_SIZE.height);
         this.name = name;
         this.direction = Direction.DOWN;
     }

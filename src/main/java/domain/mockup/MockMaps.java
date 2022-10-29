@@ -41,5 +41,12 @@ public class MockMaps {
 
     private static final WaterWave[][] WATER_WAVES = new WaterWave[Sizes.TILE_COLUMN_COUNT][Sizes.TILE_ROW_COUNT];
 
-    public static final Map map1 = new Map(TILES_1, WALLS_1, WATER_BOMBS_1, WATER_WAVES);
+    private static final Offset[] STARTING_POINTS = {
+            new Offset(6, 4), new Offset(8, 4),
+            new Offset(6, 8), new Offset(8, 8),
+            new Offset(4, 5), new Offset(10, 5),
+            new Offset(4, 7), new Offset(10, 7)
+    };
+
+    public static final Map map1 = new Map(STARTING_POINTS, TILES_1, WALLS_1, WATER_BOMBS_1, WATER_WAVES);
 }

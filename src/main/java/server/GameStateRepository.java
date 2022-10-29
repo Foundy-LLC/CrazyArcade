@@ -1,10 +1,7 @@
 package server;
 
 import domain.mockup.MockMaps;
-import domain.model.Direction;
-import domain.model.Offset;
-import domain.model.Player;
-import domain.model.WaterBomb;
+import domain.model.*;
 import domain.state.GameState;
 import lombok.Getter;
 
@@ -30,11 +27,14 @@ public class GameStateRepository {
     }
 
     public GameState initState(List<String> names) {
+        Map map = MockMaps.map1;
+        Offset[] startingPoints = map.getShuffledStartingPoints();
         List<Player> players = new ArrayList<>(8);
-        names.forEach((name) -> {
-            // TODO 위치 지정하기
-            players.add(new Player(name, 0, 0));
-        });
+
+        for (int i = 0; i < names.size(); ++i) {
+            Offset startingPoint = startingPoints[i];
+            players.add(new Player(names.get(i), startingPoint.x, startingPoint.y));
+        }
 
         gameState = GameState.builder()
                 .players(players)
