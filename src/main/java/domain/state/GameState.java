@@ -14,6 +14,8 @@ public class GameState implements Serializable {
 
     private static final long serialVersionUID = 6601648199897535737L;
 
+    private static final Direction[] DIRECTIONS = Direction.values();
+
     @NonNull
     private List<Player> players;
 
@@ -25,7 +27,6 @@ public class GameState implements Serializable {
 
     public void updateWaterBombStates() {
         WaterBomb[][] waterBomb2d = map.getWaterBomb2d();
-        WaterWave[][] waterWave2d = map.getWaterWave2d();
 
         for (int y = 0; y < waterBomb2d.length; ++y) {
             for (int x = 0; x < waterBomb2d[y].length; ++x) {
@@ -34,59 +35,69 @@ public class GameState implements Serializable {
                     continue;
                 }
                 if (waterBomb.shouldExplode()) {
-                    createWaterCourse(waterBomb, waterWave2d, x, y);
-                    // TODO: 동시 폭발 구현하기
-
-                    waterBomb2d[y][x] = null;
+                    doChainExplode(y, x);
                 }
             }
         }
     }
 
-    private void createWaterCourse(WaterBomb waterBomb, WaterWave[][] waterWave2d, int x, int y) {
+    /**
+     * [y, x] 좌표의 물폭탄을 기점으로 사정거리내에 존재하는 물폭탄을 연쇄 폭발한다.
+     */
+    private void doChainExplode(int y, int x) {
+        WaterBomb[][] waterBomb2d = map.getWaterBomb2d();
         Block[][] block2d = map.getBlock2D();
-        int waterBombLength = waterBomb.getLength();
-        boolean isUpEnded = false;
-        boolean isDownEnded = false;
-        boolean isLeftEnded = false;
-        boolean isRightEnded = false;
+        WaterBomb waterBomb = waterBomb2d[y][x];
+
+        if (waterBomb == null) {
+            return;
+        }
+        int length = waterBomb.getLength();
+        waterBomb2d[y][x] = null;
+
+        createWaterWave(y, x, length);
+
+        for (int dir = 0; dir < DIRECTIONS.length; ++dir) {
+            for (int i = 1; i <= length; ++i) {
+                int ny = y + i * Direction.DIR[dir][0];
+                int nx = x + i * Direction.DIR[dir][1];
+
+                if (isOutOfRange(ny, nx) || block2d[ny][nx] != null) {
+                    break;
+                }
+                if (waterBomb2d[ny][nx] != null) {
+                    doChainExplode(ny, nx);
+                }
+            }
+        }
+    }
+
+    /**
+     * 십자가 모양의 물줄기를 생성한다.
+     * @param y 물줄기의 중앙 y값 좌표
+     * @param x 물줄기의 중앙 x값 좌표
+     * @param length 물줄기의 길이
+     */
+    private void createWaterWave(int y, int x, int length) {
+        WaterWave[][] waterWave2d = map.getWaterWave2d();
+        Block[][] block2d = map.getBlock2D();
 
         waterWave2d[y][x] = new WaterWave(null, false);
-        for (int i = 1; i <= waterBombLength; i++) {
-            boolean isEnd = i == waterBombLength;
-            if (inRange(y + i, x) && !isDownEnded) {
-                if (block2d[y + i][x] != null) {
-                    isDownEnded = true;
-                } else {
-                    waterWave2d[y + i][x] = new WaterWave(Direction.DOWN, isEnd);
+        for (int dir = 0; dir < DIRECTIONS.length; ++dir) {
+            for (int i = 1; i <= length; i++) {
+                int ny = y + i * Direction.DIR[dir][0];
+                int nx = x + i * Direction.DIR[dir][1];
+
+                if (isOutOfRange(ny, nx) || block2d[ny][nx] != null) {
+                    break;
                 }
-            }
-            if (inRange(y - i, x) && !isUpEnded) {
-                if (block2d[y - i][x] != null) {
-                    isUpEnded = true;
-                } else {
-                    waterWave2d[y - i][x] = new WaterWave(Direction.UP, isEnd);
-                }
-            }
-            if (inRange(y, x + i) && !isRightEnded) {
-                if (block2d[y][x + i] != null) {
-                    isRightEnded = true;
-                } else {
-                    waterWave2d[y][x + i] = new WaterWave(Direction.RIGHT, isEnd);
-                }
-            }
-            if (inRange(y, x - i) && !isLeftEnded) {
-                if (block2d[y][x - i] != null) {
-                    isLeftEnded = true;
-                } else {
-                    waterWave2d[y][x - i] = new WaterWave(Direction.LEFT, isEnd);
-                }
+                waterWave2d[ny][nx] = new WaterWave(DIRECTIONS[dir], i == length);
             }
         }
     }
 
-    private boolean inRange(int y, int x) {
-        return 0 <= x && x < Sizes.TILE_ROW_COUNT && 0 <= y && y < Sizes.TILE_COLUMN_COUNT;
+    private boolean isOutOfRange(int y, int x) {
+        return 0 > x || x >= Sizes.TILE_ROW_COUNT || 0 > y || y >= Sizes.TILE_COLUMN_COUNT;
     }
 
     public void updateWaterCourseStates() {
