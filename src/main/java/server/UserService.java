@@ -3,7 +3,6 @@ package server;
 import java.io.*;
 import java.net.Socket;
 import java.util.Arrays;
-import java.util.Vector;
 
 import com.google.gson.Gson;
 import domain.model.Direction;
@@ -32,11 +31,8 @@ public class UserService extends Thread {
             String line = dis.readUTF();
             String[] msgArr = line.split(" ");
             userName = msgArr[0].trim().substring(1);
-            LobbyStateRepository lobbyStateRepository = LobbyStateRepository.getInstance();
-            lobbyStateRepository.addUserName(userName);
-            LobbyState lobbyState = lobbyStateRepository.getLobbyState();
-            String stateJson = new Gson().toJson(lobbyState);
-            writeAll.call(stateJson);
+            addUser(userName);
+            writeLobbyStateToAll();
         } catch (Exception e) {
             // AppendText("userService error");
         }
@@ -62,18 +58,37 @@ public class UserService extends Thread {
         }
     }
 
-    private void closeAll() throws IOException {
-        dos.close();
-        dis.close();
-        clientSocket.close();
-
-        LobbyStateRepository lobbyStateRepository = LobbyStateRepository.getInstance();
-        lobbyStateRepository.removeLobbyUser(this.userName);
+    private void close() {
+        removeUser(this.userName);
         onUserRemove.call(this);
+        writeLobbyStateToAll();
+        try {
+            dos.close();
+            dis.close();
+            clientSocket.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void addUser(String userName) {
+        LobbyStateRepository lobbyStateRepository = LobbyStateRepository.getInstance();
+        lobbyStateRepository.addUserName(userName);
+    }
+
+    private void removeUser(String userName) {
+        LobbyStateRepository lobbyStateRepository = LobbyStateRepository.getInstance();
+        lobbyStateRepository.removeLobbyUser(userName);
+    }
+
+    private void writeLobbyStateToAll() {
+        LobbyState lobbyState = LobbyStateRepository.getInstance().getLobbyState();
+        String stateJson = new Gson().toJson(lobbyState);
+        writeAll.call(stateJson);
     }
 
     public void run() {
-        while (true) { // 사용자 접속을 계속해서 받기 위해 while문
+        while (true) {
             try {
                 String msg = dis.readUTF();
                 msg = msg.trim();
@@ -133,14 +148,11 @@ public class UserService extends Thread {
                 }
             } catch (IOException e) {
                 System.out.println("dis.read() error");
-                try {
-                    closeAll();
-                    break;
-                } catch (Exception ee) {
-                    break;
-                }
+                e.printStackTrace();
+                break;
             }
         }
+        close();
     }
 
     private class GameStateTicker extends Thread {
