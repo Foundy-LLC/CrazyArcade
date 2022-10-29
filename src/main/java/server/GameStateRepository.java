@@ -16,7 +16,7 @@ public class GameStateRepository {
     @Getter
     private GameState gameState;
 
-    private StateChecker stateChecker;
+    private StateUpdater stateUpdater;
 
     private GameStateRepository() {
     }
@@ -42,8 +42,8 @@ public class GameStateRepository {
                 .map(MockMaps.map1)
                 .build();
 
-        stateChecker = new StateChecker(gameState);
-        stateChecker.start();
+        stateUpdater = new StateUpdater(gameState);
+        stateUpdater.start();
 
         return gameState;
     }
@@ -80,15 +80,15 @@ public class GameStateRepository {
     }
 
     public void clear() {
-        stateChecker.interrupt();
-        stateChecker = null;
+        stateUpdater.interrupt();
+        stateUpdater = null;
     }
 
-    private static class StateChecker extends Thread {
+    private static class StateUpdater extends Thread {
 
         private final GameState state;
 
-        private StateChecker(GameState state) {
+        private StateUpdater(GameState state) {
             this.state = state;
         }
 
@@ -101,8 +101,7 @@ public class GameStateRepository {
                     break;
                 }
 
-                state.updateWaterBombsState();
-                state.updateWaterWavesState();
+                state.updateState();
             }
         }
     }

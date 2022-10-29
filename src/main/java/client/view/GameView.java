@@ -98,7 +98,7 @@ public class GameView extends BaseView {
 
         public KeyboardListener() {
             final Api api = Api.getInstance();
-            timer = new Timer(6, arg0 -> {
+            timer = new Timer(16, arg0 -> {
                 if (!pressedKeys.isEmpty()) {
                     for (Integer pressedKey : pressedKeys) {
                         switch (pressedKey) {

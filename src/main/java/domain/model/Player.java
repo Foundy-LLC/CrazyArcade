@@ -11,6 +11,7 @@ import java.util.List;
 public class Player extends GameObject {
 
     private static final int COLLIDE_TOLERANCES = 10;
+    private static final int MAX_ALIVE_TIME_IN_TRAP = 7_000;
 
     @NonNull
     @Getter
@@ -24,6 +25,8 @@ public class Player extends GameObject {
     @Getter
     private Integer waterBombLength = 3;
 
+    private Long trappedTimeMilli = null;
+
     public Player(String name, int x, int y) {
         super(x, y);
         this.name = name;
@@ -34,12 +37,36 @@ public class Player extends GameObject {
         this.direction = direction;
     }
 
+    public void trapIntoWaterWave() {
+        trappedTimeMilli = System.currentTimeMillis();
+    }
+
+    public boolean isTrapped() {
+        return trappedTimeMilli != null;
+    }
+
+    public boolean isDead() {
+        if (trappedTimeMilli == null) {
+            return false;
+        }
+        long currentMilli = System.currentTimeMillis();
+        return currentMilli - trappedTimeMilli >= MAX_ALIVE_TIME_IN_TRAP;
+    }
+
+    public int getSpeed() {
+        if (isTrapped()) {
+            return 1;
+        }
+        return 3;
+    }
+
     public void move(Direction direction, Map map) {
+        int speed = getSpeed();
         Offset newOffset = switch (direction) {
-            case UP -> new Offset(offset.x, offset.y - SPEED);
-            case DOWN -> new Offset(offset.x, offset.y + SPEED);
-            case LEFT -> new Offset(offset.x - SPEED, offset.y);
-            case RIGHT -> new Offset(offset.x + SPEED, offset.y);
+            case UP -> new Offset(offset.x, offset.y - speed);
+            case DOWN -> new Offset(offset.x, offset.y + speed);
+            case LEFT -> new Offset(offset.x - speed, offset.y);
+            case RIGHT -> new Offset(offset.x + speed, offset.y);
         };
 
         if (isInRange(newOffset)) {

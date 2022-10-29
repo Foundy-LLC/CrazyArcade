@@ -25,7 +25,13 @@ public class GameState implements Serializable {
     @NonNull
     private Integer remainingTimeSec;
 
-    public void updateWaterBombsState() {
+    public void updateState() {
+        updateWaterBombsState();
+        updateWaterWavesState();
+        updatePlayersState();
+    }
+
+    private void updateWaterBombsState() {
         WaterBomb[][] waterBomb2d = map.getWaterBomb2d();
 
         for (int y = 0; y < waterBomb2d.length; ++y) {
@@ -101,7 +107,7 @@ public class GameState implements Serializable {
         return 0 > x || x >= Sizes.TILE_ROW_COUNT || 0 > y || y >= Sizes.TILE_COLUMN_COUNT;
     }
 
-    public void updateWaterWavesState() {
+    private void updateWaterWavesState() {
         WaterWave[][] waterWave2d = map.getWaterWave2d();
 
         for (int y = 0; y < waterWave2d.length; ++y) {
@@ -115,6 +121,24 @@ public class GameState implements Serializable {
                 }
             }
         }
+    }
+
+    private void updatePlayersState() {
+        players.forEach((player) -> {
+            Offset tileOffset = player.getCenterTileOffset();
+
+            if (!player.isTrapped() && isOnWave(tileOffset)) {
+                player.trapIntoWaterWave();
+            }
+            if (player.isDead()) {
+                // TODO implements
+            }
+        });
+    }
+
+    private boolean isOnWave(Offset tileOffset) {
+        WaterWave[][] waterWave2d = map.getWaterWave2d();
+        return waterWave2d[tileOffset.y][tileOffset.x] != null;
     }
 
     public boolean canInstallWaterBombAt(Offset tileOffset) {

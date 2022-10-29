@@ -11,8 +11,6 @@ public abstract class GameObject implements Serializable {
     public static final int WIDTH = Sizes.MAP_WIDTH / Sizes.TILE_ROW_COUNT;
     public static final int HEIGHT = Sizes.MAP_HEIGHT / Sizes.TILE_COLUMN_COUNT;
 
-    public static final int SPEED = 1;
-
     @Getter
     @NonNull
     protected Offset offset;
