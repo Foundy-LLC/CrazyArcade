@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 public class Api {
 
@@ -80,6 +81,7 @@ public class Api {
     }
 
     public void login(String userName) {
+        userName += "-" + UUID.randomUUID().toString().substring(0, 4);
         this.userName = userName;
         sendMessage("/" + userName + " " + ipAddress + " " + portNumber);
     }
