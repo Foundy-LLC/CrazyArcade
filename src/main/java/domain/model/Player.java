@@ -60,7 +60,7 @@ public class Player implements Serializable {
         trappedTimeMilli = System.currentTimeMillis();
     }
 
-    public void killPlayer() {
+    public void terminatePlayer() {
         this.trappedTimeMilli = 0L;
     }
 

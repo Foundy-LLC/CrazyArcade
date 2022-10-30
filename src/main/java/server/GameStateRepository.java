@@ -97,7 +97,7 @@ public class GameStateRepository {
         if (terminatedPlayer == null) {
             return;
         }
-        terminatedPlayer.killPlayer();
+        terminatedPlayer.terminatePlayer();
 
         gameState.removeTerminatedPlayer(terminatedPlayer);
         gameState.updateState();
