@@ -1,7 +1,6 @@
 package domain.model;
 
 import lombok.Getter;
-import lombok.NonNull;
 
 import java.io.Serializable;
 
@@ -9,8 +8,7 @@ public class WaterBomb implements Serializable {
 
     private static final int EXPLOSION_MILLI = 3_000;
 
-    public static final int FRAME_DELAY_MILLI = 300;
-
+    @Getter
     private final long installedMilli = System.currentTimeMillis();
 
     @Getter
@@ -18,11 +16,6 @@ public class WaterBomb implements Serializable {
 
     public WaterBomb(int length) {
         this.length = length;
-    }
-
-    public int getFrame() {
-        long currentMilli = System.currentTimeMillis();
-        return (int) (((currentMilli - installedMilli) / FRAME_DELAY_MILLI) % 4);
     }
 
     public boolean shouldExplode() {

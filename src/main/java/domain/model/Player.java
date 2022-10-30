@@ -1,32 +1,28 @@
 package domain.model;
 
-import client.util.ImageIcons;
 import domain.constant.Sizes;
 import domain.core.Pair;
 import lombok.Getter;
 import lombok.NonNull;
 
-import javax.swing.*;
 import java.awt.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Player extends GameObject {
+public class Player implements Serializable {
+    public static final int WIDTH = Sizes.MAP_WIDTH / Sizes.TILE_ROW_COUNT;
+    public static final int HEIGHT = Sizes.MAP_HEIGHT / Sizes.TILE_COLUMN_COUNT;
 
     private static final int COLLIDE_TOLERANCES = 16;
-    private static final int MAX_ALIVE_TIME_IN_TRAP = 7_000;
-    private static final int DEAD_ANIMATION_MILLI = 600;
+    public static final int MAX_ALIVE_TIME_IN_TRAP = 7_000;
+    public static final int DEAD_ANIMATION_MILLI = 600;
 
-    private static final int TRAP_IMAGE_MAX_FRAME = 23;
-    private static final int DEAD_IMAGE_MAX_FRAME = 14;
 
     private static final int FEET_DISTANCE_FROM_BOTTOM_OF_IMAGE = 8;
 
     private static final int GAP_BETWEEN_FEET = 4;
 
-    public static final Dimension NORMAL_IMAGE_SIZE = new Dimension(64, 76);
-    public static final Dimension TRAP_IMAGE_SIZE = new Dimension(88, 82);
-    public static final Dimension DIE_IMAGE_SIZE = new Dimension(88, 144);
 
     @NonNull
     @Getter
@@ -43,8 +39,12 @@ public class Player extends GameObject {
     @Getter
     private Long trappedTimeMilli = null;
 
+    @Getter
+    @NonNull
+    private Offset offset;
+
     public Player(String name, int tileX, int tileY) {
-        super(tileX * Sizes.TILE_SIZE.width, tileY * Sizes.TILE_SIZE.height);
+        this.offset = new Offset(tileX * Sizes.TILE_SIZE.width, tileY * Sizes.TILE_SIZE.height);
         this.name = name;
         this.direction = Direction.DOWN;
     }
@@ -68,25 +68,6 @@ public class Player extends GameObject {
         return trappedTimeMilli != null;
     }
 
-    public int getFrameOfTrapImage() {
-        if (!isTrapped()) {
-            throw new IllegalStateException();
-        }
-        long currentMilli = System.currentTimeMillis();
-        long gap = MAX_ALIVE_TIME_IN_TRAP / (TRAP_IMAGE_MAX_FRAME - 1);
-        return (int) ((currentMilli - trappedTimeMilli) / gap) % TRAP_IMAGE_MAX_FRAME;
-    }
-
-    public int getFrameOfDeadImage() {
-        if (!isDead()) {
-            throw new IllegalStateException();
-        }
-        long currentMilli = System.currentTimeMillis();
-        long passedMilli = currentMilli - trappedTimeMilli - MAX_ALIVE_TIME_IN_TRAP;
-        long gap = DEAD_ANIMATION_MILLI / (DEAD_IMAGE_MAX_FRAME - 1);
-        return (int) (passedMilli / gap) % DEAD_IMAGE_MAX_FRAME;
-    }
-
     public boolean isDead() {
         if (trappedTimeMilli == null) {
             return false;
@@ -106,31 +87,6 @@ public class Player extends GameObject {
         }
         long currentMilli = System.currentTimeMillis();
         return currentMilli - trappedTimeMilli - MAX_ALIVE_TIME_IN_TRAP >= DEAD_ANIMATION_MILLI;
-    }
-
-    public ImageIcon getImage() {
-        if (isDead()) {
-            return ImageIcons.BAZZI_DIE;
-        }
-        if (isTrapped()) {
-            return ImageIcons.BAZZI_TRAP;
-        }
-        return switch (direction) {
-            case UP -> ImageIcons.BAZZI_UP;
-            case DOWN -> ImageIcons.BAZZI_DOWN;
-            case LEFT -> ImageIcons.BAZZI_LEFT;
-            case RIGHT -> ImageIcons.BAZZI_RIGHT;
-        };
-    }
-
-    public Dimension getImageSize() {
-        if (isDead()) {
-            return DIE_IMAGE_SIZE;
-        }
-        if (isTrapped()) {
-            return TRAP_IMAGE_SIZE;
-        }
-        return NORMAL_IMAGE_SIZE;
     }
 
     public int getSpeed() {
@@ -339,5 +295,11 @@ public class Player extends GameObject {
 
     public WaterBomb createWaterBomb() {
         return new WaterBomb(waterBombLength);
+    }
+
+    public double distance(Player other) {
+        double yd = Math.pow((offset.y - other.offset.y), 2);
+        double xd = Math.pow((offset.x - other.offset.x), 2);
+        return Math.sqrt(yd + xd);
     }
 }

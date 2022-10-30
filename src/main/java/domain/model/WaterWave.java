@@ -14,8 +14,7 @@ public class WaterWave implements Serializable {
     @Getter
     private final boolean isEnd;
 
-    private final int maxFrame;
-
+    @Getter
     private final long createdMilli = System.currentTimeMillis();
 
     /**
@@ -25,13 +24,7 @@ public class WaterWave implements Serializable {
     public WaterWave(Direction direction, boolean isEnd) {
         this.direction = direction;
         this.isEnd = isEnd;
-        this.maxFrame = direction != null ? 6 : 11;
-    }
 
-    public int getFrame() {
-        long currentMilli = System.currentTimeMillis();
-        int gap = (DURATION_MILLI / (maxFrame - 1));
-        return (int) (((currentMilli - createdMilli) / gap) % maxFrame);
     }
 
     public boolean shouldDisappear() {

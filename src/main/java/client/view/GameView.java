@@ -2,8 +2,7 @@ package client.view;
 
 import client.component.GameEndTextLabel;
 import client.core.ApiListenerView;
-import client.component.MapView;
-import client.component.PlayerComponent;
+import client.component.MapPanel;
 import client.service.Api;
 import client.util.ImageIcons;
 import com.google.gson.Gson;
@@ -19,12 +18,7 @@ import java.util.*;
 public class GameView extends ApiListenerView {
 
     @NonNull
-    private final HashMap<String, PlayerComponent> playerMap = new HashMap<>();
-
-    @NonNull
-    private final MapView mapView = new MapView();
-
-    private boolean isComponentInitialized = false;
+    private final MapPanel mapPanel = new MapPanel();
 
     private KeyboardListener keyboardListener;
 
@@ -37,7 +31,7 @@ public class GameView extends ApiListenerView {
     }
 
     private void initView() {
-        add(mapView);
+        add(mapPanel);
     }
 
     private void initListener() {
@@ -45,27 +39,9 @@ public class GameView extends ApiListenerView {
         addKeyListener(keyboardListener);
     }
 
-    private void initPlayerComponents(List<Player> players) {
-        players.forEach((player) -> {
-            Offset offset = player.getOffset();
-            PlayerComponent playerObject = new PlayerComponent();
-            playerObject.setOffset(offset);
-
-            playerMap.put(player.getName(), playerObject);
-            mapView.add(playerObject);
-        });
-    }
-
     private void updateView(GameState gameState) {
         if (isGameEnded) {
             return;
-        }
-
-        if (!isComponentInitialized) {
-            isComponentInitialized = true;
-            initPlayerComponents(gameState.getPlayers());
-
-            requestFocus();
         }
 
         if (gameState.isEnded()) {
@@ -77,33 +53,9 @@ public class GameView extends ApiListenerView {
             return;
         }
 
-        updatePlayerObjects(gameState.getPlayers());
-        mapView.updateMap(gameState.getMap());
+        mapPanel.repaint(gameState.getMap(), gameState.getPlayers());
 
-        mapView.repaint();
-    }
-
-    private void updatePlayerObjects(@NonNull List<Player> players) {
-        // 사망자가 발생한 경우
-        if (players.size() != playerMap.size()) {
-            List<String> deadPlayerNames = new ArrayList<>(List.copyOf(playerMap.keySet()));
-            for (Player alivePlayer : players) {
-                deadPlayerNames.remove(alivePlayer.getName());
-            }
-
-            deadPlayerNames.forEach((deadPlayerName) -> {
-                PlayerComponent deadPlayerComponent = playerMap.get(deadPlayerName);
-                playerMap.remove(deadPlayerName);
-                mapView.remove(deadPlayerComponent);
-            });
-        }
-
-        for (var entry : playerMap.entrySet()) {
-            String name = entry.getKey();
-            PlayerComponent component = entry.getValue();
-            Optional<Player> player = players.stream().filter((element) -> element.getName().equals(name)).findFirst();
-            player.ifPresent(component::updateState);
-        }
+        requestFocus();
     }
 
     private void showGameEndText(Player winner) {
@@ -141,7 +93,7 @@ public class GameView extends ApiListenerView {
     @Override
     protected void onDestroyed() {
         keyboardListener.stop();
-        mapView.dispose();
+        mapPanel.dispose();
     }
 
     public static class KeyboardListener extends KeyAdapter {
