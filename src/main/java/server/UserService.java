@@ -3,9 +3,11 @@ package server;
 import java.io.*;
 import java.net.Socket;
 import java.util.Arrays;
+import java.util.List;
 
 import com.google.gson.Gson;
 import domain.model.Direction;
+import domain.model.Player;
 import domain.state.GameState;
 import domain.state.LobbyState;
 
@@ -154,6 +156,17 @@ public class UserService extends Thread {
                 }
             } catch (IOException e) {
                 System.out.println("dis.read() error");
+
+                GameStateRepository gameStateRepository = GameStateRepository.getInstance();
+                GameState gameState = gameStateRepository.getGameState();
+                List<Player> players = gameState.getPlayers();
+                Player destroyedPlayer = players.stream()
+                        .filter(player -> this.userName.equals(player.getName())).findAny().orElse(null);
+                destroyedPlayer.killPlayer();
+
+                gameState.getPlayers().remove(this.userName);
+                gameState.updateState();
+
                 e.printStackTrace();
                 break;
             }
