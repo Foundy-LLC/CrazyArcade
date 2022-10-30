@@ -1,13 +1,17 @@
 package client.component;
 
 import client.util.ImageIcons;
+import domain.constant.Sizes;
+import domain.model.Offset;
 import domain.model.Player;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class PlayerRenderElement extends RenderElement{
+public class PlayerRenderElement extends RenderElement {
 
+    private static final int NORMAL_VERTICAL_IMAGE_MAX_FRAME = 8;
+    private static final int NORMAL_HORIZONTAL_IMAGE_MAX_FRAME = 6;
     private static final int TRAP_IMAGE_MAX_FRAME = 23;
     private static final int DEAD_IMAGE_MAX_FRAME = 14;
 
@@ -56,8 +60,16 @@ public class PlayerRenderElement extends RenderElement{
         if (player.isTrapped()) {
             return getFrameOfTrapImage();
         }
-        // TODO: 움직이는 애니메이션 구현하기
-        return 0;
+        if (!player.isMoving()) {
+            return 0;
+        }
+        Offset offset = player.getOffset();
+        int sum = (offset.y + offset.x) / 10;
+        int maxFrame = switch (player.getDirection()) {
+            case UP, DOWN -> NORMAL_VERTICAL_IMAGE_MAX_FRAME;
+            case LEFT, RIGHT -> NORMAL_HORIZONTAL_IMAGE_MAX_FRAME;
+        };
+        return sum % maxFrame;
     }
 
     private int getFrameOfTrapImage() {

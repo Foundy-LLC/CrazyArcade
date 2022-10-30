@@ -11,18 +11,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Player implements Serializable {
+
     public static final int WIDTH = Sizes.MAP_WIDTH / Sizes.TILE_ROW_COUNT;
     public static final int HEIGHT = Sizes.MAP_HEIGHT / Sizes.TILE_COLUMN_COUNT;
 
-    private static final int COLLIDE_TOLERANCES = 16;
     public static final int MAX_ALIVE_TIME_IN_TRAP = 7_000;
     public static final int DEAD_ANIMATION_MILLI = 600;
 
+    private static final int COLLIDE_TOLERANCES = 16;
 
     private static final int FEET_DISTANCE_FROM_BOTTOM_OF_IMAGE = 8;
 
     private static final int GAP_BETWEEN_FEET = 4;
-
 
     @NonNull
     @Getter
@@ -38,6 +38,9 @@ public class Player implements Serializable {
 
     @Getter
     private Long trappedTimeMilli = null;
+
+    @Getter
+    private Long lastMovingMilli = null;
 
     @Getter
     @NonNull
@@ -96,6 +99,19 @@ public class Player implements Serializable {
         return 4;
     }
 
+    private void setOffset(Offset offset) {
+        lastMovingMilli = System.currentTimeMillis();
+        this.offset = offset;
+    }
+
+    public boolean isMoving() {
+        if (lastMovingMilli == null) {
+            return false;
+        }
+        long currentMilli = System.currentTimeMillis();
+        return currentMilli - lastMovingMilli <= 30;
+    }
+
     public void move(Direction direction, Map map) {
         if (isDead()) {
             return;
@@ -138,7 +154,7 @@ public class Player implements Serializable {
             }
 
             if (collideCount == 0) {
-                offset = newOffset;
+                setOffset(newOffset);
             } else if (collideCount == 1) {
                 switch (direction) {
                     case UP -> {
@@ -146,13 +162,13 @@ public class Player implements Serializable {
                             int blockRightX = Sizes.TILE_SIZE.width * (leftTopTile.x + 1);
                             int diff = blockRightX - newRectangle.x;
                             if (diff < COLLIDE_TOLERANCES) {
-                                offset = new Offset(newRectangle.x + speed, oldRectangle.y);
+                                setOffset(new Offset(newRectangle.x + speed, oldRectangle.y));
                             }
                         } else if (collideRightTop) {
                             int blockLeftX = Sizes.TILE_SIZE.width * rightTopTile.x;
                             int diff = (newRectangle.x + newRectangle.width) - blockLeftX;
                             if (diff < COLLIDE_TOLERANCES) {
-                                offset = new Offset(newRectangle.x - speed, oldRectangle.y);
+                                setOffset(new Offset(newRectangle.x - speed, oldRectangle.y));
                             }
                         }
                     }
@@ -161,13 +177,13 @@ public class Player implements Serializable {
                             int blockRightX = Sizes.TILE_SIZE.width * (leftBottomTile.x + 1);
                             int diff = blockRightX - newRectangle.x;
                             if (diff < COLLIDE_TOLERANCES) {
-                                offset = new Offset(newRectangle.x + speed, oldRectangle.y);
+                                setOffset(new Offset(newRectangle.x + speed, oldRectangle.y));
                             }
                         } else if (collideRightBottom) {
                             int blockLeftX = Sizes.TILE_SIZE.width * rightBottomTile.x;
                             int diff = (newRectangle.x + newRectangle.width) - blockLeftX;
                             if (diff < COLLIDE_TOLERANCES) {
-                                offset = new Offset(newRectangle.x - speed, oldRectangle.y);
+                                setOffset(new Offset(newRectangle.x - speed, oldRectangle.y));
                             }
                         }
                     }
@@ -176,13 +192,13 @@ public class Player implements Serializable {
                             int blockTopY = Sizes.TILE_SIZE.height * (leftTopTile.y + 1);
                             int diff = blockTopY - newRectangle.y;
                             if (diff < COLLIDE_TOLERANCES) {
-                                offset = new Offset(oldRectangle.x, newRectangle.y + speed);
+                                setOffset(new Offset(oldRectangle.x, newRectangle.y + speed));
                             }
                         } else if (collideLeftBottom) {
                             int blockBottomY = Sizes.TILE_SIZE.height * leftBottomTile.y;
                             int diff = (newRectangle.y + newRectangle.width) - blockBottomY;
                             if (diff < COLLIDE_TOLERANCES) {
-                                offset = new Offset(oldRectangle.x, newRectangle.y - speed);
+                                setOffset(new Offset(oldRectangle.x, newRectangle.y - speed));
                             }
                         }
                     }
@@ -191,13 +207,13 @@ public class Player implements Serializable {
                             int blockTopY = Sizes.TILE_SIZE.height * (leftTopTile.y + 1);
                             int diff = blockTopY - newRectangle.y;
                             if (diff < COLLIDE_TOLERANCES) {
-                                offset = new Offset(newRectangle.x, newRectangle.y + speed);
+                                setOffset(new Offset(newRectangle.x, newRectangle.y + speed));
                             }
                         } else if (collideRightBottom) {
                             int blockBottomY = Sizes.TILE_SIZE.height * leftBottomTile.y;
                             int diff = (newRectangle.y + newRectangle.width) - blockBottomY;
                             if (diff < COLLIDE_TOLERANCES) {
-                                offset = new Offset(newRectangle.x, newRectangle.y - speed);
+                                setOffset(new Offset(newRectangle.x, newRectangle.y - speed));
                             }
                         }
                     }
