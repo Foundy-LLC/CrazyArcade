@@ -1,10 +1,9 @@
 package client.view;
 
-import client.core.BaseView;
+import client.core.ApiListenerView;
 import client.core.Button;
 import client.core.OutlinedLabel;
 import client.service.Api;
-import client.service.MessageListener;
 import client.util.Fonts;
 import client.util.ImageIcons;
 import com.google.gson.Gson;
@@ -18,7 +17,7 @@ import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.Optional;
 
-public class LobbyView extends BaseView {
+public class LobbyView extends ApiListenerView {
 
     private final JTextArea userListTextArea = new JTextArea();
 
@@ -27,7 +26,7 @@ public class LobbyView extends BaseView {
     public LobbyView() {
         super(ImageIcons.LOBBY_BACKGROUND);
         initView();
-        initApi();
+        requestLobbyState();
     }
 
     private void initView() {
@@ -49,9 +48,8 @@ public class LobbyView extends BaseView {
         add(startGameButton);
     }
 
-    private void initApi() {
+    private void requestLobbyState() {
         Api api = Api.getInstance();
-        api.addListener(messageListener);
         api.requestLobbyState();
     }
 
@@ -64,15 +62,7 @@ public class LobbyView extends BaseView {
     }
 
     @Override
-    protected void onDestroyed() {
-        Api.getInstance().removeListener(messageListener);
-    }
-
-    private final ActionListener gameStartListener = (event) -> {
-        Api.getInstance().startGame();
-    };
-
-    private final MessageListener messageListener = message -> {
+    protected void onMessageReceived(String message) {
         if (message.equals(Protocol.ERROR)) {
             showToast("서버와의 연결이 끊어졌습니다.");
         }
@@ -89,5 +79,9 @@ public class LobbyView extends BaseView {
             e.printStackTrace();
             showToast("잘못된 `LobbyState`가 서버로부터 전달되었습니다.");
         }
+    }
+
+    private final ActionListener gameStartListener = (event) -> {
+        Api.getInstance().startGame();
     };
 }

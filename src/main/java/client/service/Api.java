@@ -1,5 +1,6 @@
 package client.service;
 
+import client.core.ChangeNotifier;
 import domain.constant.Protocol;
 import domain.model.Direction;
 import lombok.Getter;
@@ -8,11 +9,9 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 
-public class Api {
+public class Api extends ChangeNotifier {
 
     private String ipAddress;
     private String portNumber;
@@ -22,8 +21,6 @@ public class Api {
 
     @Getter
     private String userName;
-
-    private final Set<MessageListener> listeners = new HashSet<>();
 
     private Api() {
     }
@@ -46,20 +43,6 @@ public class Api {
 
         NetworkSubscriber subscriber = new NetworkSubscriber();
         subscriber.start();
-    }
-
-    public synchronized void addListener(MessageListener listener) {
-        listeners.add(listener);
-    }
-
-    private synchronized void notifyToListeners(String message) {
-        for (MessageListener listener : listeners) {
-            listener.onReceive(message);
-        }
-    }
-
-    public synchronized void removeListener(MessageListener listener) {
-        listeners.remove(listener);
     }
 
     private void assertDidInit() {
@@ -111,7 +94,7 @@ public class Api {
                     String message = inputStream.readUTF();
                     System.out.println("============= MESSAGE ==============");
                     System.out.println(message);
-                    notifyToListeners(message);
+                    notifyListeners(message);
                 } catch (IOException e) {
                     try {
                         outputStream.close();
@@ -122,7 +105,7 @@ public class Api {
                     break;
                 }
             }
-            notifyToListeners(Protocol.ERROR);
+            notifyListeners(Protocol.ERROR);
         }
     }
 }

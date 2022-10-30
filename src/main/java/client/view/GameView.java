@@ -1,11 +1,10 @@
 package client.view;
 
 import client.component.GameEndTextLabel;
-import client.core.BaseView;
+import client.core.ApiListenerView;
 import client.component.MapView;
 import client.component.PlayerComponent;
 import client.service.Api;
-import client.service.MessageListener;
 import client.util.ImageIcons;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -17,7 +16,7 @@ import javax.swing.Timer;
 import java.awt.event.*;
 import java.util.*;
 
-public class GameView extends BaseView {
+public class GameView extends ApiListenerView {
 
     @NonNull
     private final HashMap<String, PlayerComponent> playerMap = new HashMap<>();
@@ -26,9 +25,6 @@ public class GameView extends BaseView {
     private final MapView mapView = new MapView();
 
     private boolean isComponentInitialized = false;
-
-    @NonNull
-    private final Api api = Api.getInstance();
 
     private KeyboardListener keyboardListener;
 
@@ -47,7 +43,6 @@ public class GameView extends BaseView {
     private void initListener() {
         keyboardListener = new KeyboardListener();
         addKeyListener(keyboardListener);
-        api.addListener(messageListener);
     }
 
     private void initPlayerComponents(List<Player> players) {
@@ -112,6 +107,7 @@ public class GameView extends BaseView {
     }
 
     private void showGameEndText(Player winner) {
+        Api api = Api.getInstance();
         GameEndTextLabel.Type type;
         boolean draw = winner == null;
         if (draw) {
@@ -132,8 +128,18 @@ public class GameView extends BaseView {
     }
 
     @Override
+    protected void onMessageReceived(String message) {
+        try {
+            GameState state = new Gson().fromJson(message, GameState.class);
+            updateView(state);
+        } catch (JsonSyntaxException e) {
+            e.printStackTrace();
+            showToast("잘못된 형식의 GameState 객체 전달됨");
+        }
+    }
+
+    @Override
     protected void onDestroyed() {
-        api.removeListener(messageListener);
         keyboardListener.stop();
         mapView.dispose();
     }
@@ -188,14 +194,4 @@ public class GameView extends BaseView {
             pressedKeys.remove(keyCode);
         }
     }
-
-    private final MessageListener messageListener = (message) -> {
-        try {
-            GameState state = new Gson().fromJson(message, GameState.class);
-            updateView(state);
-        } catch (JsonSyntaxException e) {
-            e.printStackTrace();
-            showToast("잘못된 형식의 GameState 객체 전달됨");
-        }
-    };
 }

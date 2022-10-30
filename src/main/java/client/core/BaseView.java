@@ -24,8 +24,8 @@ public class BaseView extends JPanel {
 	protected void onDestroyed() {}
 
 	protected void navigateTo(JComponent panel) {
-		Navigator.navigateTo(this, panel);
 		onDestroyed();
+		Navigator.navigateTo(this, panel);
 	}
 
 	protected void showToast(String message) {
