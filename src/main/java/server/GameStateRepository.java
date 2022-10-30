@@ -88,6 +88,21 @@ public class GameStateRepository {
         return null;
     }
 
+    public void removeTerminatedUser(String userName) {
+        List<Player> players = gameState.getPlayers();
+        Player terminatedPlayer = players.stream()
+                .filter(player -> userName.equals(player.getName()))
+                .findAny()
+                .orElse(null);
+        if (terminatedPlayer == null) {
+            return;
+        }
+        terminatedPlayer.killPlayer();
+
+        gameState.removeTerminatedPlayer(terminatedPlayer);
+        gameState.updateState();
+    }
+
     public void clear() {
         gameState = null;
     }

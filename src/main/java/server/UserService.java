@@ -158,14 +158,7 @@ public class UserService extends Thread {
                 System.out.println("dis.read() error");
 
                 GameStateRepository gameStateRepository = GameStateRepository.getInstance();
-                GameState gameState = gameStateRepository.getGameState();
-                List<Player> players = gameState.getPlayers();
-                Player destroyedPlayer = players.stream()
-                        .filter(player -> this.userName.equals(player.getName())).findAny().orElse(null);
-                destroyedPlayer.killPlayer();
-
-                gameState.getPlayers().remove(this.userName);
-                gameState.updateState();
+                gameStateRepository.removeTerminatedUser(this.userName);
 
                 e.printStackTrace();
                 break;

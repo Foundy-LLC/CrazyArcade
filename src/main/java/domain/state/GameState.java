@@ -210,4 +210,8 @@ public class GameState implements Serializable {
         WaterBomb[][] waterBomb2d = map.getWaterBomb2d();
         waterBomb2d[tileOffset.y][tileOffset.x] = waterBomb;
     }
+
+    public void removeTerminatedPlayer(Player player) {
+        players.remove(player);
+    }
 }
