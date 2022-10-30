@@ -11,6 +11,8 @@ public class BlockRenderElement extends RenderElement {
 
     private static final Dimension SIZE = new Dimension(68, 67);
 
+    private static final int MAX_BLOCK_POP_FRAME = 5;
+
     private final Block block;
 
     public BlockRenderElement(@NonNull Block block) {
@@ -19,7 +21,11 @@ public class BlockRenderElement extends RenderElement {
 
     @Override
     protected ImageIcon getImageIcon() {
-        return ImageIcons.BLOCKS[block.getBlockImageIndex()];
+        int imageIndex = block.getBlockImageIndex();
+        if (block.isDisappearing()) {
+            return ImageIcons.BLOCK_POPS[imageIndex];
+        }
+        return ImageIcons.BLOCKS[imageIndex];
     }
 
     @Override
@@ -29,6 +35,12 @@ public class BlockRenderElement extends RenderElement {
 
     @Override
     protected int getFrame() {
+        if (block.isDisappearing()) {
+            long currentMilli = System.currentTimeMillis();
+            long passedMilli = currentMilli - block.getWaterWaveCollideTimeMilli();
+            int gap = Block.DISAPPEAR_ANIM_MILLI / MAX_BLOCK_POP_FRAME;
+            return (int) ((passedMilli / gap));
+        }
         return 0;
     }
 }

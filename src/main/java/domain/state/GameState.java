@@ -32,6 +32,7 @@ public class GameState implements Serializable {
     private boolean isEnded;
 
     public void updateState() {
+        updateBlocksState();
         updateWaterBombsState();
         updateWaterWavesState();
         updatePlayersState();
@@ -50,6 +51,21 @@ public class GameState implements Serializable {
             throw new IllegalStateException();
         }
         return players.isEmpty() ? null : players.get(0);
+    }
+
+    private void updateBlocksState() {
+        Block[][] block2d = map.getBlock2D();
+
+        for (int y = 0; y < block2d.length; ++y) {
+            for (int x = 0; x < block2d[y].length; ++x) {
+                if (block2d[y][x] == null) {
+                    continue;
+                }
+                if (block2d[y][x].shouldDisappear()) {
+                    block2d[y][x] = null;
+                }
+            }
+        }
     }
 
     private void updateWaterBombsState() {
@@ -116,7 +132,11 @@ public class GameState implements Serializable {
                 int ny = y + i * Direction.DIR[dir][0];
                 int nx = x + i * Direction.DIR[dir][1];
 
-                if (isOutOfRange(ny, nx) || block2d[ny][nx] != null) {
+                if (isOutOfRange(ny, nx)) {
+                    break;
+                }
+                if (block2d[ny][nx] != null) {
+                    block2d[ny][nx].collideWithWaterWave();
                     break;
                 }
                 waterWave2d[ny][nx] = new WaterWave(DIRECTIONS[dir], i == length);

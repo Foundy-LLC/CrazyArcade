@@ -24,6 +24,13 @@ public class ImageIcons {
             new ImageIcon("assets/map/forest/block/block_4.png")
     };
 
+    public static final ImageIcon[] BLOCK_POPS = {
+            new ImageIcon("assets/map/forest/block/block_1_pop.png"),
+            new ImageIcon("assets/map/forest/block/block_2_pop.png"),
+            new ImageIcon("assets/map/forest/block/block_3_pop.png"),
+            new ImageIcon("assets/map/forest/block/block_4_pop.png")
+    };
+
     public static final ImageIcon TILE1 = new ImageIcon("assets/map/forest/tile/tile_1.png");
     public static final ImageIcon TILE2 = new ImageIcon("assets/map/forest/tile/tile_2.png");
     public static final ImageIcon TILE3 = new ImageIcon("assets/map/forest/tile/tile_3.png");
