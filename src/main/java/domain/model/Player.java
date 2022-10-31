@@ -322,4 +322,8 @@ public class Player implements Serializable {
         double xd = Math.pow((offset.x - other.offset.x), 2);
         return Math.sqrt(yd + xd);
     }
+
+    public void collectItem(Item item) {
+        // TODO
+    }
 }

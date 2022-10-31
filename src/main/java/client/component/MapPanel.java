@@ -45,8 +45,10 @@ public class MapPanel extends JPanel {
         }
     }
 
-    private void paintPlayerAndBlocks(Graphics g) {
+    private void paintPlayerAndItemAndBlock(Graphics g) {
+        Item[][] item2d = map.getItem2d();
         Block[][] block2d = map.getBlock2D();
+
         for (int y = 0; y < block2d.length; ++y) {
             for (int x = 0; x < block2d[y].length; ++x) {
                 Offset tileOffset = new Offset(x, y);
@@ -59,6 +61,12 @@ public class MapPanel extends JPanel {
                     Offset objectOffset = new Offset(tileOffset.x * Sizes.TILE_SIZE.width, tileOffset.y * Sizes.TILE_SIZE.height);
                     new BlockRenderElement(block).draw(g, objectOffset);
                 }
+
+                if (item2d[y][x] != null) {
+                    Item item = item2d[y][x];
+                    new ItemRenderElement(item).draw(g, new Offset(x * Sizes.TILE_SIZE.width, y * Sizes.TILE_SIZE.height));
+                }
+
                 players.forEach((player) -> {
                     if (!player.shouldBeRemoved()) {
                         new PlayerRenderElement(player).draw(g, player.getOffset());
@@ -109,7 +117,7 @@ public class MapPanel extends JPanel {
         paintTiles(g);
         paintWaterWaves(g);
         paintWaterBombs(g);
-        paintPlayerAndBlocks(g);
+        paintPlayerAndItemAndBlock(g);
 
         setOpaque(false);
     }

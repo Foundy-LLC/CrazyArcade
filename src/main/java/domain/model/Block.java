@@ -3,8 +3,6 @@ package domain.model;
 import client.util.ImageIcons;
 import lombok.Getter;
 
-import javax.swing.*;
-import java.awt.*;
 import java.io.Serializable;
 
 public class Block implements Serializable {
@@ -17,7 +15,14 @@ public class Block implements Serializable {
     @Getter
     private Long waterWaveCollideTimeMilli = null;
 
+    private final Item.Type itemType;
+
     public Block() {
+        this(null);
+    }
+
+    public Block(Item.Type itemType) {
+        this.itemType = itemType;
         double random = Math.random() * ImageIcons.BLOCKS.length;
         blockImageIndex = (int) random;
     }
@@ -38,5 +43,12 @@ public class Block implements Serializable {
         }
         long currentMilli = System.currentTimeMillis();
         return currentMilli - waterWaveCollideTimeMilli >= DISAPPEAR_ANIM_MILLI;
+    }
+
+    public Item createItem() {
+        if (itemType == null) {
+            return null;
+        }
+        return new Item(itemType);
     }
 }

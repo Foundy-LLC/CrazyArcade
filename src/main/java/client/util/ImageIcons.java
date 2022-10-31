@@ -31,6 +31,11 @@ public class ImageIcons {
             new ImageIcon("assets/map/forest/block/block_4_pop.png")
     };
 
+    public static final ImageIcon ITEM_BUBBLE = new ImageIcon("assets/item/bubble.png");
+    public static final ImageIcon ITEM_FLUID = new ImageIcon("assets/item/fluid.png");
+    public static final ImageIcon ITEM_ROLLER = new ImageIcon("assets/item/roller.png");
+    public static final ImageIcon ITEM_ULTRA = new ImageIcon("assets/item/ultra.png");
+
     public static final ImageIcon TILE1 = new ImageIcon("assets/map/forest/tile/tile_1.png");
     public static final ImageIcon TILE2 = new ImageIcon("assets/map/forest/tile/tile_2.png");
     public static final ImageIcon TILE3 = new ImageIcon("assets/map/forest/tile/tile_3.png");
