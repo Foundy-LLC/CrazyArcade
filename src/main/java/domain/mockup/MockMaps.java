@@ -26,7 +26,7 @@ public class MockMaps {
             {new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block()},
             {new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block()},
             {new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block()},
-            {new Block(), new Block(), new Block(), new Block(), new Block(Item.Type.BUBBLE), null, null, null, null, null, new Block(), new Block(), new Block(), new Block(), new Block()},
+            {new Block(), new Block(), new Block(), new Block(), new Block(Item.Type.FLUID), null, null, null, null, null, new Block(), new Block(), new Block(), new Block(), new Block()},
             {new Block(), new Block(), new Block(), new Block(), null, null, null, null, null, null, null, new Block(), new Block(), new Block(), new Block()},
             {new Block(), new Block(), new Block(), new Block(), null, null, null, null, null, null, null, new Block(), new Block(), new Block(), new Block()},
             {new Block(), new Block(), new Block(), new Block(), null, null, null, null, null, null, null, new Block(), new Block(), new Block(), new Block()},

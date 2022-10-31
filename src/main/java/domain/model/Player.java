@@ -24,7 +24,8 @@ public class Player implements Serializable {
 
     private static final int GAP_BETWEEN_FEET = 4;
 
-    private static final int MAX_WATER_BOMB_COUNT_LIMIT = 8;
+    private static final int MAX_WATER_BOMB_COUNT_LIMIT = 7;
+    private static final int WATER_BOMB_LENGTH_LIMIT = 8;
 
     @NonNull
     @Getter
@@ -33,13 +34,12 @@ public class Player implements Serializable {
     @Getter
     private int maxWaterBombCount = 1;
 
-    @NonNull
     @Getter
-    private Direction direction;
+    private int waterBombLength = 1;
 
     @NonNull
     @Getter
-    private Integer waterBombLength = 1;
+    private Direction direction;
 
     @Getter
     private Long trappedTimeMilli = null;
@@ -336,6 +336,9 @@ public class Player implements Serializable {
                 }
             }
             case FLUID -> {
+                if (waterBombLength < WATER_BOMB_LENGTH_LIMIT) {
+                    waterBombLength++;
+                }
             }
             case ULTRA -> {
             }
