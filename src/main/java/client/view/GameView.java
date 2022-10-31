@@ -5,8 +5,6 @@ import client.core.ApiListenerView;
 import client.component.MapPanel;
 import client.service.Api;
 import client.util.ImageIcons;
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 import domain.model.*;
 import domain.state.GameState;
 import lombok.NonNull;
@@ -80,13 +78,9 @@ public class GameView extends ApiListenerView {
     }
 
     @Override
-    protected void onMessageReceived(String message) {
-        try {
-            GameState state = new Gson().fromJson(message, GameState.class);
-            updateView(state);
-        } catch (JsonSyntaxException e) {
-            e.printStackTrace();
-            showToast("잘못된 형식의 GameState 객체 전달됨");
+    protected void onMessageReceived(Object object) {
+        if (object instanceof GameState) {
+            updateView((GameState) object);
         }
     }
 

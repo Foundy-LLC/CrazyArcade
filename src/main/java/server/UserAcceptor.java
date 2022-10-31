@@ -8,6 +8,7 @@ import java.util.Vector;
 import domain.constant.Protocol;
 
 public class UserAcceptor extends Thread {
+
     private ServerSocket socket; // 서버소켓
     public final Vector<UserService> userVector = new Vector<>();
 
@@ -36,10 +37,9 @@ public class UserAcceptor extends Thread {
         }
     }
 
-    public void writeAll(String str) {
-        for (int i = 0; i < userVector.size(); i++) {
-            UserService user = userVector.elementAt(i);
-            user.writeOne(str);
+    public void writeAll(Object object) {
+        for (var user : userVector) {
+            user.writeToThis(object);
         }
     }
 }

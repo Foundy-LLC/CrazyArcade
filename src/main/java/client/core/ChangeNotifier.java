@@ -13,9 +13,9 @@ public abstract class ChangeNotifier {
         listeners.add(listener);
     }
 
-    protected synchronized void notifyListeners(String message) {
+    protected synchronized void notifyListeners(Object object) {
         for (MessageListener listener : listeners) {
-            listener.onReceive(message);
+            listener.onReceive(object);
         }
     }
 

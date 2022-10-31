@@ -13,7 +13,7 @@ public abstract class ApiListenerView extends BaseView {
         Api.getInstance().addListener(listener);
     }
 
-    protected abstract void onMessageReceived(String message);
+    protected abstract void onMessageReceived(Object object);
 
     @Override
     protected void onDestroyed() {

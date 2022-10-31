@@ -2,35 +2,35 @@ package server;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.Arrays;
-import java.util.List;
 
-import com.google.gson.Gson;
 import domain.model.Direction;
-import domain.model.Player;
 import domain.state.GameState;
 import domain.state.LobbyState;
 
 public class UserService extends Thread {
-    private DataInputStream dis;
-    private DataOutputStream dos;
+
+    private ObjectInputStream inputStream;
+    private ObjectOutputStream outputStream;
+
     private final Socket clientSocket;
+
     private String userName = "";
 
-    private final Callback<String> writeAll;
+    private final Callback<Object> writeAll;
 
     private final Callback<UserService> onUserRemove;
 
-    public UserService(Socket clientSocket, Callback<String> writeAll, Callback<UserService> onUserRemove) {
+    public UserService(Socket clientSocket, Callback<Object> writeAll, Callback<UserService> onUserRemove) {
         this.clientSocket = clientSocket;
         this.writeAll = writeAll;
         this.onUserRemove = onUserRemove;
         try {
             InputStream is = clientSocket.getInputStream();
-            dis = new DataInputStream(is);
+            inputStream = new ObjectInputStream(is);
             OutputStream os = clientSocket.getOutputStream();
-            dos = new DataOutputStream(os);
-            String line = dis.readUTF();
+            outputStream = new ObjectOutputStream(os);
+            outputStream.flush();
+            String line = readMessage();
             String[] msgArr = line.split(" ");
             userName = msgArr[0].trim().substring(1);
             addUser(userName);
@@ -40,17 +40,32 @@ public class UserService extends Thread {
         }
     }
 
-    public void writeOne(String msg) {
+    private String readMessage() throws IOException {
         try {
-            dos.writeUTF(msg);
-            System.out.println("--------------send----------------");
-            System.out.println(msg);
-            System.out.println("-------------------------------------");
+            Object object = inputStream.readObject();
+            if (object instanceof String) {
+                return ((String) object).trim();
+            }
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        throw new IllegalStateException();
+    }
+
+    public void writeToThis(Object object) {
+        try {
+            outputStream.writeObject(object);
+            outputStream.flush();
+
+            System.out.println("=============== SEND ===============");
+            System.out.println("TO: " + userName);
+            System.out.println("DATA: " + object);
+            System.out.println("====================================");
         } catch (IOException e) {
-            System.out.println("writeOne error");
+            System.out.println("writeToThis error");
             try {
-                dos.close();
-                dis.close();
+                outputStream.close();
+                inputStream.close();
                 clientSocket.close();
             } catch (IOException e1) {
                 // TODO Auto-generated catch block
@@ -65,8 +80,8 @@ public class UserService extends Thread {
         onUserRemove.call(this);
         writeLobbyStateToAll();
         try {
-            dos.close();
-            dis.close();
+            outputStream.close();
+            inputStream.close();
             clientSocket.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -85,30 +100,27 @@ public class UserService extends Thread {
 
     private void writeLobbyStateToAll() {
         LobbyState lobbyState = LobbyStateRepository.getInstance().getLobbyState();
-        String stateJson = new Gson().toJson(lobbyState);
-        writeAll.call(stateJson);
+        writeAll.call(lobbyState);
     }
 
     public void run() {
         while (true) {
             try {
-                String msg = dis.readUTF();
-                msg = msg.trim();
-                System.out.println("--------------receive----------------");
-                System.out.println(msg);
-                System.out.println("-------------------------------------");
+                String msg = readMessage();
+                System.out.println("============= RECEIVE ==============");
+                System.out.println("FROM: " + userName);
+                System.out.println("MSG: " + msg);
+                System.out.println("====================================");
                 try {
                     // String[] msgArr = msg.split(Constants.MESSAGE_SEPARATOR.toString());
                     String[] msgArr = msg.split(" ");
-                    System.out.println(Arrays.toString(msgArr));
                     GameStateRepository gameStateRepository = GameStateRepository.getInstance();
 
                     switch (msgArr[1]) {
                         case "getLobbyState" -> {
                             LobbyStateRepository lobbyStateRepository = LobbyStateRepository.getInstance();
                             LobbyState lobbyState = lobbyStateRepository.getLobbyState();
-                            String stateJson = new Gson().toJson(lobbyState);
-                            writeOne(stateJson);
+                            writeToThis(lobbyState);
                         }
                         case "startGame" -> {
                             LobbyStateRepository lobbyStateRepository = LobbyStateRepository.getInstance();
@@ -123,8 +135,7 @@ public class UserService extends Thread {
                             writeAll.call("/startGame");
 
                             GameState initGameState = gameStateRepository.initState(lobbyStateRepository.getLobbyUserNames());
-                            String stateJson = new Gson().toJson(initGameState);
-                            writeAll.call(stateJson);
+                            writeAll.call(initGameState);
 
                             GameStateTicker gameStateTicker = new GameStateTicker();
                             gameStateTicker.start();
@@ -137,8 +148,7 @@ public class UserService extends Thread {
                             String action = msgArr[1];
                             Direction direction = Direction.valueOf(action.toUpperCase());
                             GameState newState = gameStateRepository.movePlayer(name, direction);
-                            String stateJson = new Gson().toJson(newState);
-                            writeAll.call(stateJson);
+                            writeAll.call(newState);
                         }
                         case "waterBomb" -> {
                             if (gameStateRepository.isEnded()) {
@@ -146,8 +156,7 @@ public class UserService extends Thread {
                             }
                             String playerName = msgArr[0].substring(1);
                             GameState newState = gameStateRepository.installWaterBomb(playerName);
-                            String stateJson = new Gson().toJson(newState);
-                            writeAll.call(stateJson);
+                            writeAll.call(newState);
                         }
                     }
                 } catch (Exception e) {
@@ -181,8 +190,7 @@ public class UserService extends Thread {
                 stateRepository.updateState();
 
                 GameState state = stateRepository.getGameState();
-                String stateJson = new Gson().toJson(state);
-                writeAll.call(stateJson);
+                writeAll.call(state);
 
                 if (state.isEnded()) {
                     stateRepository.clear();

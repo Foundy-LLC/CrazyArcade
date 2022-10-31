@@ -6,8 +6,6 @@ import client.core.OutlinedLabel;
 import client.service.Api;
 import client.util.Fonts;
 import client.util.ImageIcons;
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 import domain.constant.Protocol;
 import domain.state.LobbyState;
 
@@ -62,22 +60,22 @@ public class LobbyView extends ApiListenerView {
     }
 
     @Override
-    protected void onMessageReceived(String message) {
-        if (message.equals(Protocol.ERROR)) {
-            showToast("서버와의 연결이 끊어졌습니다.");
-        }
+    protected void onMessageReceived(Object object) {
+        if (object instanceof String) {
+            String message = (String) object;
 
-        if (message.startsWith("/startGame")) {
-            navigateTo(new GameView());
+            if (message.equals(Protocol.ERROR)) {
+                showToast("서버와의 연결이 끊어졌습니다.");
+            }
+
+            if (message.startsWith("/startGame")) {
+                navigateTo(new GameView());
+            }
             return;
         }
 
-        try {
-            LobbyState state = new Gson().fromJson(message, LobbyState.class);
-            updateView(state);
-        } catch (JsonSyntaxException e) {
-            e.printStackTrace();
-            showToast("잘못된 `LobbyState`가 서버로부터 전달되었습니다.");
+        if (object instanceof LobbyState) {
+            updateView((LobbyState) object);
         }
     }
 

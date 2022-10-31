@@ -5,9 +5,7 @@ import domain.constant.Protocol;
 import domain.model.Direction;
 import lombok.Getter;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
 import java.util.UUID;
 
@@ -16,8 +14,8 @@ public class Api extends ChangeNotifier {
     private String ipAddress;
     private String portNumber;
     private Socket socket;
-    private DataInputStream inputStream;
-    private DataOutputStream outputStream;
+    private ObjectInputStream inputStream;
+    private ObjectOutputStream outputStream;
 
     @Getter
     private String userName;
@@ -38,8 +36,9 @@ public class Api extends ChangeNotifier {
         this.portNumber = portNumber;
 
         socket = new Socket(ipAddress, Integer.parseInt(portNumber));
-        inputStream = new DataInputStream(socket.getInputStream());
-        outputStream = new DataOutputStream(socket.getOutputStream());
+        outputStream = new ObjectOutputStream(socket.getOutputStream());
+        outputStream.flush();
+        inputStream = new ObjectInputStream(socket.getInputStream());
 
         NetworkSubscriber subscriber = new NetworkSubscriber();
         subscriber.start();
@@ -55,9 +54,9 @@ public class Api extends ChangeNotifier {
 
     private void sendMessage(String message) {
         assertDidInit();
-
         try {
-            outputStream.writeUTF(message);
+            outputStream.writeObject(message);
+            outputStream.flush();
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -91,10 +90,11 @@ public class Api extends ChangeNotifier {
         public void run() {
             while (true) {
                 try {
-                    String message = inputStream.readUTF();
-                    System.out.println("============= MESSAGE ==============");
-                    System.out.println(message);
-                    notifyListeners(message);
+                    Object object = inputStream.readObject();
+                    System.out.println("========== MESSAGE RECEIVED ==========");
+                    System.out.println(object);
+                    System.out.println("======================================");
+                    notifyListeners(object);
                 } catch (IOException e) {
                     try {
                         outputStream.close();
@@ -103,6 +103,9 @@ public class Api extends ChangeNotifier {
                     } catch (Exception ignored) {
                     }
                     break;
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                    throw new RuntimeException(e);
                 }
             }
             notifyListeners(Protocol.ERROR);
