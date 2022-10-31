@@ -51,36 +51,39 @@ public class GameStateRepository {
         gameState.updateState();
     }
 
-    public GameState movePlayer(String name, Direction direction) {
+    public void movePlayer(String name, Direction direction) {
         if (gameState.isEnded()) {
-            return null;
+            return;
         }
         Player player = findPlayer(name);
         if (player != null) {
             player.setDirection(direction);
             player.move(direction, gameState.getMap());
         }
-        return gameState;
     }
 
-    public GameState installWaterBomb(String playerName) {
+    /**
+     * @return 설치에 성공하면 `true`를 반환한다.
+     */
+    public boolean installWaterBomb(String playerName) {
         if (gameState.isEnded()) {
-            return null;
+            return false;
         }
         Player player = findPlayer(playerName);
         if (player != null && !player.isTrapped()) {
             int installedCount = gameState.countPlayerWaterBombs(player);
             if (installedCount == player.getMaxWaterBombCount()) {
-                return gameState;
+                return false;
             }
 
             Offset playerCenterTileOffset = player.getCenterTileOffset();
             if (gameState.canInstallWaterBombAt(playerCenterTileOffset)) {
                 WaterBomb waterBomb = player.createWaterBomb();
                 gameState.installWaterBomb(waterBomb, playerCenterTileOffset);
+                return true;
             }
         }
-        return gameState;
+        return false;
     }
 
     private Player findPlayer(String name) {

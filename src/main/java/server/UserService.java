@@ -87,6 +87,12 @@ public class UserService extends Thread {
         writeAll.call(stateJson);
     }
 
+    private void writeGameStateToAll() {
+        GameState gameState = GameStateRepository.getInstance().getGameState();
+        String stateJson = new Gson().toJson(gameState);
+        writeAll.call(stateJson);
+    }
+
     public void run() {
         while (true) {
             try {
@@ -120,9 +126,8 @@ public class UserService extends Thread {
 
                             writeAll.call("/startGame");
 
-                            GameState initGameState = gameStateRepository.initState(lobbyStateRepository.getLobbyUserNames());
-                            String stateJson = new Gson().toJson(initGameState);
-                            writeAll.call(stateJson);
+                            gameStateRepository.initState(lobbyStateRepository.getLobbyUserNames());
+                            writeGameStateToAll();
 
                             GameStateTicker gameStateTicker = new GameStateTicker();
                             gameStateTicker.start();
@@ -134,18 +139,16 @@ public class UserService extends Thread {
                             String name = msgArr[0].substring(1);
                             String action = msgArr[1];
                             Direction direction = Direction.valueOf(action.toUpperCase());
-                            GameState newState = gameStateRepository.movePlayer(name, direction);
-                            String stateJson = new Gson().toJson(newState);
-                            writeAll.call(stateJson);
+                            gameStateRepository.movePlayer(name, direction);
+                            writeGameStateToAll();
                         }
                         case "installWaterBomb" -> {
                             if (gameStateRepository.isEnded()) {
                                 continue;
                             }
                             String playerName = msgArr[0].substring(1);
-                            GameState newState = gameStateRepository.installWaterBomb(playerName);
-                            String stateJson = new Gson().toJson(newState);
-                            writeAll.call(stateJson);
+                            gameStateRepository.installWaterBomb(playerName);
+                            writeGameStateToAll();
                         }
                     }
                 } catch (Exception e) {
@@ -178,10 +181,9 @@ public class UserService extends Thread {
                 GameStateRepository stateRepository = GameStateRepository.getInstance();
                 stateRepository.updateState();
 
-                GameState state = stateRepository.getGameState();
-                String stateJson = new Gson().toJson(state);
-                writeAll.call(stateJson);
+                writeGameStateToAll();
 
+                GameState state = stateRepository.getGameState();
                 if (state.isEnded()) {
                     stateRepository.clear();
                     break;
