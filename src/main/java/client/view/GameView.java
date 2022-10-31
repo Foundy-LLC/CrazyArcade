@@ -83,7 +83,11 @@ public class GameView extends ApiListenerView {
     protected void onMessageReceived(String message) {
         try {
             GameState state = new Gson().fromJson(message, GameState.class);
-            updateView(state);
+            // 상대 플레이어가 비정상 종료된 경우 LobbyState 정보가 전달되기 때문에
+            //noinspection ConstantConditions
+            if (state.getMap() != null) {
+                updateView(state);
+            }
         } catch (JsonSyntaxException e) {
             e.printStackTrace();
             showToast("잘못된 형식의 GameState 객체 전달됨");

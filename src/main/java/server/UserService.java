@@ -3,11 +3,9 @@ package server;
 import java.io.*;
 import java.net.Socket;
 import java.util.Arrays;
-import java.util.List;
 
 import com.google.gson.Gson;
 import domain.model.Direction;
-import domain.model.Player;
 import domain.state.GameState;
 import domain.state.LobbyState;
 

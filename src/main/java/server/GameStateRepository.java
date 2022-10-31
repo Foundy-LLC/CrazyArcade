@@ -89,6 +89,9 @@ public class GameStateRepository {
     }
 
     public void removeTerminatedUser(String userName) {
+        if (isEnded()) {
+            return;
+        }
         List<Player> players = gameState.getPlayers();
         Player terminatedPlayer = players.stream()
                 .filter(player -> userName.equals(player.getName()))
