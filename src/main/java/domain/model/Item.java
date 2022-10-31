@@ -8,11 +8,20 @@ import java.io.Serializable;
 public class Item implements Serializable {
 
     public enum Type {
-        BUBBLE, FLUID, ULTRA, ROLLER
+        BUBBLE(0.08),
+        FLUID(0.8),
+        ULTRA(0.01),
+        ROLLER(0.06);
+
+        final double appearanceProbability;
+
+        Type(double appearanceProbability) {
+            this.appearanceProbability = appearanceProbability;
+        }
     }
 
     @Getter
-    private long createdMilli = System.currentTimeMillis();
+    private final long createdMilli = System.currentTimeMillis();
 
     @NonNull
     @Getter

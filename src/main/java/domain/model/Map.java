@@ -19,7 +19,7 @@ public class Map implements Serializable {
 
     @Getter
     @NonNull
-    private final Block[][] block2D;
+    private final Block[][] block2d;
 
     @Getter
     @NonNull
@@ -36,7 +36,7 @@ public class Map implements Serializable {
     public Map(
             Offset[] startingPoints,
             Tile[][] tile2d,
-            Block[][] block2D,
+            Block[][] block2d,
             WaterBomb[][] waterBomb2d,
             WaterWave[][] waterWave2d,
             Item[][] item2d
@@ -44,8 +44,8 @@ public class Map implements Serializable {
         assert (startingPoints.length == 8);
         assert (tile2d.length == Sizes.TILE_COLUMN_COUNT);
         assert (tile2d[0].length == Sizes.TILE_ROW_COUNT);
-        assert (block2D.length == Sizes.TILE_COLUMN_COUNT);
-        assert (block2D[0].length == Sizes.TILE_ROW_COUNT);
+        assert (block2d.length == Sizes.TILE_COLUMN_COUNT);
+        assert (block2d[0].length == Sizes.TILE_ROW_COUNT);
         assert (waterBomb2d.length == Sizes.TILE_COLUMN_COUNT);
         assert (waterBomb2d[0].length == Sizes.TILE_ROW_COUNT);
         assert (waterWave2d.length == Sizes.TILE_COLUMN_COUNT);
@@ -55,7 +55,7 @@ public class Map implements Serializable {
 
         this.startingPoints = startingPoints;
         this.tile2d = tile2d;
-        this.block2D = block2D;
+        this.block2d = block2d;
         this.waterBomb2d = waterBomb2d;
         this.waterWave2d = waterWave2d;
         this.item2d = item2d;

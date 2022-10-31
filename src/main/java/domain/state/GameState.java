@@ -54,7 +54,7 @@ public class GameState implements Serializable {
     }
 
     private void updateBlocksState() {
-        Block[][] block2d = map.getBlock2D();
+        Block[][] block2d = map.getBlock2d();
         Item[][] item2d = map.getItem2d();
 
         for (int y = 0; y < block2d.length; ++y) {
@@ -91,7 +91,7 @@ public class GameState implements Serializable {
      */
     private void doChainExplode(int y, int x) {
         WaterBomb[][] waterBomb2d = map.getWaterBomb2d();
-        Block[][] block2d = map.getBlock2D();
+        Block[][] block2d = map.getBlock2d();
         WaterBomb waterBomb = waterBomb2d[y][x];
 
         if (waterBomb == null) {
@@ -128,7 +128,7 @@ public class GameState implements Serializable {
      */
     private void createWaterWave(int y, int x, int length) {
         WaterWave[][] waterWave2d = map.getWaterWave2d();
-        Block[][] block2d = map.getBlock2D();
+        Block[][] block2d = map.getBlock2d();
         Item[][] item2d = map.getItem2d();
 
         waterWave2d[y][x] = new WaterWave(null, false);

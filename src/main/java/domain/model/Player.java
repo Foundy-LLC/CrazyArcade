@@ -140,7 +140,7 @@ public class Player implements Serializable {
         if (isInRange(newOffset)) {
             Rectangle oldRectangle = getPlayerRectangleAt(offset);
             Rectangle newRectangle = getPlayerRectangleAt(newOffset);
-            Block[][] block2d = map.getBlock2D();
+            Block[][] block2d = map.getBlock2d();
             WaterBomb[][] waterBomb2d = deepCopy(map.getWaterBomb2d());
 
             // 플레이어가 물폭탄을 설치하여 플레이어 밑에 물폭탄이 있는 경우 충돌에서 제외한다.

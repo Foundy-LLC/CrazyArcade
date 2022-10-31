@@ -47,7 +47,7 @@ public class MapPanel extends JPanel {
 
     private void paintPlayerAndItemAndBlock(Graphics g) {
         Item[][] item2d = map.getItem2d();
-        Block[][] block2d = map.getBlock2D();
+        Block[][] block2d = map.getBlock2d();
 
         for (int y = 0; y < block2d.length; ++y) {
             for (int x = 0; x < block2d[y].length; ++x) {

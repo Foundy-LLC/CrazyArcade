@@ -18,13 +18,24 @@ public class Block implements Serializable {
     private final Item.Type itemType;
 
     public Block() {
-        this(null);
+        double blockImageIndex = Math.random() * ImageIcons.BLOCKS.length;
+        this.blockImageIndex = (int) blockImageIndex;
+        this.itemType = getRandomItemType();
     }
 
-    public Block(Item.Type itemType) {
-        this.itemType = itemType;
-        double random = Math.random() * ImageIcons.BLOCKS.length;
-        blockImageIndex = (int) random;
+    private Item.Type getRandomItemType() {
+        final Item.Type[] itemTypes = Item.Type.values();
+        double random = Math.random();
+        double propSum = 0.0;
+
+        for (var itemType: itemTypes) {
+            propSum += itemType.appearanceProbability;
+            if (random < propSum) {
+                return itemType;
+            }
+        }
+
+        return null;
     }
 
     public void collideWithWaterWave() {
