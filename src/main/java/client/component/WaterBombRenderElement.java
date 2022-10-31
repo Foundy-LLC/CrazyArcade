@@ -1,6 +1,6 @@
 package client.component;
 
-import client.util.ImageIcons;
+import client.constant.ImageIcons;
 import domain.model.WaterBomb;
 
 import javax.swing.*;

@@ -1,7 +1,6 @@
 package client.component;
 
-import client.util.ImageIcons;
-import domain.constant.Sizes;
+import client.constant.ImageIcons;
 import domain.model.Offset;
 import domain.model.Player;
 

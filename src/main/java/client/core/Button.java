@@ -3,7 +3,7 @@ package client.core;
 import java.awt.Color;
 import javax.swing.JButton;
 
-import client.util.Fonts;
+import client.constant.Fonts;
 
 public class Button extends JButton {
 

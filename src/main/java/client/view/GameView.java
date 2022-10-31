@@ -4,7 +4,7 @@ import client.component.GameEndTextLabel;
 import client.core.ApiListenerView;
 import client.component.MapPanel;
 import client.service.Api;
-import client.util.ImageIcons;
+import client.constant.ImageIcons;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import domain.model.*;

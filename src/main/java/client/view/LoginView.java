@@ -8,7 +8,7 @@ import client.core.BaseView;
 import client.core.Button;
 import client.core.TextField;
 import client.service.Api;
-import client.util.ImageIcons;
+import client.constant.ImageIcons;
 
 public class LoginView extends BaseView {
 

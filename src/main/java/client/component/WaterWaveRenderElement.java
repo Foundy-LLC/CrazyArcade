@@ -1,6 +1,6 @@
 package client.component;
 
-import client.util.ImageIcons;
+import client.constant.ImageIcons;
 import domain.constant.Sizes;
 import domain.model.Direction;
 import domain.model.WaterWave;

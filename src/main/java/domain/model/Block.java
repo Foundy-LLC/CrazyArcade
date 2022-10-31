@@ -1,6 +1,6 @@
 package domain.model;
 
-import client.util.ImageIcons;
+import client.constant.ImageIcons;
 import lombok.Getter;
 
 import java.io.Serializable;

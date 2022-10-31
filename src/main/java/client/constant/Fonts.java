@@ -1,4 +1,4 @@
-package client.util;
+package client.constant;
 
 import java.awt.Font;
 

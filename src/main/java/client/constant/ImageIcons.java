@@ -1,4 +1,4 @@
-package client.util;
+package client.constant;
 
 import javax.swing.ImageIcon;
 

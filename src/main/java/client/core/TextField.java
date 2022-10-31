@@ -7,7 +7,7 @@ import java.awt.RenderingHints;
 import javax.swing.JTextField;
 import javax.swing.text.Document;
 
-import client.util.Fonts;
+import client.constant.Fonts;
 
 public class TextField extends JTextField {
 

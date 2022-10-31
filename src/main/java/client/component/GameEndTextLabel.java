@@ -1,6 +1,6 @@
 package client.component;
 
-import client.util.ImageIcons;
+import client.constant.ImageIcons;
 
 import javax.swing.*;
 import java.awt.*;
