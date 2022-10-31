@@ -54,7 +54,8 @@ public class GameState implements Serializable {
     }
 
     private void updateBlocksState() {
-        Block[][] block2d = map.getBlock2D();
+        Block[][] block2d = map.getBlock2d();
+        Item[][] item2d = map.getItem2d();
 
         for (int y = 0; y < block2d.length; ++y) {
             for (int x = 0; x < block2d[y].length; ++x) {
@@ -62,6 +63,7 @@ public class GameState implements Serializable {
                     continue;
                 }
                 if (block2d[y][x].shouldDisappear()) {
+                    item2d[y][x] = block2d[y][x].createItem();
                     block2d[y][x] = null;
                 }
             }
@@ -89,7 +91,7 @@ public class GameState implements Serializable {
      */
     private void doChainExplode(int y, int x) {
         WaterBomb[][] waterBomb2d = map.getWaterBomb2d();
-        Block[][] block2d = map.getBlock2D();
+        Block[][] block2d = map.getBlock2d();
         WaterBomb waterBomb = waterBomb2d[y][x];
 
         if (waterBomb == null) {
@@ -117,6 +119,8 @@ public class GameState implements Serializable {
 
     /**
      * 십자가 모양의 물줄기를 생성한다.
+     * <p>
+     * 블럭에 충돌한 경우 더이상 물줄기는 뻗지 않는다. 아이템은 물줄기를 맞으면 사라진다.
      *
      * @param y      물줄기의 중앙 y값 좌표
      * @param x      물줄기의 중앙 x값 좌표
@@ -124,9 +128,12 @@ public class GameState implements Serializable {
      */
     private void createWaterWave(int y, int x, int length) {
         WaterWave[][] waterWave2d = map.getWaterWave2d();
-        Block[][] block2d = map.getBlock2D();
+        Block[][] block2d = map.getBlock2d();
+        Item[][] item2d = map.getItem2d();
 
         waterWave2d[y][x] = new WaterWave(null, false);
+        item2d[y][x] = null;
+
         for (int dir = 0; dir < DIRECTIONS.length; ++dir) {
             for (int i = 1; i <= length; i++) {
                 int ny = y + i * Direction.DIR[dir][0];
@@ -135,10 +142,13 @@ public class GameState implements Serializable {
                 if (isOutOfRange(ny, nx)) {
                     break;
                 }
+
                 if (block2d[ny][nx] != null) {
                     block2d[ny][nx].collideWithWaterWave();
                     break;
                 }
+
+                item2d[ny][nx] = null;
                 waterWave2d[ny][nx] = new WaterWave(DIRECTIONS[dir], i == length);
             }
         }
@@ -165,6 +175,8 @@ public class GameState implements Serializable {
     }
 
     private void updatePlayersState() {
+        Item[][] item2d = map.getItem2d();
+
         for (int i = 0; i < players.size(); ++i) {
             Player player = players.get(i);
 
@@ -177,6 +189,13 @@ public class GameState implements Serializable {
                         otherPlayer.die();
                     }
                 }
+            }
+
+            Offset centerOffset = player.getCenterTileOffset();
+            Item item = item2d[centerOffset.y][centerOffset.x];
+            if (item != null) {
+                player.collectItem(item);
+                item2d[centerOffset.y][centerOffset.x] = null;
             }
 
             Pair<Offset> feetOffset = player.getFeetTileOffset();
@@ -213,5 +232,18 @@ public class GameState implements Serializable {
 
     public void removeTerminatedPlayer(Player player) {
         players.remove(player);
+    }
+
+    public int countPlayerWaterBombs(Player player) {
+        WaterBomb[][] waterBomb2d = map.getWaterBomb2d();
+        int result = 0;
+        for (var waterBombs : waterBomb2d) {
+            for (var waterBomb : waterBombs) {
+                if (waterBomb != null && player == waterBomb.getInstaller()) {
+                    result++;
+                }
+            }
+        }
+        return result;
     }
 }

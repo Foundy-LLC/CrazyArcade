@@ -12,10 +12,14 @@ public class WaterBomb implements Serializable {
     private final long installedMilli = System.currentTimeMillis();
 
     @Getter
+    private final Player installer;
+
+    @Getter
     private final int length;
 
-    public WaterBomb(int length) {
-        this.length = length;
+    public WaterBomb(Player installer) {
+        this.installer = installer;
+        this.length = installer.getWaterBombLength();
     }
 
     public boolean shouldExplode() {

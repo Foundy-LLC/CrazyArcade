@@ -24,17 +24,25 @@ public class Player implements Serializable {
 
     private static final int GAP_BETWEEN_FEET = 4;
 
+    private static final int MAX_WATER_BOMB_COUNT_LIMIT = 7;
+    private static final int WATER_BOMB_LENGTH_LIMIT = 8;
+    private static final int NORMAL_STATE_SPEED_LIMIT = 9;
+
     @NonNull
     @Getter
     private final String name;
 
-    @NonNull
     @Getter
-    private Direction direction;
+    private int maxWaterBombCount = 1;
+
+    @Getter
+    private int waterBombLength = 1;
+
+    private int normalStateSpeed = 5;
 
     @NonNull
     @Getter
-    private Integer waterBombLength = 1;
+    private Direction direction;
 
     @Getter
     private Long trappedTimeMilli = null;
@@ -100,7 +108,7 @@ public class Player implements Serializable {
         if (isTrapped()) {
             return 1;
         }
-        return 4;
+        return normalStateSpeed;
     }
 
     private void setOffset(Offset offset) {
@@ -132,7 +140,7 @@ public class Player implements Serializable {
         if (isInRange(newOffset)) {
             Rectangle oldRectangle = getPlayerRectangleAt(offset);
             Rectangle newRectangle = getPlayerRectangleAt(newOffset);
-            Block[][] block2d = map.getBlock2D();
+            Block[][] block2d = map.getBlock2d();
             WaterBomb[][] waterBomb2d = deepCopy(map.getWaterBomb2d());
 
             // 플레이어가 물폭탄을 설치하여 플레이어 밑에 물폭탄이 있는 경우 충돌에서 제외한다.
@@ -314,12 +322,33 @@ public class Player implements Serializable {
     }
 
     public WaterBomb createWaterBomb() {
-        return new WaterBomb(waterBombLength);
+        return new WaterBomb(this);
     }
 
     public double distance(Player other) {
         double yd = Math.pow((offset.y - other.offset.y), 2);
         double xd = Math.pow((offset.x - other.offset.x), 2);
         return Math.sqrt(yd + xd);
+    }
+
+    public void collectItem(Item item) {
+        switch (item.getType()) {
+            case BUBBLE -> {
+                if (maxWaterBombCount < MAX_WATER_BOMB_COUNT_LIMIT) {
+                    maxWaterBombCount++;
+                }
+            }
+            case FLUID -> {
+                if (waterBombLength < WATER_BOMB_LENGTH_LIMIT) {
+                    waterBombLength++;
+                }
+            }
+            case ULTRA -> waterBombLength = WATER_BOMB_LENGTH_LIMIT;
+            case ROLLER -> {
+                if (normalStateSpeed < NORMAL_STATE_SPEED_LIMIT) {
+                    normalStateSpeed++;
+                }
+            }
+        }
     }
 }
