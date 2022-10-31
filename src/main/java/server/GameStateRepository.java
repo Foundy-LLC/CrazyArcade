@@ -69,6 +69,11 @@ public class GameStateRepository {
         }
         Player player = findPlayer(playerName);
         if (player != null && !player.isTrapped()) {
+            int installedCount = gameState.countPlayerWaterBombs(player);
+            if (installedCount == player.getMaxWaterBombCount()) {
+                return gameState;
+            }
+
             Offset playerCenterTileOffset = player.getCenterTileOffset();
             if (gameState.canInstallWaterBombAt(playerCenterTileOffset)) {
                 WaterBomb waterBomb = player.createWaterBomb();

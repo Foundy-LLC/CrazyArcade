@@ -12,10 +12,10 @@ public class WaterBomb implements Serializable {
     private final long installedMilli = System.currentTimeMillis();
 
     @Getter
-    private final int length;
+    private final Player installer;
 
-    public WaterBomb(int length) {
-        this.length = length;
+    public WaterBomb(Player installer) {
+        this.installer = installer;
     }
 
     public boolean shouldExplode() {
@@ -30,5 +30,10 @@ public class WaterBomb implements Serializable {
         long passedMilli = currentMilli - installedMilli;
 
         return passedMilli < EXPLOSION_MILLI;
+    }
+
+    public int getLength() {
+        // TODO use player water bomb length
+        return 1;
     }
 }

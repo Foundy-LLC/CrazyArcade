@@ -24,9 +24,14 @@ public class Player implements Serializable {
 
     private static final int GAP_BETWEEN_FEET = 4;
 
+    private static final int MAX_WATER_BOMB_COUNT_LIMIT = 8;
+
     @NonNull
     @Getter
     private final String name;
+
+    @Getter
+    private int maxWaterBombCount = 1;
 
     @NonNull
     @Getter
@@ -314,7 +319,7 @@ public class Player implements Serializable {
     }
 
     public WaterBomb createWaterBomb() {
-        return new WaterBomb(waterBombLength);
+        return new WaterBomb(this);
     }
 
     public double distance(Player other) {
@@ -324,6 +329,18 @@ public class Player implements Serializable {
     }
 
     public void collectItem(Item item) {
-        // TODO
+        switch (item.getType()) {
+            case BUBBLE -> {
+                if (maxWaterBombCount < MAX_WATER_BOMB_COUNT_LIMIT) {
+                    maxWaterBombCount++;
+                }
+            }
+            case FLUID -> {
+            }
+            case ULTRA -> {
+            }
+            case ROLLER -> {
+            }
+        }
     }
 }

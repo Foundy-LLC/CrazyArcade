@@ -231,4 +231,17 @@ public class GameState implements Serializable {
     public void removeTerminatedPlayer(Player player) {
         players.remove(player);
     }
+
+    public int countPlayerWaterBombs(Player player) {
+        WaterBomb[][] waterBomb2d = map.getWaterBomb2d();
+        int result = 0;
+        for (var waterBombs : waterBomb2d) {
+            for (var waterBomb: waterBombs) {
+                if (waterBomb != null && player == waterBomb.getInstaller()) {
+                    result++;
+                }
+            }
+        }
+        return result;
+    }
 }
