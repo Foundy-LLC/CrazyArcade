@@ -174,13 +174,15 @@ public class Player implements Serializable {
                             int blockRightX = Sizes.TILE_SIZE.width * (leftTopTile.x + 1);
                             int diff = blockRightX - newRectangle.x;
                             if (diff < COLLIDE_TOLERANCES) {
-                                setOffset(new Offset(newRectangle.x + speed, oldRectangle.y));
+                                int nx = Math.min(newRectangle.x + speed, offset.x + diff);
+                                setOffset(new Offset(nx, oldRectangle.y));
                             }
                         } else if (collideRightTop) {
                             int blockLeftX = Sizes.TILE_SIZE.width * rightTopTile.x;
                             int diff = (newRectangle.x + newRectangle.width) - blockLeftX;
                             if (diff < COLLIDE_TOLERANCES) {
-                                setOffset(new Offset(newRectangle.x - speed, oldRectangle.y));
+                                int nx = Math.max(newRectangle.x - speed, offset.x - diff - 1);
+                                setOffset(new Offset(nx, oldRectangle.y));
                             }
                         }
                     }
@@ -189,13 +191,15 @@ public class Player implements Serializable {
                             int blockRightX = Sizes.TILE_SIZE.width * (leftBottomTile.x + 1);
                             int diff = blockRightX - newRectangle.x;
                             if (diff < COLLIDE_TOLERANCES) {
-                                setOffset(new Offset(newRectangle.x + speed, oldRectangle.y));
+                                int nx = Math.min(newRectangle.x + speed, offset.x + diff);
+                                setOffset(new Offset(nx, oldRectangle.y));
                             }
                         } else if (collideRightBottom) {
                             int blockLeftX = Sizes.TILE_SIZE.width * rightBottomTile.x;
                             int diff = (newRectangle.x + newRectangle.width) - blockLeftX;
                             if (diff < COLLIDE_TOLERANCES) {
-                                setOffset(new Offset(newRectangle.x - speed, oldRectangle.y));
+                                int nx = Math.max(newRectangle.x - speed, offset.x - diff - 1);
+                                setOffset(new Offset(nx, oldRectangle.y));
                             }
                         }
                     }
@@ -204,13 +208,15 @@ public class Player implements Serializable {
                             int blockTopY = Sizes.TILE_SIZE.height * (leftTopTile.y + 1);
                             int diff = blockTopY - newRectangle.y;
                             if (diff < COLLIDE_TOLERANCES) {
-                                setOffset(new Offset(oldRectangle.x, newRectangle.y + speed));
+                                int ny = Math.min(newRectangle.y + speed, offset.y + diff);
+                                setOffset(new Offset(oldRectangle.x, ny));
                             }
                         } else if (collideLeftBottom) {
                             int blockBottomY = Sizes.TILE_SIZE.height * leftBottomTile.y;
                             int diff = (newRectangle.y + newRectangle.width) - blockBottomY;
                             if (diff < COLLIDE_TOLERANCES) {
-                                setOffset(new Offset(oldRectangle.x, newRectangle.y - speed));
+                                int ny = Math.max(newRectangle.y - speed, offset.y - diff - 1);
+                                setOffset(new Offset(oldRectangle.x, ny));
                             }
                         }
                     }
@@ -219,13 +225,15 @@ public class Player implements Serializable {
                             int blockTopY = Sizes.TILE_SIZE.height * (leftTopTile.y + 1);
                             int diff = blockTopY - newRectangle.y;
                             if (diff < COLLIDE_TOLERANCES) {
-                                setOffset(new Offset(newRectangle.x, newRectangle.y + speed));
+                                int ny = Math.min(newRectangle.y + speed, offset.y + diff);
+                                setOffset(new Offset(newRectangle.x, ny));
                             }
                         } else if (collideRightBottom) {
                             int blockBottomY = Sizes.TILE_SIZE.height * leftBottomTile.y;
                             int diff = (newRectangle.y + newRectangle.width) - blockBottomY;
                             if (diff < COLLIDE_TOLERANCES) {
-                                setOffset(new Offset(newRectangle.x, newRectangle.y - speed));
+                                int ny = Math.max(newRectangle.y - speed, offset.y - diff - 1);
+                                setOffset(new Offset(newRectangle.x, ny));
                             }
                         }
                     }
