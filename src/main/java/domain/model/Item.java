@@ -9,7 +9,7 @@ public class Item implements Serializable {
 
     public enum Type {
         BUBBLE(0.08),
-        FLUID(0.8),
+        FLUID(0.08),
         ULTRA(0.01),
         ROLLER(0.06);
 
