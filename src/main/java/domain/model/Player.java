@@ -340,8 +340,7 @@ public class Player implements Serializable {
                     waterBombLength++;
                 }
             }
-            case ULTRA -> {
-            }
+            case ULTRA -> waterBombLength = WATER_BOMB_LENGTH_LIMIT;
             case ROLLER -> {
             }
         }
