@@ -84,7 +84,7 @@ public class Api extends ChangeNotifier {
     }
 
     public void installWaterBomb() {
-        sendMessage("/" + userName + " waterBomb");
+        sendMessage("/" + userName + " installWaterBomb");
     }
 
     class NetworkSubscriber extends Thread {

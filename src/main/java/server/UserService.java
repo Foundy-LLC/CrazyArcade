@@ -138,7 +138,7 @@ public class UserService extends Thread {
                             String stateJson = new Gson().toJson(newState);
                             writeAll.call(stateJson);
                         }
-                        case "waterBomb" -> {
+                        case "installWaterBomb" -> {
                             if (gameStateRepository.isEnded()) {
                                 continue;
                             }
