@@ -26,6 +26,7 @@ public class Player implements Serializable {
 
     private static final int MAX_WATER_BOMB_COUNT_LIMIT = 7;
     private static final int WATER_BOMB_LENGTH_LIMIT = 8;
+    private static final int NORMAL_STATE_SPEED_LIMIT = 9;
 
     @NonNull
     @Getter
@@ -36,6 +37,8 @@ public class Player implements Serializable {
 
     @Getter
     private int waterBombLength = 1;
+
+    private int normalStateSpeed = 5;
 
     @NonNull
     @Getter
@@ -105,7 +108,7 @@ public class Player implements Serializable {
         if (isTrapped()) {
             return 1;
         }
-        return 4;
+        return normalStateSpeed;
     }
 
     private void setOffset(Offset offset) {
@@ -342,6 +345,9 @@ public class Player implements Serializable {
             }
             case ULTRA -> waterBombLength = WATER_BOMB_LENGTH_LIMIT;
             case ROLLER -> {
+                if (normalStateSpeed < NORMAL_STATE_SPEED_LIMIT) {
+                    normalStateSpeed++;
+                }
             }
         }
     }

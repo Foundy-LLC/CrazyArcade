@@ -110,7 +110,7 @@ public class GameView extends ApiListenerView {
 
         public KeyboardListener() {
             final Api api = Api.getInstance();
-            timer = new Timer(24, arg0 -> {
+            timer = new Timer(30, arg0 -> {
                 if (!pressedKeys.isEmpty()) {
                     for (Integer pressedKey : pressedKeys) {
                         switch (pressedKey) {
