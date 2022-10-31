@@ -18,7 +18,7 @@ public class Player implements Serializable {
     public static final int MAX_ALIVE_TIME_IN_TRAP = 7_000;
     public static final int DEAD_ANIMATION_MILLI = 600;
 
-    private static final int COLLIDE_TOLERANCES = 16;
+    private static final int COLLIDE_TOLERANCES = 20;
 
     private static final int FEET_DISTANCE_FROM_BOTTOM_OF_IMAGE = 8;
 
