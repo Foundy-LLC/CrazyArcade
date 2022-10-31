@@ -189,13 +189,13 @@ public class GameState implements Serializable {
                         otherPlayer.die();
                     }
                 }
-            }
 
-            Offset centerOffset = player.getCenterTileOffset();
-            Item item = item2d[centerOffset.y][centerOffset.x];
-            if (item != null) {
-                player.collectItem(item);
-                item2d[centerOffset.y][centerOffset.x] = null;
+                Offset centerOffset = player.getCenterTileOffset();
+                Item item = item2d[centerOffset.y][centerOffset.x];
+                if (item != null) {
+                    player.collectItem(item);
+                    item2d[centerOffset.y][centerOffset.x] = null;
+                }
             }
 
             Pair<Offset> feetOffset = player.getFeetTileOffset();
