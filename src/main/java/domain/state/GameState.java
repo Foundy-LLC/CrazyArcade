@@ -147,6 +147,8 @@ public class GameState implements Serializable {
                     block2d[ny][nx].collideWithWaterWave();
                     break;
                 }
+
+                item2d[ny][nx] = null;
                 waterWave2d[ny][nx] = new WaterWave(DIRECTIONS[dir], i == length);
             }
         }
@@ -190,10 +192,10 @@ public class GameState implements Serializable {
             }
 
             Offset centerOffset = player.getCenterTileOffset();
-            Item item = item2d[centerOffset.x][centerOffset.y];
+            Item item = item2d[centerOffset.y][centerOffset.x];
             if (item != null) {
                 player.collectItem(item);
-                item2d[centerOffset.x][centerOffset.y] = null;
+                item2d[centerOffset.y][centerOffset.x] = null;
             }
 
             Pair<Offset> feetOffset = player.getFeetTileOffset();
@@ -236,7 +238,7 @@ public class GameState implements Serializable {
         WaterBomb[][] waterBomb2d = map.getWaterBomb2d();
         int result = 0;
         for (var waterBombs : waterBomb2d) {
-            for (var waterBomb: waterBombs) {
+            for (var waterBomb : waterBombs) {
                 if (waterBomb != null && player == waterBomb.getInstaller()) {
                     result++;
                 }
