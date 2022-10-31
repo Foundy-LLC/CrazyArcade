@@ -1,8 +1,11 @@
 package client.service;
 
 import client.core.ChangeNotifier;
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import domain.constant.Protocol;
 import domain.model.Direction;
+import domain.model.Sound;
 import lombok.Getter;
 
 import java.io.DataInputStream;
@@ -88,12 +91,29 @@ public class Api extends ChangeNotifier {
     }
 
     class NetworkSubscriber extends Thread {
+
+        private boolean checkAndPlaySound(String message) {
+            try {
+                Sound sound = new Gson().fromJson(message, Sound.class);
+                if (sound.path != null) {
+                    SoundController.play(sound);
+                    return true;
+                }
+            } catch (JsonSyntaxException ignored) {
+            }
+            return false;
+        }
+
         public void run() {
             while (true) {
                 try {
                     String message = inputStream.readUTF();
                     System.out.println("============= MESSAGE ==============");
                     System.out.println(message);
+
+                    if (checkAndPlaySound(message)) {
+                        continue;
+                    }
                     notifyListeners(message);
                 } catch (IOException e) {
                     try {

@@ -6,6 +6,7 @@ import java.util.Arrays;
 
 import com.google.gson.Gson;
 import domain.model.Direction;
+import domain.model.Sound;
 import domain.state.GameState;
 import domain.state.LobbyState;
 
@@ -81,6 +82,16 @@ public class UserService extends Thread {
         lobbyStateRepository.removeLobbyUser(userName);
     }
 
+    private void writeSoundToOne(Sound sound) {
+        String json = new Gson().toJson(sound);
+        writeOne(json);
+    }
+
+    private void writeSoundToAll(Sound sound) {
+        String json = new Gson().toJson(sound);
+        writeAll.call(json);
+    }
+
     private void writeLobbyStateToAll() {
         LobbyState lobbyState = LobbyStateRepository.getInstance().getLobbyState();
         String stateJson = new Gson().toJson(lobbyState);
@@ -147,7 +158,10 @@ public class UserService extends Thread {
                                 continue;
                             }
                             String playerName = msgArr[0].substring(1);
-                            gameStateRepository.installWaterBomb(playerName);
+                            boolean installed = gameStateRepository.installWaterBomb(playerName);
+                            if (installed) {
+                                writeSoundToOne(Sound.BOMB_SET);
+                            }
                             writeGameStateToAll();
                         }
                     }
