@@ -208,6 +208,7 @@ public class GameState implements Serializable {
                 Item item = item2d[centerOffset.y][centerOffset.x];
                 if (item != null) {
                     player.collectItem(item);
+                    shouldBePlayedSounds.add(Sound.EAT_ITEM);
                     item2d[centerOffset.y][centerOffset.x] = null;
                 }
             }
