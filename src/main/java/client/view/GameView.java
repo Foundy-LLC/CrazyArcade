@@ -5,6 +5,7 @@ import client.core.ApiListenerView;
 import client.component.MapPanel;
 import client.service.Api;
 import client.constant.ImageIcons;
+import client.service.SoundController;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import domain.model.*;
@@ -46,7 +47,7 @@ public class GameView extends ApiListenerView {
 
         if (gameState.isEnded()) {
             isGameEnded = true;
-            showGameEndText(gameState.getWinner());
+            playGameEndingEffect(gameState.getWinner());
             Timer timer = new Timer(3_000, arg0 -> navigateTo(new LobbyView()));
             timer.setRepeats(false);
             timer.start();
@@ -58,20 +59,26 @@ public class GameView extends ApiListenerView {
         requestFocus();
     }
 
-    private void showGameEndText(Player winner) {
+    private void playGameEndingEffect(Player winner) {
         Api api = Api.getInstance();
         GameEndTextLabel.Type type;
         boolean draw = winner == null;
+        Sound sound;
         if (draw) {
             type = GameEndTextLabel.Type.DRAW;
+            sound = Sound.DRAW;
         } else {
             boolean win = winner.getName().equals(api.getUserName());
             if (win) {
                 type = GameEndTextLabel.Type.WIN;
+                sound = Sound.WIN;
             } else {
                 type = GameEndTextLabel.Type.LOSE;
+                sound = Sound.LOSE;
             }
         }
+
+        SoundController.play(sound);
 
         GameEndTextLabel gameEndTextLabel = new GameEndTextLabel(type);
         add(gameEndTextLabel);

@@ -14,7 +14,14 @@ public enum Sound implements Serializable {
 
     BOMB_SET("bomb_set.wav"),
 
-    WATER_WAVE("wave.wav");
+    WATER_WAVE("wave.wav"),
+
+    WIN("win.wav"),
+
+    // TODO 무승부 효과음 바꾸기
+    DRAW("lose.wav"),
+
+    LOSE("lose.wav");
 
     public final String path;
 
