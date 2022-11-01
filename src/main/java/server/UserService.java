@@ -3,6 +3,7 @@ package server;
 import java.io.*;
 import java.net.Socket;
 import java.util.Arrays;
+import java.util.List;
 
 import com.google.gson.Gson;
 import domain.model.Direction;
@@ -183,6 +184,17 @@ public class UserService extends Thread {
     }
 
     private class GameStateTicker extends Thread {
+
+        private void writeSoundIfExists() {
+            GameStateRepository stateRepository = GameStateRepository.getInstance();
+            GameState state = stateRepository.getGameState();
+            List<Sound> sounds = state.getShouldBePlayedSounds();
+
+            sounds.forEach((UserService.this::writeSoundToAll));
+
+            state.playedSounds(sounds);
+        }
+
         @Override
         public void run() {
             while (true) {
@@ -194,6 +206,7 @@ public class UserService extends Thread {
 
                 GameStateRepository stateRepository = GameStateRepository.getInstance();
                 stateRepository.updateState();
+                writeSoundIfExists();
 
                 writeGameStateToAll();
 

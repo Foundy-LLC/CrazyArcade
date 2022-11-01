@@ -1,6 +1,7 @@
 package domain.state;
 
 import java.io.Serializable;
+import java.util.LinkedList;
 import java.util.List;
 
 import domain.constant.Sizes;
@@ -31,6 +32,9 @@ public class GameState implements Serializable {
     @Getter
     private boolean isEnded;
 
+    @Getter
+    private final List<Sound> shouldBePlayedSounds = new LinkedList<>();
+
     public void updateState() {
         updateBlocksState();
         updateWaterBombsState();
@@ -40,6 +44,10 @@ public class GameState implements Serializable {
         if (isGameEnded()) {
             isEnded = true;
         }
+    }
+
+    public void playedSounds(List<Sound> sounds) {
+        shouldBePlayedSounds.removeAll(sounds);
     }
 
     private boolean isGameEnded() {
@@ -72,6 +80,7 @@ public class GameState implements Serializable {
 
     private void updateWaterBombsState() {
         WaterBomb[][] waterBomb2d = map.getWaterBomb2d();
+        boolean didExplode = false;
 
         for (int y = 0; y < waterBomb2d.length; ++y) {
             for (int x = 0; x < waterBomb2d[y].length; ++x) {
@@ -81,8 +90,13 @@ public class GameState implements Serializable {
                 }
                 if (waterBomb.shouldExplode()) {
                     doChainExplode(y, x);
+                    didExplode = true;
                 }
             }
+        }
+
+        if (didExplode) {
+            shouldBePlayedSounds.add(Sound.WATER_WAVE);
         }
     }
 

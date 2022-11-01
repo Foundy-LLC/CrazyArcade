@@ -4,7 +4,9 @@ import java.io.Serializable;
 
 public enum Sound implements Serializable {
 
-    BOMB_SET("bomb_set.wav");
+    BOMB_SET("bomb_set.wav"),
+
+    WATER_WAVE("wave.wav");
 
     public final String path;
 
