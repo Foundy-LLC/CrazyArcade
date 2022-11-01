@@ -215,6 +215,7 @@ public class GameState implements Serializable {
 
             Pair<Offset> feetOffset = player.getFeetTileOffset();
             if (!player.isTrapped() && isOnWave(feetOffset)) {
+                shouldBePlayedSounds.add(Sound.PLAYER_TRAP);
                 player.trapIntoWaterWave();
             }
             if (player.shouldBeRemoved()) {
