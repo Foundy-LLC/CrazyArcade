@@ -201,6 +201,7 @@ public class GameState implements Serializable {
                             player.distance(otherPlayer) <= KILL_DISTANCE
                     ) {
                         otherPlayer.die();
+                        shouldBePlayedSounds.add(Sound.PLAYER_DIE);
                     }
                 }
 
