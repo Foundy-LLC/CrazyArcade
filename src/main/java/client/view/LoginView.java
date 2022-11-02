@@ -9,6 +9,8 @@ import client.core.Button;
 import client.core.TextField;
 import client.service.Api;
 import client.constant.ImageIcons;
+import client.service.SoundController;
+import domain.model.Sound;
 
 public class LoginView extends BaseView {
 
@@ -20,6 +22,8 @@ public class LoginView extends BaseView {
 	
 	public LoginView() {
 		super(ImageIcons.LOGIN_BACKGROUND);
+
+		SoundController.playLoop(Sound.LOGIN_VIEW_BGM);
 		
 		this.userNameTextField = new TextField();
 		userNameTextField.setPlaceholder("닉네임");

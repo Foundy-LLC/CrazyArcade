@@ -115,7 +115,7 @@ public class Api extends ChangeNotifier {
                         continue;
                     }
                     if (message.equals("/startGame")) {
-                        SoundController.playLoop(Sound.IN_GAME_BGM);
+                        SoundController.playLoop(Sound.GAME_VIEW_BGM);
                     }
                     notifyListeners(message);
                 } catch (IOException e) {

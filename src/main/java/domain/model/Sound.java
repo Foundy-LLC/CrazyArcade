@@ -4,7 +4,9 @@ import java.io.Serializable;
 
 public enum Sound implements Serializable {
 
-    IN_GAME_BGM("play_scene.wav"),
+    LOGIN_VIEW_BGM("login_scene.wav"),
+
+    GAME_VIEW_BGM("play_scene.wav"),
 
     // TODO 더 좋은 물방울 효과음으로 바꾸기
     PLAYER_TRAP("pt_in_react.wav"),
