@@ -6,6 +6,8 @@ public enum Sound implements Serializable {
 
     LOGIN_VIEW_BGM("login_scene.wav"),
 
+    LOBBY_VIEW_BGM("lobby_scene.wav"),
+
     GAME_VIEW_BGM("play_scene.wav"),
 
     // TODO 더 좋은 물방울 효과음으로 바꾸기

@@ -6,9 +6,11 @@ import client.core.OutlinedLabel;
 import client.service.Api;
 import client.constant.Fonts;
 import client.constant.ImageIcons;
+import client.service.SoundController;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import domain.constant.Protocol;
+import domain.model.Sound;
 import domain.state.LobbyState;
 
 import javax.swing.*;
@@ -25,6 +27,9 @@ public class LobbyView extends ApiListenerView {
 
     public LobbyView() {
         super(ImageIcons.LOBBY_BACKGROUND);
+
+        SoundController.playLoop(Sound.LOBBY_VIEW_BGM);
+
         initView();
         requestLobbyState();
     }
