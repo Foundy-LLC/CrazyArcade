@@ -47,6 +47,7 @@ public class GameView extends ApiListenerView {
 
         if (gameState.isEnded()) {
             isGameEnded = true;
+            SoundController.stopLoop();
             playGameEndingEffect(gameState.getWinner());
             Timer timer = new Timer(3_000, arg0 -> navigateTo(new LobbyView()));
             timer.setRepeats(false);
