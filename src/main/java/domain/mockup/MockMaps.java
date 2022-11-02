@@ -2,6 +2,7 @@ package domain.mockup;
 
 import domain.constant.Sizes;
 import domain.model.*;
+import org.apache.commons.lang3.SerializationUtils;
 
 public class MockMaps {
 
@@ -50,5 +51,9 @@ public class MockMaps {
             new Offset(4, 7), new Offset(10, 7)
     };
 
-    public static final Map map1 = new Map(STARTING_POINTS, TILES_1, WALLS_1, WATER_BOMBS_1, WATER_WAVES, ITEMS);
+    private static final Map map1 = new Map(STARTING_POINTS, TILES_1, WALLS_1, WATER_BOMBS_1, WATER_WAVES, ITEMS);
+
+    public static Map generateMap() {
+        return SerializationUtils.clone(map1);
+    }
 }

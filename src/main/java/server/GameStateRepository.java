@@ -29,7 +29,7 @@ public class GameStateRepository {
     }
 
     public GameState initState(List<String> names) {
-        Map map = MockMaps.map1;
+        Map map = MockMaps.generateMap();
         Offset[] startingPoints = map.getShuffledStartingPoints();
         List<Player> players = new ArrayList<>(8);
 
@@ -41,7 +41,7 @@ public class GameStateRepository {
         gameState = GameState.builder()
                 .players(players)
                 .remainingTimeSec(3 * 60)
-                .map(MockMaps.map1)
+                .map(map)
                 .build();
 
         return gameState;

@@ -1,6 +1,8 @@
 package domain.model;
 
-public class Offset {
+import java.io.Serializable;
+
+public class Offset implements Serializable {
 	public final int x;
 	public final int y;
 
