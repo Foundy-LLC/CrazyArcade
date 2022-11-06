@@ -1,5 +1,6 @@
 package client.component;
 
+import client.service.Api;
 import domain.constant.Sizes;
 import domain.model.*;
 
@@ -46,6 +47,7 @@ public class MapPanel extends JPanel {
     }
 
     private void paintPlayerAndItemAndBlock(Graphics g) {
+        final String currentUserName = Api.getInstance().getUserName();
         Item[][] item2d = map.getItem2d();
         Block[][] block2d = map.getBlock2d();
 
@@ -69,7 +71,15 @@ public class MapPanel extends JPanel {
 
                 players.forEach((player) -> {
                     if (!player.shouldBeRemoved()) {
-                        new PlayerRenderElement(player).draw(g, player.getOffset());
+                        Offset playerOffset = player.getOffset();
+                        new PlayerRenderElement(player).draw(g, playerOffset);
+                        if (player.getName().equals(currentUserName)) {
+                            Offset arrowOffset = new Offset(
+                                    playerOffset.x,
+                                    playerOffset.y - PlayerRenderElement.NORMAL_ONE_FRAME_SIZE.height
+                            );
+                            new ArrowRenderElement().draw(g, arrowOffset);
+                        }
                     }
                 });
             }
