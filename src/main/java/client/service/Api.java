@@ -95,7 +95,7 @@ public class Api extends ChangeNotifier {
         private boolean checkAndPlaySound(String message) {
             try {
                 Sound sound = new Gson().fromJson(message, Sound.class);
-                if (sound.path != null) {
+                if (sound != null && sound.path != null) {
                     SoundController.play(sound);
                     return true;
                 }
