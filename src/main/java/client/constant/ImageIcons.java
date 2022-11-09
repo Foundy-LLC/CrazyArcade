@@ -64,4 +64,6 @@ public class ImageIcons {
     public static final ImageIcon DRAW_TEXT = new ImageIcon("assets/game_end/draw.png");
 
     public static final ImageIcon SINGLE_PLAYER_ARROW = new ImageIcon("assets/player/solo_player.png");
+
+    public static final ImageIcon BACK_BUTTON = new ImageIcon("assets/back_button.png");
 }

@@ -68,10 +68,6 @@ public class Player implements Serializable {
         trappedTimeMilli = System.currentTimeMillis();
     }
 
-    public void terminatePlayer() {
-        this.trappedTimeMilli = 0L;
-    }
-
     public boolean isAlive() {
         return trappedTimeMilli == null;
     }

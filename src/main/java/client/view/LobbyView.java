@@ -3,6 +3,7 @@ package client.view;
 import client.core.ApiListenerView;
 import client.core.Button;
 import client.core.OutlinedLabel;
+import client.core.TextField;
 import client.service.Api;
 import client.constant.Fonts;
 import client.constant.ImageIcons;
@@ -10,20 +11,25 @@ import client.service.SoundController;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import domain.constant.Protocol;
+import domain.model.RoomDto;
 import domain.model.Sound;
 import domain.state.LobbyState;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
-import java.util.Optional;
+import java.util.Vector;
 
 public class LobbyView extends ApiListenerView {
 
-    private final JTextArea userListTextArea = new JTextArea();
+    private final JList<RoomDto> roomList = new JList<>();
 
-    private final Button startGameButton = new Button("게임 시작");
+    private final TextField roomNameTextField = new TextField();
+
+    private final Button makeRoomButton = new Button("방 만들기");
 
     public LobbyView() {
         super(ImageIcons.LOBBY_BACKGROUND);
@@ -35,22 +41,30 @@ public class LobbyView extends ApiListenerView {
     }
 
     private void initView() {
-        OutlinedLabel userListTitle = new OutlinedLabel("대기 인원", 2);
+        OutlinedLabel userListTitle = new OutlinedLabel("방 목록", 2);
         userListTitle.setBounds(470, 320, 200, 40);
         userListTitle.setForeground(Color.white);
         userListTitle.setOutlineColor(Color.blue);
         userListTitle.setFont(Fonts.H5.deriveFont(Font.BOLD));
         add(userListTitle);
 
-        userListTextArea.setEditable(false);
-        userListTextArea.setFont(Fonts.H6);
-        userListTextArea.setBounds(420, 360, 200, 120);
-        add(userListTextArea);
+        roomList.setFont(Fonts.H6);
+        roomList.setBounds(420, 360, 200, 120);
+        roomList.addMouseListener(listMouseClickAdapter);
+        add(roomList);
 
-        startGameButton.setEnabled(false);
-        startGameButton.setBounds(420, 600, 200, 60);
-        startGameButton.addActionListener(gameStartListener);
-        add(startGameButton);
+        roomNameTextField.setPlaceholder("방이름");
+        roomNameTextField.setBounds(420, 530, 200, 60);
+        roomNameTextField.addCaretListener((e) -> {
+            String roomName = roomNameTextField.getText();
+            makeRoomButton.setEnabled(!roomName.isEmpty());
+        });
+        add(roomNameTextField);
+
+        makeRoomButton.setEnabled(false);
+        makeRoomButton.setBounds(420, 600, 200, 60);
+        makeRoomButton.addActionListener(makeRoomButtonListener);
+        add(makeRoomButton);
     }
 
     private void requestLobbyState() {
@@ -59,22 +73,19 @@ public class LobbyView extends ApiListenerView {
     }
 
     private void updateView(LobbyState state) {
-        List<String> userNames = state.getUserNames();
-        Optional<String> users = userNames.stream().reduce((prev, next) -> prev + "\n" + next);
-        users.ifPresent(userListTextArea::setText);
-
-        startGameButton.setEnabled(userNames.size() >= 2);
+        List<RoomDto> roomDtoList = state.getRoomDtoList();
+        Vector<RoomDto> vector = new Vector<>(roomDtoList);
+        roomList.setListData(vector);
     }
 
     @Override
     protected void onMessageReceived(String message) {
-        if (message.equals(Protocol.ERROR)) {
-            showToast("서버와의 연결이 끊어졌습니다.");
-        }
-
-        if (message.equals(Protocol.GAME_START)) {
-            navigateTo(new GameView());
-            return;
+        switch (message) {
+            case Protocol.ERROR -> showToast("서버와의 연결이 끊어졌습니다.");
+            case Protocol.MAKE_ROOM, Protocol.JOIN_ROOM -> {
+                navigateTo(new RoomView());
+                return;
+            }
         }
 
         try {
@@ -86,7 +97,15 @@ public class LobbyView extends ApiListenerView {
         }
     }
 
-    private final ActionListener gameStartListener = (event) -> {
-        Api.getInstance().startGame();
+    private final MouseAdapter listMouseClickAdapter = new MouseAdapter() {
+        public void mouseClicked(MouseEvent evt) {
+            if (evt.getClickCount() == 2) {
+                int index = roomList.locationToIndex(evt.getPoint());
+                RoomDto roomDto = roomList.getModel().getElementAt(index);
+                Api.getInstance().joinRoom(roomDto.getId());
+            }
+        }
     };
+
+    private final ActionListener makeRoomButtonListener = (event) -> Api.getInstance().makeRoom(roomNameTextField.getText());
 }
