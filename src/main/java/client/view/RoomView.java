@@ -1,11 +1,11 @@
 package client.view;
 
+import client.constant.Fonts;
+import client.constant.ImageIcons;
 import client.core.ApiListenerView;
 import client.core.Button;
 import client.core.OutlinedLabel;
 import client.service.Api;
-import client.constant.Fonts;
-import client.constant.ImageIcons;
 import client.service.SoundController;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -19,13 +19,13 @@ import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.Optional;
 
-public class LobbyView extends ApiListenerView {
+public class RoomView extends ApiListenerView {
 
-    private final JTextArea roomListTextArea = new JTextArea();
+    private final JTextArea userListTextArea = new JTextArea();
 
-    private final Button joinRoomButton = new Button("방 참여");
+    private final Button startGameButton = new Button("게임 시작");
 
-    public LobbyView() {
+    public RoomView() {
         super(ImageIcons.LOBBY_BACKGROUND);
 
         SoundController.playLoop(Sound.LOBBY_VIEW_BGM);
@@ -42,15 +42,15 @@ public class LobbyView extends ApiListenerView {
         userListTitle.setFont(Fonts.H5.deriveFont(Font.BOLD));
         add(userListTitle);
 
-        roomListTextArea.setEditable(false);
-        roomListTextArea.setFont(Fonts.H6);
-        roomListTextArea.setBounds(420, 360, 200, 120);
-        add(roomListTextArea);
+        userListTextArea.setEditable(false);
+        userListTextArea.setFont(Fonts.H6);
+        userListTextArea.setBounds(420, 360, 200, 120);
+        add(userListTextArea);
 
-        joinRoomButton.setEnabled(false);
-        joinRoomButton.setBounds(420, 600, 200, 60);
-        joinRoomButton.addActionListener(gameStartListener);
-        add(joinRoomButton);
+        startGameButton.setEnabled(false);
+        startGameButton.setBounds(420, 600, 200, 60);
+        startGameButton.addActionListener(gameStartListener);
+        add(startGameButton);
     }
 
     private void requestLobbyState() {
@@ -61,9 +61,9 @@ public class LobbyView extends ApiListenerView {
     private void updateView(LobbyState state) {
         List<String> userNames = state.getUserNames();
         Optional<String> users = userNames.stream().reduce((prev, next) -> prev + "\n" + next);
-        users.ifPresent(roomListTextArea::setText);
+        users.ifPresent(userListTextArea::setText);
 
-        joinRoomButton.setEnabled(userNames.size() >= 2);
+        startGameButton.setEnabled(userNames.size() >= 2);
     }
 
     @Override
@@ -72,7 +72,7 @@ public class LobbyView extends ApiListenerView {
             showToast("서버와의 연결이 끊어졌습니다.");
         }
 
-        if (message.equals(Protocol.GAME_START)) {
+        if (message.startsWith("/startGame")) {
             navigateTo(new GameView());
             return;
         }

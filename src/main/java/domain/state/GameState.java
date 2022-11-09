@@ -46,7 +46,7 @@ public class GameState implements Serializable {
         }
     }
 
-    public void playedSounds(List<Sound> sounds) {
+    public void didPlaySounds(List<Sound> sounds) {
         shouldBePlayedSounds.removeAll(sounds);
     }
 

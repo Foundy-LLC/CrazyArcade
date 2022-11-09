@@ -3,7 +3,6 @@ package server;
 import java.io.*;
 import java.net.Socket;
 import java.util.Arrays;
-import java.util.List;
 
 import com.google.gson.Gson;
 import domain.constant.Protocol;
@@ -11,6 +10,7 @@ import domain.model.Direction;
 import domain.model.Sound;
 import domain.state.GameState;
 import domain.state.LobbyState;
+import domain.state.RoomState;
 
 public class UserService extends Thread {
     private DataInputStream dis;
@@ -104,8 +104,11 @@ public class UserService extends Thread {
         writeAll.call(stateJson);
     }
 
-    private void writeGameStateToAll() {
-        GameState gameState = GameStateRepository.getInstance().getGameState();
+    /**
+     * 방에 참여한 사람들에게 게임 상태를 전달한다.
+     */
+    private void writeGameStateToAllIn(RoomState room) {
+        GameState gameState = room.getGameState();
         String stateJson = new Gson().toJson(gameState);
         writeAll.call(stateJson);
     }
@@ -122,7 +125,7 @@ public class UserService extends Thread {
                     // String[] msgArr = msg.split(Constants.MESSAGE_SEPARATOR.toString());
                     String[] msgArr = msg.split(" ");
                     System.out.println(Arrays.toString(msgArr));
-                    GameStateRepository gameStateRepository = GameStateRepository.getInstance();
+                    RoomStateRepository roomStateRepository = RoomStateRepository.getInstance();
 
                     switch (msgArr[1]) {
                         case Protocol.GET_LOBBY_STATE -> {
@@ -143,32 +146,37 @@ public class UserService extends Thread {
 
                             writeAll.call(Protocol.GAME_START);
 
-                            gameStateRepository.initState(lobbyStateRepository.getLobbyUserNames());
-                            writeGameStateToAll();
-
-                            GameStateTicker gameStateTicker = new GameStateTicker();
-                            gameStateTicker.start();
+                            RoomState roomState = roomStateRepository.startGame(
+                                    lobbyStateRepository.getLobbyUserNames(),
+                                    this::writeSoundToAll,
+                                    this::writeGameStateToAllIn
+                            );
+                            writeGameStateToAllIn(roomState);
                         }
                         case Protocol.MOVE -> {
-                            if (gameStateRepository.isEnded()) {
-                                continue;
-                            }
                             String name = msgArr[0];
                             String action = msgArr[2];
                             Direction direction = Direction.valueOf(action.toUpperCase());
-                            gameStateRepository.movePlayer(name, direction);
-                            writeGameStateToAll();
+                            RoomState roomState = roomStateRepository.movePlayer(name, direction);
+                            writeGameStateToAllIn(roomState);
                         }
                         case Protocol.INSTALL_WATER_BOMB -> {
-                            if (gameStateRepository.isEnded()) {
-                                continue;
-                            }
                             String playerName = msgArr[0];
-                            boolean installed = gameStateRepository.installWaterBomb(playerName);
+                            boolean installed = roomStateRepository.installWaterBomb(playerName);
+                            RoomState roomState = roomStateRepository.requireRoomByUserName(playerName);
                             if (installed) {
                                 writeSoundToOne(Sound.BOMB_SET);
                             }
-                            writeGameStateToAll();
+                            writeGameStateToAllIn(roomState);
+                        }
+                        case Protocol.MAKE_ROOM -> {
+
+                        }
+                        case Protocol.JOIN_ROOM -> {
+
+                        }
+                        case Protocol.OUT_ROOM -> {
+
                         }
                     }
                 } catch (Exception e) {
@@ -178,49 +186,13 @@ public class UserService extends Thread {
             } catch (IOException e) {
                 System.out.println("dis.read() error");
 
-                GameStateRepository gameStateRepository = GameStateRepository.getInstance();
-                gameStateRepository.removeTerminatedUser(this.userName);
+                RoomStateRepository roomStateRepository = RoomStateRepository.getInstance();
+                roomStateRepository.removeTerminatedUser(this.userName);
 
                 e.printStackTrace();
                 break;
             }
         }
         close();
-    }
-
-    private class GameStateTicker extends Thread {
-
-        private void writeSoundIfExists() {
-            GameStateRepository stateRepository = GameStateRepository.getInstance();
-            GameState state = stateRepository.getGameState();
-            List<Sound> sounds = state.getShouldBePlayedSounds();
-
-            sounds.forEach((UserService.this::writeSoundToAll));
-
-            state.playedSounds(sounds);
-        }
-
-        @Override
-        public void run() {
-            while (true) {
-                try {
-                    sleep(100);
-                } catch (InterruptedException e) {
-                    break;
-                }
-
-                GameStateRepository stateRepository = GameStateRepository.getInstance();
-                stateRepository.updateState();
-                writeSoundIfExists();
-
-                writeGameStateToAll();
-
-                GameState state = stateRepository.getGameState();
-                if (state.isEnded()) {
-                    stateRepository.clear();
-                    break;
-                }
-            }
-        }
     }
 }
