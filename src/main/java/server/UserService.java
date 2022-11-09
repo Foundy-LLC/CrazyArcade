@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.google.gson.Gson;
+import domain.constant.Protocol;
 import domain.model.Direction;
 import domain.model.Sound;
 import domain.state.GameState;
@@ -32,9 +33,13 @@ public class UserService extends Thread {
             dos = new DataOutputStream(os);
             String line = dis.readUTF();
             String[] msgArr = line.split(" ");
-            userName = msgArr[0].trim().substring(1);
-            addUser(userName);
-            writeLobbyStateToAll();
+            userName = msgArr[0].trim();
+            if (msgArr[1].equals(Protocol.LOGIN)) {
+                addUser(userName);
+                writeLobbyStateToAll();
+            } else {
+                System.out.println("LOGIN ERROR");
+            }
         } catch (Exception e) {
             // AppendText("userService error");
         }
@@ -120,13 +125,13 @@ public class UserService extends Thread {
                     GameStateRepository gameStateRepository = GameStateRepository.getInstance();
 
                     switch (msgArr[1]) {
-                        case "getLobbyState" -> {
+                        case Protocol.GET_LOBBY_STATE -> {
                             LobbyStateRepository lobbyStateRepository = LobbyStateRepository.getInstance();
                             LobbyState lobbyState = lobbyStateRepository.getLobbyState();
                             String stateJson = new Gson().toJson(lobbyState);
                             writeOne(stateJson);
                         }
-                        case "startGame" -> {
+                        case Protocol.GAME_START -> {
                             LobbyStateRepository lobbyStateRepository = LobbyStateRepository.getInstance();
 
                             if (lobbyStateRepository.getLobbyUserCounts() < 2) {
@@ -136,7 +141,7 @@ public class UserService extends Thread {
                                 continue;
                             }
 
-                            writeAll.call("/startGame");
+                            writeAll.call(Protocol.GAME_START);
 
                             gameStateRepository.initState(lobbyStateRepository.getLobbyUserNames());
                             writeGameStateToAll();
@@ -144,21 +149,21 @@ public class UserService extends Thread {
                             GameStateTicker gameStateTicker = new GameStateTicker();
                             gameStateTicker.start();
                         }
-                        case "up", "down", "left", "right" -> {
+                        case Protocol.MOVE -> {
                             if (gameStateRepository.isEnded()) {
                                 continue;
                             }
-                            String name = msgArr[0].substring(1);
-                            String action = msgArr[1];
+                            String name = msgArr[0];
+                            String action = msgArr[2];
                             Direction direction = Direction.valueOf(action.toUpperCase());
                             gameStateRepository.movePlayer(name, direction);
                             writeGameStateToAll();
                         }
-                        case "installWaterBomb" -> {
+                        case Protocol.INSTALL_WATER_BOMB -> {
                             if (gameStateRepository.isEnded()) {
                                 continue;
                             }
-                            String playerName = msgArr[0].substring(1);
+                            String playerName = msgArr[0];
                             boolean installed = gameStateRepository.installWaterBomb(playerName);
                             if (installed) {
                                 writeSoundToOne(Sound.BOMB_SET);

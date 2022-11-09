@@ -72,7 +72,7 @@ public class LobbyView extends ApiListenerView {
             showToast("서버와의 연결이 끊어졌습니다.");
         }
 
-        if (message.startsWith("/startGame")) {
+        if (message.equals(Protocol.GAME_START)) {
             navigateTo(new GameView());
             return;
         }
