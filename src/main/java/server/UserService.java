@@ -187,8 +187,8 @@ public class UserService extends Thread {
                             writeOne(json);
                         }
                         case Protocol.MAKE_ROOM -> {
-                            // TODO: 방제목 샘플에서 무작위로 생성되게 하기 or 유저에게 전달받기
-                            roomStateRepository.createAndJoinRoom(userName, "멋진방!" + UUID.randomUUID().toString().substring(0, 4));
+                            String roomName = msgArr[2];
+                            roomStateRepository.createAndJoinRoom(userName, roomName);
                             writeOne(Protocol.MAKE_ROOM);
                             writeLobbyStateToAll();
                         }

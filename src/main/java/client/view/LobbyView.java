@@ -3,6 +3,7 @@ package client.view;
 import client.core.ApiListenerView;
 import client.core.Button;
 import client.core.OutlinedLabel;
+import client.core.TextField;
 import client.service.Api;
 import client.constant.Fonts;
 import client.constant.ImageIcons;
@@ -15,7 +16,6 @@ import domain.model.Sound;
 import domain.state.LobbyState;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -26,6 +26,8 @@ import java.util.Vector;
 public class LobbyView extends ApiListenerView {
 
     private final JList<RoomDto> roomList = new JList<>();
+
+    private final TextField roomNameTextField = new TextField();
 
     private final Button makeRoomButton = new Button("방 만들기");
 
@@ -51,7 +53,15 @@ public class LobbyView extends ApiListenerView {
         roomList.addMouseListener(listMouseClickAdapter);
         add(roomList);
 
-        makeRoomButton.setEnabled(true);
+        roomNameTextField.setPlaceholder("방이름");
+        roomNameTextField.setBounds(420, 530, 200, 60);
+        roomNameTextField.addCaretListener((e) -> {
+            String roomName = roomNameTextField.getText();
+            makeRoomButton.setEnabled(!roomName.isEmpty());
+        });
+        add(roomNameTextField);
+
+        makeRoomButton.setEnabled(false);
         makeRoomButton.setBounds(420, 600, 200, 60);
         makeRoomButton.addActionListener(makeRoomButtonListener);
         add(makeRoomButton);
@@ -97,5 +107,5 @@ public class LobbyView extends ApiListenerView {
         }
     };
 
-    private final ActionListener makeRoomButtonListener = (event) -> Api.getInstance().makeRoom();
+    private final ActionListener makeRoomButtonListener = (event) -> Api.getInstance().makeRoom(roomNameTextField.getText());
 }
