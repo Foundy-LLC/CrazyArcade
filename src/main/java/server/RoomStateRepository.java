@@ -39,7 +39,7 @@ public class RoomStateRepository {
                 .findFirst();
         if (roomStateOptional.isPresent()) {
             RoomState room = roomStateOptional.get();
-            if (room.isFull()) {
+            if (room.isFull() || room.gameInProgress()) {
                 return null;
             }
             roomStateOptional.ifPresent((roomState) -> roomState.join(joinerName));
@@ -63,7 +63,8 @@ public class RoomStateRepository {
             RoomDto roomDto = new RoomDto(
                     roomState.getId(),
                     roomState.getRoomName(),
-                    roomState.getUserCount()
+                    roomState.getUserCount(),
+                    roomState.gameInProgress()
             );
             roomDtos.add(roomDto);
         }));
@@ -73,7 +74,8 @@ public class RoomStateRepository {
     public RoomState startGame(
             List<String> userNames,
             BiConsumer<Sound, RoomState> onSoundShouldPlay,
-            Callback<RoomState> onGameStateUpdated
+            Callback<RoomState> onGameStateUpdated,
+            Runnable onGameEnd
     ) {
         RoomState room = requireRoomByUserName(userNames.get(0));
         Map map = MockMaps.generateMap();
@@ -99,6 +101,7 @@ public class RoomStateRepository {
                 (Void) -> {
                     room.endGame();
                     tickerHashMap.remove(room);
+                    onGameEnd.run();
                 }
         );
         gameStateTicker.start();

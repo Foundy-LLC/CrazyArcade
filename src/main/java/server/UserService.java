@@ -4,7 +4,6 @@ import java.io.*;
 import java.net.Socket;
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 import java.util.function.BiConsumer;
 
 import com.google.gson.Gson;
@@ -162,9 +161,11 @@ public class UserService extends Thread {
                             RoomState roomState = roomStateRepository.startGame(
                                     room.getUserNames(),
                                     this::writeSoundToAll,
-                                    this::writeGameStateToAllIn
+                                    this::writeGameStateToAllIn,
+                                    this::writeLobbyStateToAll
                             );
                             writeGameStateToAllIn(roomState);
+                            writeLobbyStateToAll();
                         }
                         case Protocol.MOVE -> {
                             String action = msgArr[2];
