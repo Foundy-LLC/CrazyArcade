@@ -48,12 +48,13 @@ public class RoomStateRepository {
         return null;
     }
 
-    public void exitRoom(String userName) {
+    public RoomState exitRoom(String userName) {
         RoomState room = requireRoomByUserName(userName);
         room.exit(userName);
         if (room.isEmpty()) {
             roomStateList.remove(room);
         }
+        return room;
     }
 
     public List<RoomDto> getCurrentRoomDtoList() {

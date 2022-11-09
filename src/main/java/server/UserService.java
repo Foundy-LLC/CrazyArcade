@@ -202,12 +202,12 @@ public class UserService extends Thread {
                                 writeRoomStateToAllIn(roomState);
                             }
                         }
-                        case Protocol.OUT_ROOM -> {
-
+                        case Protocol.EXIT_ROOM -> {
+                            RoomState roomState = roomStateRepository.exitRoom(userName);
+                            writeRoomStateToAllIn(roomState);
+                            writeLobbyStateToAll();
                         }
-                        default -> {
-                            throw new IllegalArgumentException("존재하지 않는 프로토콜을 수신했습니다.");
-                        }
+                        default -> throw new IllegalArgumentException("존재하지 않는 프로토콜을 수신했습니다.");
                     }
                 } catch (Exception e) {
                     System.out.println("Message Separate Error");

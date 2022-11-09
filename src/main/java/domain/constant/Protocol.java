@@ -19,7 +19,7 @@ public class Protocol {
 
     public static final String MAKE_ROOM = "400";
     public static final String JOIN_ROOM = "401";
-    public static final String OUT_ROOM = "402";
+    public static final String EXIT_ROOM = "402";
     public static final String GET_ROOM_STATE = "403";
 
 }

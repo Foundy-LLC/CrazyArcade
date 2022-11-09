@@ -90,6 +90,10 @@ public class Api extends ChangeNotifier {
         sendMessage(userName + " " + Protocol.JOIN_ROOM + " " + roomId);
     }
 
+    public void exitRoom() {
+        sendMessage(userName + " " + Protocol.EXIT_ROOM);
+    }
+
     public void startGame() {
         sendMessage(userName + " " + Protocol.GAME_START);
     }

@@ -7,6 +7,7 @@ import client.core.Button;
 import client.core.OutlinedLabel;
 import client.service.Api;
 import client.service.SoundController;
+import client.util.Navigator;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import domain.constant.Protocol;
@@ -16,6 +17,9 @@ import domain.state.RoomState;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +28,8 @@ public class RoomView extends ApiListenerView {
     private final JTextArea userListTextArea = new JTextArea();
 
     private final Button startGameButton = new Button("게임 시작");
+
+    private final JLabel backButton = new JLabel(ImageIcons.BACK_BUTTON);
 
     public RoomView() {
         super(ImageIcons.LOBBY_BACKGROUND);
@@ -51,6 +57,10 @@ public class RoomView extends ApiListenerView {
         startGameButton.setBounds(420, 600, 200, 60);
         startGameButton.addActionListener(gameStartListener);
         add(startGameButton);
+
+        backButton.setBounds(100, 100, 80, 60);
+        backButton.addMouseListener(backButtonClickListener);
+        add(backButton);
     }
 
     private void requestRoomState() {
@@ -91,5 +101,13 @@ public class RoomView extends ApiListenerView {
 
     private final ActionListener gameStartListener = (event) -> {
         Api.getInstance().startGame();
+    };
+
+    private final MouseAdapter backButtonClickListener = new MouseAdapter() {
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            Api.getInstance().exitRoom();
+            Navigator.navigateTo(RoomView.this, new LobbyView());
+        }
     };
 }
