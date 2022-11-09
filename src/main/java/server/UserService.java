@@ -188,7 +188,7 @@ public class UserService extends Thread {
                             writeOne(json);
                         }
                         case Protocol.MAKE_ROOM -> {
-                            String roomName = msgArr[2];
+                            String roomName = msg.substring(userName.length() + Protocol.MAKE_ROOM.length() + 2);
                             roomStateRepository.createAndJoinRoom(userName, roomName);
                             writeOne(Protocol.MAKE_ROOM);
                             writeLobbyStateToAll();
