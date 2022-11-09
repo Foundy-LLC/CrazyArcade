@@ -11,7 +11,7 @@ import java.util.UUID;
 
 public class RoomState implements Serializable {
 
-    private static final int MAX_USER = 8;
+    public static final int MAX_USER = 8;
 
     @NonNull
     @Getter
@@ -48,6 +48,9 @@ public class RoomState implements Serializable {
         if (adminName.equals(userName) && !isEmpty()) {
             adminName = userNames.get(0);
         }
+        if (gameInProgress()) {
+            gameState.exitPlayer(userName);
+        }
     }
 
     public boolean isEmpty() {
@@ -82,5 +85,9 @@ public class RoomState implements Serializable {
             }
         }
         throw new IllegalArgumentException("해당 유저는 없습니다.");
+    }
+
+    public int getUserCount() {
+        return userNames.size();
     }
 }

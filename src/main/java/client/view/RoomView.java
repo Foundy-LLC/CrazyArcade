@@ -11,7 +11,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import domain.constant.Protocol;
 import domain.model.Sound;
-import domain.state.LobbyState;
+import domain.state.RoomState;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,7 +31,7 @@ public class RoomView extends ApiListenerView {
         SoundController.playLoop(Sound.LOBBY_VIEW_BGM);
 
         initView();
-        requestLobbyState();
+        requestRoomState();
     }
 
     private void initView() {
@@ -53,12 +53,12 @@ public class RoomView extends ApiListenerView {
         add(startGameButton);
     }
 
-    private void requestLobbyState() {
+    private void requestRoomState() {
         Api api = Api.getInstance();
-        api.requestLobbyState();
+        api.requestRoomState();
     }
 
-    private void updateView(LobbyState state) {
+    private void updateView(RoomState state) {
         List<String> userNames = state.getUserNames();
         Optional<String> users = userNames.stream().reduce((prev, next) -> prev + "\n" + next);
         users.ifPresent(userListTextArea::setText);
@@ -72,17 +72,20 @@ public class RoomView extends ApiListenerView {
             showToast("서버와의 연결이 끊어졌습니다.");
         }
 
-        if (message.startsWith("/startGame")) {
+        if (message.equals(Protocol.GAME_START)) {
             navigateTo(new GameView());
             return;
         }
 
         try {
-            LobbyState state = new Gson().fromJson(message, LobbyState.class);
-            updateView(state);
+            RoomState state = new Gson().fromJson(message, RoomState.class);
+            //noinspection ConstantConditions
+            if (state.getId() != null) {
+                updateView(state);
+            }
         } catch (JsonSyntaxException e) {
             e.printStackTrace();
-            showToast("잘못된 `LobbyState`가 서버로부터 전달되었습니다.");
+            showToast("잘못된 `RoomState`가 서버로부터 전달되었습니다.");
         }
     }
 

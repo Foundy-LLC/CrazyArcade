@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BiConsumer;
 
 public class RoomStateRepository {
 
@@ -27,24 +28,24 @@ public class RoomStateRepository {
         private static final RoomStateRepository INSTANCE = new RoomStateRepository();
     }
 
-    public void createRoom(String creatorName, String roomName) {
+    public void createAndJoinRoom(String creatorName, String roomName) {
         RoomState newRoom = new RoomState(creatorName, roomName);
         roomStateList.add(newRoom);
     }
 
-    public boolean joinRoom(String joinerName, String roomId) {
+    public RoomState joinRoom(String joinerName, String roomId) {
         Optional<RoomState> roomStateOptional = roomStateList.stream()
                 .filter((room) -> room.getId().equals(roomId))
                 .findFirst();
         if (roomStateOptional.isPresent()) {
             RoomState room = roomStateOptional.get();
             if (room.isFull()) {
-                return false;
+                return null;
             }
             roomStateOptional.ifPresent((roomState) -> roomState.join(joinerName));
-            return true;
+            return room;
         }
-        return false;
+        return null;
     }
 
     public void exitRoom(String userName) {
@@ -55,9 +56,22 @@ public class RoomStateRepository {
         }
     }
 
+    public List<RoomDto> getCurrentRoomDtoList() {
+        ArrayList<RoomDto> roomDtos = new ArrayList<>(8);
+        roomStateList.forEach((roomState -> {
+            RoomDto roomDto = new RoomDto(
+                    roomState.getId(),
+                    roomState.getRoomName(),
+                    roomState.getUserCount()
+            );
+            roomDtos.add(roomDto);
+        }));
+        return roomDtos;
+    }
+
     public RoomState startGame(
             List<String> userNames,
-            Callback<Sound> onSoundShouldPlay,
+            BiConsumer<Sound, RoomState> onSoundShouldPlay,
             Callback<RoomState> onGameStateUpdated
     ) {
         RoomState room = requireRoomByUserName(userNames.get(0));
@@ -79,7 +93,7 @@ public class RoomStateRepository {
 
         GameStateTicker gameStateTicker = new GameStateTicker(
                 gameState,
-                onSoundShouldPlay,
+                (sound) -> onSoundShouldPlay.accept(sound, room),
                 (empty) -> onGameStateUpdated.call(room),
                 (Void) -> {
                     room.endGame();
@@ -128,12 +142,13 @@ public class RoomStateRepository {
         return false;
     }
 
-    public void removeTerminatedUser(String userName) {
+    public RoomState removeTerminatedUser(String userName) {
         RoomState room = requireRoomByUserName(userName);
-        room.exit(userName);
+        exitRoom(userName);
         if (room.gameInProgress()) {
             room.getGameState().updateState();
         }
+        return room;
     }
 
     public RoomState requireRoomByUserName(String userName) {

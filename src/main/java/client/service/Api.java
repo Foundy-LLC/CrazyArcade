@@ -78,6 +78,18 @@ public class Api extends ChangeNotifier {
         sendMessage(userName + " " + Protocol.GET_LOBBY_STATE);
     }
 
+    public void makeRoom() {
+        sendMessage(userName + " " + Protocol.MAKE_ROOM);
+    }
+
+    public void requestRoomState() {
+        sendMessage(userName + " " + Protocol.GET_ROOM_STATE);
+    }
+
+    public void joinRoom(String roomId) {
+        sendMessage(userName + " " + Protocol.JOIN_ROOM + " " + roomId);
+    }
+
     public void startGame() {
         sendMessage(userName + " " + Protocol.GAME_START);
     }

@@ -3,6 +3,7 @@ package server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.List;
 import java.util.Vector;
 
 import domain.constant.Protocol;
@@ -14,8 +15,6 @@ public class UserAcceptor extends Thread {
     public void run() {
         try {
             socket = new ServerSocket(Protocol.PORT_NUMBER);
-            LobbyStateRepository lobbyStateRepository = LobbyStateRepository.getInstance();
-            lobbyStateRepository.initState();
         } catch (IOException e1) {
             e1.printStackTrace();
         }
@@ -26,7 +25,7 @@ public class UserAcceptor extends Thread {
                 Socket clientSocket = socket.accept();
                 System.out.println("새로운 참가자 from " + clientSocket);
                 // User 당 하나씩 Thread 생성
-                UserService newUser = new UserService(clientSocket, this::writeAll, userVector::removeElement);
+                UserService newUser = new UserService(clientSocket, this::writeAll, this::writeToSome, userVector::removeElement);
                 userVector.add(newUser);
                 System.out.println("사용자 입장. 현재 참가자 수 " + userVector.size());
                 newUser.start();
@@ -40,6 +39,16 @@ public class UserAcceptor extends Thread {
         for (int i = 0; i < userVector.size(); i++) {
             UserService user = userVector.elementAt(i);
             user.writeOne(str);
+        }
+    }
+
+    public void writeToSome(String message, List<String> targetUserNames) {
+        for (int i = 0; i < userVector.size(); i++) {
+            UserService user = userVector.elementAt(i);
+            String name = user.getUserName();
+            if (targetUserNames.contains(name)) {
+                user.writeOne(message);
+            }
         }
     }
 }

@@ -3,6 +3,7 @@ package domain.state;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 import domain.constant.Sizes;
 import domain.core.Pair;
@@ -43,6 +44,14 @@ public class GameState implements Serializable {
 
         if (isGameEnded()) {
             isEnded = true;
+        }
+    }
+
+    public void exitPlayer(String userName) {
+        Optional<Player> playerOptional = players.stream().filter((player -> player.getName().equals(userName))).findFirst();
+        if (playerOptional.isPresent()) {
+            Player player = playerOptional.get();
+            players.remove(player);
         }
     }
 
