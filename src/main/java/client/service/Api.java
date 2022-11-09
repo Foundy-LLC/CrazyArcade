@@ -71,23 +71,23 @@ public class Api extends ChangeNotifier {
     public void login(String userName) {
         userName += "-" + UUID.randomUUID().toString().substring(0, 4);
         this.userName = userName;
-        sendMessage("/" + userName + " " + ipAddress + " " + portNumber);
+        sendMessage(userName + " " + Protocol.LOGIN + " " + ipAddress + " " + portNumber);
     }
 
     public void requestLobbyState() {
-        sendMessage("/" + userName + " getLobbyState");
+        sendMessage(userName + " " + Protocol.GET_LOBBY_STATE);
     }
 
     public void startGame() {
-        sendMessage("/" + userName + " startGame");
+        sendMessage(userName + " " + Protocol.GAME_START);
     }
 
     public void movePlayer(Direction direction) {
-        sendMessage("/" + userName + " " + direction.name().toLowerCase());
+        sendMessage(userName + " " + Protocol.MOVE + " " + direction.name().toLowerCase());
     }
 
     public void installWaterBomb() {
-        sendMessage("/" + userName + " installWaterBomb");
+        sendMessage(userName + " " + Protocol.INSTALL_WATER_BOMB);
     }
 
     class NetworkSubscriber extends Thread {
@@ -114,7 +114,7 @@ public class Api extends ChangeNotifier {
                     if (checkAndPlaySound(message)) {
                         continue;
                     }
-                    if (message.equals("/startGame")) {
+                    if (message.equals(Protocol.GAME_START)) {
                         SoundController.playLoop(Sound.GAME_VIEW_BGM);
                     }
                     notifyListeners(message);
