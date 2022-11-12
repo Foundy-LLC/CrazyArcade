@@ -25,8 +25,12 @@ import java.util.Optional;
 public class RoomView extends ApiListenerView {
 
     private final JTextArea userListTextArea = new JTextArea();
+    private final JTextArea chattingTextArea = new JTextArea();
+
+    private final JTextField chattingTextInput = new JTextField();
 
     private final Button startGameButton = new Button("게임 시작");
+    private final JButton sendButton = new JButton("Send");
 
     private final JLabel backButton = new JLabel(ImageIcons.BACK_BUTTON);
 
@@ -52,6 +56,19 @@ public class RoomView extends ApiListenerView {
         userListTextArea.setBounds(420, 360, 200, 120);
         add(userListTextArea);
 
+        chattingTextArea.setEditable(false);
+        chattingTextArea.setFont(Fonts.H6);
+        chattingTextArea.setBounds(720, 160, 257, 360);
+        add(chattingTextArea);
+
+        chattingTextInput.setBounds(718, 535, 185, 40);
+        chattingTextInput.setColumns(10);
+        add(chattingTextInput);
+
+        sendButton.setBounds(903, 535, 76, 40);
+        sendButton.addActionListener(chattingListener);
+        add(sendButton);
+
         startGameButton.setEnabled(false);
         startGameButton.setBounds(420, 600, 200, 60);
         startGameButton.addActionListener(gameStartListener);
@@ -75,6 +92,11 @@ public class RoomView extends ApiListenerView {
         startGameButton.setEnabled(userNames.size() >= 2);
     }
 
+    public void appendText(String msg) {
+        chattingTextArea.append(msg + "\n");
+        chattingTextArea.setCaretPosition(chattingTextArea.getText().length());
+    }
+
     @Override
     protected void onMessageReceived(String message) {
         if (message.equals(Protocol.ERROR)) {
@@ -84,6 +106,12 @@ public class RoomView extends ApiListenerView {
         if (message.equals(Protocol.GAME_START)) {
             navigateTo(new GameView());
             return;
+        }
+
+        if(message.startsWith(Protocol.SEND_MESSAGE)){
+            String[] msg = message.split(" ");
+            appendText(msg[1] + " : " + msg[2]);
+            return ;
         }
 
         try {
@@ -100,6 +128,10 @@ public class RoomView extends ApiListenerView {
 
     private final ActionListener gameStartListener = (event) -> {
         Api.getInstance().startGame();
+    };
+
+    private final ActionListener chattingListener = (event) -> {
+        Api.getInstance().chatting(chattingTextInput.getText());
     };
 
     private final MouseAdapter backButtonClickListener = new MouseAdapter() {
