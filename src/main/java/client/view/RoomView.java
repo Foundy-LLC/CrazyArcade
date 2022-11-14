@@ -28,6 +28,7 @@ public class RoomView extends ApiListenerView {
     private final JTextArea chattingTextArea = new JTextArea();
 
     private final JTextField chattingTextInput = new JTextField();
+    private final JScrollPane scrollChattingTextArea = new JScrollPane(chattingTextArea);
 
     private final Button startGameButton = new Button("게임 시작");
     private final JButton sendButton = new JButton("Send");
@@ -59,7 +60,10 @@ public class RoomView extends ApiListenerView {
         chattingTextArea.setEditable(false);
         chattingTextArea.setFont(Fonts.H6);
         chattingTextArea.setBounds(720, 160, 257, 360);
-        add(chattingTextArea);
+        chattingTextArea.setLineWrap(true);
+
+        scrollChattingTextArea.setBounds(720, 160, 257, 360);
+        add(scrollChattingTextArea);
 
         chattingTextInput.setBounds(718, 535, 185, 40);
         chattingTextInput.setColumns(10);
@@ -132,6 +136,7 @@ public class RoomView extends ApiListenerView {
 
     private final ActionListener chattingListener = (event) -> {
         Api.getInstance().chatting(chattingTextInput.getText());
+        chattingTextInput.setText("");
     };
 
     private final MouseAdapter backButtonClickListener = new MouseAdapter() {
