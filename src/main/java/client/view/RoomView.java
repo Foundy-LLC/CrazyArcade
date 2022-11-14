@@ -112,10 +112,10 @@ public class RoomView extends ApiListenerView {
             return;
         }
 
-        if(message.startsWith(Protocol.SEND_MESSAGE)){
+        if (message.startsWith(Protocol.SEND_MESSAGE)) {
             String[] msg = message.split(" ");
             appendText(msg[1] + " : " + msg[2]);
-            return ;
+            return;
         }
 
         try {
