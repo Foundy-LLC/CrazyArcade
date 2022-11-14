@@ -19,7 +19,6 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,7 +31,7 @@ public class RoomView extends ApiListenerView {
     private final JLabel backButton = new JLabel(ImageIcons.BACK_BUTTON);
 
     public RoomView() {
-        super(ImageIcons.LOBBY_BACKGROUND);
+        super(ImageIcons.ROOM_BACKGROUND);
 
         SoundController.playLoop(Sound.LOBBY_VIEW_BGM);
 
@@ -58,7 +57,7 @@ public class RoomView extends ApiListenerView {
         startGameButton.addActionListener(gameStartListener);
         add(startGameButton);
 
-        backButton.setBounds(100, 100, 80, 60);
+        backButton.setBounds(20, 10, 64, 64);
         backButton.addMouseListener(backButtonClickListener);
         add(backButton);
     }
