@@ -22,4 +22,6 @@ public class Protocol {
     public static final String EXIT_ROOM = "402";
     public static final String GET_ROOM_STATE = "403";
 
+    public static final String SEND_MESSAGE = "410";
+
 }

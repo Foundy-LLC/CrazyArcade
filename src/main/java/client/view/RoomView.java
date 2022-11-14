@@ -15,6 +15,8 @@ import domain.model.Sound;
 import domain.state.RoomState;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -25,8 +27,13 @@ import java.util.Optional;
 public class RoomView extends ApiListenerView {
 
     private final JTextArea userListTextArea = new JTextArea();
+    private final JTextArea chattingTextArea = new JTextArea();
+
+    private final JTextField chattingTextInput = new JTextField();
+    private final JScrollPane scrollChattingTextArea = new JScrollPane(chattingTextArea);
 
     private final Button startGameButton = new Button("게임 시작");
+    private final JButton sendButton = new JButton("전송");
 
     private final JLabel backButton = new JLabel(ImageIcons.BACK_BUTTON);
 
@@ -52,6 +59,24 @@ public class RoomView extends ApiListenerView {
         userListTextArea.setBounds(420, 360, 200, 120);
         add(userListTextArea);
 
+        chattingTextArea.setEditable(false);
+        chattingTextArea.setFont(Fonts.H6);
+        chattingTextArea.setBounds(720, 160, 257, 360);
+        chattingTextArea.setLineWrap(true);
+
+        scrollChattingTextArea.setBounds(720, 160, 257, 360);
+        add(scrollChattingTextArea);
+
+        chattingTextInput.setBounds(718, 535, 185, 40);
+        chattingTextInput.setColumns(10);
+        chattingTextInput.getDocument().addDocumentListener(chattingTextFieldChangeListener);
+        add(chattingTextInput);
+
+        sendButton.setBounds(903, 535, 76, 40);
+        sendButton.setEnabled(false);
+        sendButton.addActionListener(chattingSendListener);
+        add(sendButton);
+
         startGameButton.setEnabled(false);
         startGameButton.setBounds(420, 600, 200, 60);
         startGameButton.addActionListener(gameStartListener);
@@ -75,6 +100,11 @@ public class RoomView extends ApiListenerView {
         startGameButton.setEnabled(userNames.size() >= 2);
     }
 
+    public void appendChattingText(String msg) {
+        chattingTextArea.append(msg + "\n");
+        chattingTextArea.setCaretPosition(chattingTextArea.getText().length());
+    }
+
     @Override
     protected void onMessageReceived(String message) {
         if (message.equals(Protocol.ERROR)) {
@@ -83,6 +113,12 @@ public class RoomView extends ApiListenerView {
 
         if (message.equals(Protocol.GAME_START)) {
             navigateTo(new GameView());
+            return;
+        }
+
+        if (message.startsWith(Protocol.SEND_MESSAGE)) {
+            String[] messageArray = message.split(" ");
+            appendChattingText(messageArray[1] + " : " + messageArray[2]);
             return;
         }
 
@@ -102,6 +138,11 @@ public class RoomView extends ApiListenerView {
         Api.getInstance().startGame();
     };
 
+    private final ActionListener chattingSendListener = (event) -> {
+        Api.getInstance().chatting(chattingTextInput.getText());
+        chattingTextInput.setText("");
+    };
+
     private final MouseAdapter backButtonClickListener = new MouseAdapter() {
         @Override
         public void mouseClicked(MouseEvent e) {
@@ -109,4 +150,25 @@ public class RoomView extends ApiListenerView {
             Navigator.navigateTo(RoomView.this, new LobbyView());
         }
     };
+
+    private final DocumentListener chattingTextFieldChangeListener = new DocumentListener() {
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+            observeTextArea();
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+            observeTextArea();
+        }
+
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+            observeTextArea();
+        }
+    };
+
+    private void observeTextArea() {
+        sendButton.setEnabled(chattingTextInput.getText().length() > 0);
+    }
 }
