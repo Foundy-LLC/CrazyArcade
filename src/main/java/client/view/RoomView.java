@@ -69,22 +69,7 @@ public class RoomView extends ApiListenerView {
 
         chattingTextInput.setBounds(718, 535, 185, 40);
         chattingTextInput.setColumns(10);
-        chattingTextInput.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                observeTextArea();
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                observeTextArea();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                observeTextArea();
-            }
-        });
+        chattingTextInput.getDocument().addDocumentListener(chattingTextFieldChangeListener);
         add(chattingTextInput);
 
         sendButton.setBounds(903, 535, 76, 40);
@@ -163,6 +148,23 @@ public class RoomView extends ApiListenerView {
         public void mouseClicked(MouseEvent e) {
             Api.getInstance().exitRoom();
             Navigator.navigateTo(RoomView.this, new LobbyView());
+        }
+    };
+
+    private final DocumentListener chattingTextFieldChangeListener = new DocumentListener() {
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+            observeTextArea();
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+            observeTextArea();
+        }
+
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+            observeTextArea();
         }
     };
 
