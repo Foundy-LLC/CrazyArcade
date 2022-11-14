@@ -15,6 +15,8 @@ import domain.model.Sound;
 import domain.state.RoomState;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -67,9 +69,26 @@ public class RoomView extends ApiListenerView {
 
         chattingTextInput.setBounds(718, 535, 185, 40);
         chattingTextInput.setColumns(10);
+        chattingTextInput.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                observeTextArea();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                observeTextArea();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                observeTextArea();
+            }
+        });
         add(chattingTextInput);
 
         sendButton.setBounds(903, 535, 76, 40);
+        sendButton.setEnabled(false);
         sendButton.addActionListener(chattingSendListener);
         add(sendButton);
 
@@ -146,4 +165,8 @@ public class RoomView extends ApiListenerView {
             Navigator.navigateTo(RoomView.this, new LobbyView());
         }
     };
+
+    private void observeTextArea() {
+        sendButton.setEnabled(chattingTextInput.getText().length() > 0);
+    }
 }
