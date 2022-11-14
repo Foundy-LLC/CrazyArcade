@@ -31,7 +31,7 @@ public class RoomView extends ApiListenerView {
     private final JScrollPane scrollChattingTextArea = new JScrollPane(chattingTextArea);
 
     private final Button startGameButton = new Button("게임 시작");
-    private final JButton sendButton = new JButton("Send");
+    private final JButton sendButton = new JButton("전송");
 
     private final JLabel backButton = new JLabel(ImageIcons.BACK_BUTTON);
 
@@ -70,7 +70,7 @@ public class RoomView extends ApiListenerView {
         add(chattingTextInput);
 
         sendButton.setBounds(903, 535, 76, 40);
-        sendButton.addActionListener(chattingListener);
+        sendButton.addActionListener(chattingSendListener);
         add(sendButton);
 
         startGameButton.setEnabled(false);
@@ -96,7 +96,7 @@ public class RoomView extends ApiListenerView {
         startGameButton.setEnabled(userNames.size() >= 2);
     }
 
-    public void appendText(String msg) {
+    public void appendChattingText(String msg) {
         chattingTextArea.append(msg + "\n");
         chattingTextArea.setCaretPosition(chattingTextArea.getText().length());
     }
@@ -113,8 +113,8 @@ public class RoomView extends ApiListenerView {
         }
 
         if (message.startsWith(Protocol.SEND_MESSAGE)) {
-            String[] msg = message.split(" ");
-            appendText(msg[1] + " : " + msg[2]);
+            String[] messageArray = message.split(" ");
+            appendChattingText(messageArray[1] + " : " + messageArray[2]);
             return;
         }
 
@@ -134,7 +134,7 @@ public class RoomView extends ApiListenerView {
         Api.getInstance().startGame();
     };
 
-    private final ActionListener chattingListener = (event) -> {
+    private final ActionListener chattingSendListener = (event) -> {
         Api.getInstance().chatting(chattingTextInput.getText());
         chattingTextInput.setText("");
     };

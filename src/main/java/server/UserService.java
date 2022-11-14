@@ -210,8 +210,8 @@ public class UserService extends Thread {
                         }
                         case Protocol.SEND_MESSAGE -> {
                             String message = msgArr[2];
-                            List<String> userNames = roomStateRepository.requireRoomByUserName(msgArr[0]).getUserNames();
-                            writeToSome.accept(Protocol.SEND_MESSAGE + " " + msgArr[0] + " " + message, userNames);
+                            List<String> userNames = roomStateRepository.requireRoomByUserName(userName).getUserNames();
+                            writeToSome.accept(Protocol.SEND_MESSAGE + " " + userName + " " + message, userNames);
                         }
                         default -> throw new IllegalArgumentException("존재하지 않는 프로토콜을 수신했습니다.");
                     }
