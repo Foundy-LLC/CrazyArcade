@@ -152,6 +152,10 @@ public class RoomView extends ApiListenerView {
     };
 
     private final DocumentListener chattingTextFieldChangeListener = new DocumentListener() {
+        private void observeTextArea() {
+            sendButton.setEnabled(chattingTextInput.getText().length() > 0);
+        }
+
         @Override
         public void insertUpdate(DocumentEvent e) {
             observeTextArea();
@@ -167,8 +171,4 @@ public class RoomView extends ApiListenerView {
             observeTextArea();
         }
     };
-
-    private void observeTextArea() {
-        sendButton.setEnabled(chattingTextInput.getText().length() > 0);
-    }
 }
