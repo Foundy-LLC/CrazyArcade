@@ -9,7 +9,6 @@ import client.core.OutlinedLabel;
 import client.core.TextField;
 import client.service.Api;
 import client.service.SoundController;
-import client.util.Cursor;
 import client.util.Navigator;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;

@@ -1,7 +1,6 @@
 package client.constant;
 
 import javax.swing.ImageIcon;
-import java.awt.*;
 
 public class ImageIcons {
 

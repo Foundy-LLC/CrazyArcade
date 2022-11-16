@@ -2,14 +2,8 @@ package client;
 
 import javax.swing.JFrame;
 
-import client.constant.ImageIcons;
-import client.view.LobbyView;
 import client.view.LoginView;
 import domain.constant.Sizes;
-
-import java.awt.*;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 
 public class ClientMain extends JFrame {
 

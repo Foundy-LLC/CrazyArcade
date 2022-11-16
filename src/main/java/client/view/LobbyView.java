@@ -9,7 +9,6 @@ import client.service.Api;
 import client.constant.Fonts;
 import client.constant.ImageIcons;
 import client.service.SoundController;
-import client.util.Cursor;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import domain.constant.Protocol;
