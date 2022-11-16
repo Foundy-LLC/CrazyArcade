@@ -65,4 +65,7 @@ public class ImageIcons {
     public static final ImageIcon SINGLE_PLAYER_ARROW = new ImageIcon("assets/player/solo_player.png");
 
     public static final ImageIcon BACK_BUTTON = new ImageIcon("assets/back_button.png");
+
+    public static final ImageIcon ENABLED_SOUND = new ImageIcon("assets/enabled_sound.png");
+    public static final ImageIcon DISABLED_SOUND = new ImageIcon("assets/disabled_sound.png");
 }

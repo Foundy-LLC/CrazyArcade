@@ -1,5 +1,6 @@
 package client.view;
 
+import client.component.BackgroundSoundToggleButton;
 import client.core.ApiListenerView;
 import client.core.Button;
 import client.core.OutlinedLabel;
@@ -34,7 +35,7 @@ public class LobbyView extends ApiListenerView {
     public LobbyView() {
         super(ImageIcons.LOBBY_BACKGROUND);
 
-        SoundController.playLoop(Sound.LOBBY_VIEW_BGM);
+        SoundController.changeLoopIfPlaying(Sound.LOBBY_VIEW_BGM);
 
         initView();
         requestLobbyState();
@@ -47,6 +48,12 @@ public class LobbyView extends ApiListenerView {
         userListTitle.setOutlineColor(Color.blue);
         userListTitle.setFont(Fonts.H5.deriveFont(Font.BOLD));
         add(userListTitle);
+
+        BackgroundSoundToggleButton backgroundSoundToggleButton = new BackgroundSoundToggleButton(
+                Sound.LOBBY_VIEW_BGM,
+                SoundController.isLoopPlaying()
+        );
+        add(backgroundSoundToggleButton);
 
         roomList.setFont(Fonts.H6);
         roomList.setBounds(420, 360, 200, 120);

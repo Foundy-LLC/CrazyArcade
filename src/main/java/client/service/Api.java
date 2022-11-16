@@ -133,7 +133,7 @@ public class Api extends ChangeNotifier {
                         continue;
                     }
                     if (message.equals(Protocol.GAME_START)) {
-                        SoundController.playLoop(Sound.GAME_VIEW_BGM);
+                        SoundController.changeLoopIfPlaying(Sound.GAME_VIEW_BGM);
                     }
                     notifyListeners(message);
                 } catch (IOException e) {
