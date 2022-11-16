@@ -17,7 +17,7 @@ public class TextField extends JTextField {
     private String placeholder;
 
     public TextField() {
-        initFont();
+        init();
     }
 
     public TextField(
@@ -26,25 +26,25 @@ public class TextField extends JTextField {
             final int pColumns
     ) {
         super(pDoc, pText, pColumns);
-        initFont();
+        init();
     }
 
     public TextField(final int pColumns) {
         super(pColumns);
-        initFont();
+        init();
     }
 
     public TextField(final String pText) {
         super(pText);
-        initFont();
+        init();
     }
 
     public TextField(final String pText, final int pColumns) {
         super(pText, pColumns);
-        initFont();
+        init();
     }
 
-    private void initFont() {
+    private void init() {
         setFont(Fonts.BUTTON);
         setCursor(Cursor.mouseCursor());
     }
