@@ -1,8 +1,12 @@
 package client.view;
 
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.io.IOException;
+import java.util.Currency;
 
 import client.core.BaseView;
 import client.core.Button;
@@ -10,6 +14,7 @@ import client.core.TextField;
 import client.service.Api;
 import client.constant.ImageIcons;
 import client.service.SoundController;
+import client.util.Cursor;
 import domain.model.Sound;
 
 public class LoginView extends BaseView {

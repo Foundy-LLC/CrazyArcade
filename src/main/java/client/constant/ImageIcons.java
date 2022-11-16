@@ -1,6 +1,7 @@
 package client.constant;
 
 import javax.swing.ImageIcon;
+import java.awt.*;
 
 public class ImageIcons {
 
@@ -65,4 +66,6 @@ public class ImageIcons {
     public static final ImageIcon SINGLE_PLAYER_ARROW = new ImageIcon("assets/player/solo_player.png");
 
     public static final ImageIcon BACK_BUTTON = new ImageIcon("assets/back_button.png");
+
+    public static final ImageIcon MOUSE_CURSOR = new ImageIcon("assets/mouse_cursor.png");
 }

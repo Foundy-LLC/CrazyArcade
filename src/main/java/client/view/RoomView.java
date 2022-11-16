@@ -5,8 +5,10 @@ import client.constant.ImageIcons;
 import client.core.ApiListenerView;
 import client.core.Button;
 import client.core.OutlinedLabel;
+import client.core.TextField;
 import client.service.Api;
 import client.service.SoundController;
+import client.util.Cursor;
 import client.util.Navigator;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -18,9 +20,7 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,7 +29,7 @@ public class RoomView extends ApiListenerView {
     private final JTextArea userListTextArea = new JTextArea();
     private final JTextArea chattingTextArea = new JTextArea();
 
-    private final JTextField chattingTextInput = new JTextField();
+    private final TextField chattingTextInput = new TextField();
     private final JScrollPane scrollChattingTextArea = new JScrollPane(chattingTextArea);
 
     private final Button startGameButton = new Button("게임 시작");

@@ -8,21 +8,22 @@ import javax.swing.JTextField;
 import javax.swing.text.Document;
 
 import client.constant.Fonts;
+import client.util.Cursor;
 
 public class TextField extends JTextField {
 
     private static final long serialVersionUID = 8486388918278004112L;
 
-	private String placeholder;
+    private String placeholder;
 
     public TextField() {
-    	initFont();
+        initFont();
     }
 
     public TextField(
-        final Document pDoc,
-        final String pText,
-        final int pColumns
+            final Document pDoc,
+            final String pText,
+            final int pColumns
     ) {
         super(pDoc, pText, pColumns);
         initFont();
@@ -42,9 +43,10 @@ public class TextField extends JTextField {
         super(pText, pColumns);
         initFont();
     }
-    
+
     private void initFont() {
-    	setFont(Fonts.BUTTON);
+        setFont(Fonts.BUTTON);
+        setCursor(Cursor.mouseCursor());
     }
 
     public String getPlaceholder() {
@@ -61,13 +63,13 @@ public class TextField extends JTextField {
 
         final Graphics2D g = (Graphics2D) pG;
         g.setRenderingHint(
-            RenderingHints.KEY_ANTIALIASING,
-            RenderingHints.VALUE_ANTIALIAS_ON);
+                RenderingHints.KEY_ANTIALIASING,
+                RenderingHints.VALUE_ANTIALIAS_ON);
         g.setColor(getDisabledTextColor());
         g.drawString(
-    		placeholder, 
-    		getInsets().left, 
-    		pG.getFontMetrics().getMaxAscent() + getInsets().top + 10);
+                placeholder,
+                getInsets().left,
+                pG.getFontMetrics().getMaxAscent() + getInsets().top + 10);
     }
 
     public void setPlaceholder(final String s) {
