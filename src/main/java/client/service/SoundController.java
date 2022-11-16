@@ -12,6 +12,7 @@ import javax.sound.sampled.Clip;
 public class SoundController {
 
     private static Clip loopClip = null;
+    private static boolean loopPlaying = false;
 
     public static void play(@NonNull Sound sound) {
         new Thread(() -> play(sound, 0)).start();
@@ -35,12 +36,32 @@ public class SoundController {
 
     public static void playLoop(@NonNull Sound sound) {
         stopLoop();
+        loopPlaying = true;
         new Thread(() -> loopClip = SoundController.play(sound, Integer.MAX_VALUE)).start();
+    }
+
+    public static void changeLoopIfPlaying(@NonNull Sound sound) {
+        if (!loopPlaying) {
+            return;
+        }
+        playLoop(sound);
+    }
+
+    public static void pauseLoop() {
+        if (loopClip != null) {
+            loopClip.stop();
+        }
     }
 
     public static void stopLoop() {
         if (loopClip != null) {
+            loopPlaying = false;
             loopClip.stop();
+            loopClip = null;
         }
+    }
+
+    public static boolean isLoopPlaying() {
+        return loopPlaying;
     }
 }
