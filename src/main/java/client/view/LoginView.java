@@ -8,6 +8,7 @@ import java.awt.event.FocusListener;
 import java.io.IOException;
 import java.util.Currency;
 
+import client.component.BackgroundSoundToggleButton;
 import client.core.BaseView;
 import client.core.Button;
 import client.core.TextField;
@@ -34,6 +35,12 @@ public class LoginView extends BaseView {
 		userNameTextField.setPlaceholder("닉네임");
 		userNameTextField.setBounds(420, 360, 200, 60);
 		add(userNameTextField);
+
+		BackgroundSoundToggleButton backgroundSoundToggleButton = new BackgroundSoundToggleButton(
+				Sound.LOGIN_VIEW_BGM,
+				SoundController.isLoopPlaying()
+		);
+		add(backgroundSoundToggleButton);
 		
 		this.ipTextField = new TextField("127.0.0.1");
 		ipTextField.setPlaceholder("주소");
