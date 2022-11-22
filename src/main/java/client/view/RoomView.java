@@ -77,6 +77,7 @@ public class RoomView extends ApiListenerView {
         chattingTextInput.setColumns(10);
         chattingTextInput.setFont(Fonts.BODY1);
         chattingTextInput.getDocument().addDocumentListener(chattingTextFieldChangeListener);
+        chattingTextInput.addKeyListener(chattingKeyEventListener);
         add(chattingTextInput);
 
         sendButton.setBounds(903, 535, 76, 40);
@@ -141,13 +142,22 @@ public class RoomView extends ApiListenerView {
         }
     }
 
-    private final ActionListener gameStartListener = (event) -> {
-        Api.getInstance().startGame();
-    };
-
-    private final ActionListener chattingSendListener = (event) -> {
+    private void sendChatMessage() {
         Api.getInstance().chat(chattingTextInput.getText());
         chattingTextInput.setText("");
+    }
+
+    private final ActionListener gameStartListener = (event) -> Api.getInstance().startGame();
+
+    private final ActionListener chattingSendListener = (event) -> sendChatMessage();
+
+    private final KeyAdapter chattingKeyEventListener = new KeyAdapter() {
+        @Override
+        public void keyPressed(KeyEvent event) {
+            if (event.getKeyCode() == KeyEvent.VK_ENTER) {
+                sendChatMessage();
+            }
+        }
     };
 
     private final MouseAdapter backButtonClickListener = new MouseAdapter() {
