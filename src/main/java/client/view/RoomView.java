@@ -66,7 +66,7 @@ public class RoomView extends ApiListenerView {
         add(userListTextArea);
 
         chattingTextArea.setEditable(false);
-        chattingTextArea.setFont(Fonts.H6);
+        chattingTextArea.setFont(Fonts.BODY1);
         chattingTextArea.setBounds(720, 160, 257, 360);
         chattingTextArea.setLineWrap(true);
 
@@ -75,6 +75,7 @@ public class RoomView extends ApiListenerView {
 
         chattingTextInput.setBounds(718, 535, 185, 40);
         chattingTextInput.setColumns(10);
+        chattingTextInput.setFont(Fonts.BODY1);
         chattingTextInput.getDocument().addDocumentListener(chattingTextFieldChangeListener);
         add(chattingTextInput);
 
