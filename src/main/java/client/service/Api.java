@@ -98,7 +98,7 @@ public class Api extends ChangeNotifier {
         sendMessage(userName + " " + Protocol.GAME_START);
     }
 
-    public void chatting(String message) { sendMessage(userName + " " + Protocol.SEND_MESSAGE + " " + message); }
+    public void chat(String message) { sendMessage(userName + " " + Protocol.SEND_MESSAGE + " " + message); }
 
     public void movePlayer(Direction direction) {
         sendMessage(userName + " " + Protocol.MOVE + " " + direction.name().toLowerCase());

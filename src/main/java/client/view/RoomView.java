@@ -146,7 +146,7 @@ public class RoomView extends ApiListenerView {
     };
 
     private final ActionListener chattingSendListener = (event) -> {
-        Api.getInstance().chatting(chattingTextInput.getText());
+        Api.getInstance().chat(chattingTextInput.getText());
         chattingTextInput.setText("");
     };
 
