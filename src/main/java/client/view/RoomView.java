@@ -126,7 +126,8 @@ public class RoomView extends ApiListenerView {
 
         if (message.startsWith(Protocol.SEND_MESSAGE)) {
             String[] messageArray = message.split(" ");
-            appendChattingText(messageArray[1] + " : " + messageArray[2]);
+            String chatMessage = message.substring(messageArray[0].length() + messageArray[1].length() + 2);
+            appendChattingText(messageArray[1] + " : " + chatMessage);
             return;
         }
 
