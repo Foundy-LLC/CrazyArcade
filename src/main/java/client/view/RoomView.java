@@ -9,7 +9,6 @@ import client.core.OutlinedLabel;
 import client.core.TextField;
 import client.service.Api;
 import client.service.SoundController;
-import client.util.Navigator;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import domain.constant.Protocol;
@@ -177,7 +176,7 @@ public class RoomView extends ApiListenerView {
         @Override
         public void mouseClicked(MouseEvent e) {
             Api.getInstance().exitRoom();
-            Navigator.navigateTo(RoomView.this, new LobbyView());
+            navigateTo(new LobbyView());
         }
     };
 
