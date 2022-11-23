@@ -201,12 +201,14 @@ public class UserService extends Thread {
                             } else {
                                 writeOne(Protocol.JOIN_ROOM);
                                 writeRoomStateToAllIn(roomState);
+                                writeToSome.accept(Protocol.JOIN_NOTIFICATION + " " + userName, roomState.getUserNames());
                             }
                         }
                         case Protocol.EXIT_ROOM -> {
                             RoomState roomState = roomStateRepository.exitRoom(userName);
                             writeRoomStateToAllIn(roomState);
                             writeLobbyStateToAll();
+                            writeToSome.accept(Protocol.EXIT_NOTIFICATION + " " + userName, roomState.getUserNames());
                         }
                         case Protocol.SEND_MESSAGE -> {
                             String chatMessage = msg.substring(msgArr[0].length() + msgArr[1].length() + 2);

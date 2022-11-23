@@ -124,10 +124,22 @@ public class RoomView extends ApiListenerView {
             return;
         }
 
+        if (message.startsWith(Protocol.JOIN_NOTIFICATION)) {
+            String[] messageArray = message.split(" ");
+            appendChattingText(messageArray[1] + "님이 입장하셨습니다.");
+            return;
+        }
+
         if (message.startsWith(Protocol.SEND_MESSAGE)) {
             String[] messageArray = message.split(" ");
             String chatMessage = message.substring(messageArray[0].length() + messageArray[1].length() + 2);
             appendChattingText(messageArray[1] + " : " + chatMessage);
+            return;
+        }
+
+        if (message.startsWith(Protocol.EXIT_NOTIFICATION)) {
+            String[] messageArray = message.split(" ");
+            appendChattingText(messageArray[1] + "님이 퇴장하셨습니다.");
             return;
         }
 
