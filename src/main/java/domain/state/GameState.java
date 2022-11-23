@@ -36,15 +36,18 @@ public class GameState implements Serializable {
     @Getter
     private final List<Sound> shouldBePlayedSounds = new LinkedList<>();
 
-    public void updateState() {
-        updateBlocksState();
-        updateWaterBombsState();
-        updateWaterWavesState();
-        updatePlayersState();
+    public boolean updateState() {
+        boolean didUpdate;
+
+        didUpdate = updateBlocksState();
+        didUpdate = updateWaterBombsState() || didUpdate;
+        didUpdate = updateWaterWavesState() || didUpdate;
+        didUpdate = updatePlayersState() || didUpdate;
 
         if (isGameEnded()) {
             isEnded = true;
         }
+        return didUpdate;
     }
 
     public void exitPlayer(String userName) {
@@ -70,9 +73,10 @@ public class GameState implements Serializable {
         return players.isEmpty() ? null : players.get(0);
     }
 
-    private void updateBlocksState() {
+    private boolean updateBlocksState() {
         Block[][] block2d = map.getBlock2d();
         Item[][] item2d = map.getItem2d();
+        boolean didUpdate = false;
 
         for (int y = 0; y < block2d.length; ++y) {
             for (int x = 0; x < block2d[y].length; ++x) {
@@ -82,12 +86,14 @@ public class GameState implements Serializable {
                 if (block2d[y][x].shouldDisappear()) {
                     item2d[y][x] = block2d[y][x].createItem();
                     block2d[y][x] = null;
+                    didUpdate = true;
                 }
             }
         }
+        return didUpdate;
     }
 
-    private void updateWaterBombsState() {
+    private boolean updateWaterBombsState() {
         WaterBomb[][] waterBomb2d = map.getWaterBomb2d();
         boolean didExplode = false;
 
@@ -107,6 +113,7 @@ public class GameState implements Serializable {
         if (didExplode) {
             shouldBePlayedSounds.add(Sound.WATER_WAVE);
         }
+        return didExplode;
     }
 
     /**
@@ -181,8 +188,9 @@ public class GameState implements Serializable {
         return 0 > x || x >= Sizes.TILE_ROW_COUNT || 0 > y || y >= Sizes.TILE_COLUMN_COUNT;
     }
 
-    private void updateWaterWavesState() {
+    private boolean updateWaterWavesState() {
         WaterWave[][] waterWave2d = map.getWaterWave2d();
+        boolean didUpdate = false;
 
         for (int y = 0; y < waterWave2d.length; ++y) {
             for (int x = 0; x < waterWave2d[y].length; ++x) {
@@ -192,13 +200,16 @@ public class GameState implements Serializable {
                 }
                 if (waterWave.shouldDisappear()) {
                     waterWave2d[y][x] = null;
+                    didUpdate = true;
                 }
             }
         }
+        return didUpdate;
     }
 
-    private void updatePlayersState() {
+    private boolean updatePlayersState() {
         Item[][] item2d = map.getItem2d();
+        boolean didUpdate = false;
 
         for (int i = 0; i < players.size(); ++i) {
             Player player = players.get(i);
@@ -211,6 +222,7 @@ public class GameState implements Serializable {
                     ) {
                         otherPlayer.die();
                         shouldBePlayedSounds.add(Sound.PLAYER_DIE);
+                        didUpdate = true;
                     }
                 }
 
@@ -220,6 +232,7 @@ public class GameState implements Serializable {
                     player.collectItem(item);
                     shouldBePlayedSounds.add(Sound.EAT_ITEM);
                     item2d[centerOffset.y][centerOffset.x] = null;
+                    didUpdate = true;
                 }
             }
 
@@ -227,12 +240,15 @@ public class GameState implements Serializable {
             if (!player.isTrapped() && isOnWave(feetOffset)) {
                 shouldBePlayedSounds.add(Sound.PLAYER_TRAP);
                 player.trapIntoWaterWave();
+                didUpdate = true;
             }
             if (player.shouldBeRemoved()) {
                 players.remove(player);
                 --i;
+                didUpdate = true;
             }
         }
+        return didUpdate;
     }
 
     private boolean isOnWave(Pair<Offset> feetOffset) {

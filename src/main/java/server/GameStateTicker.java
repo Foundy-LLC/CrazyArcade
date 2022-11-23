@@ -47,10 +47,12 @@ public class GameStateTicker extends Thread {
                 break;
             }
 
-            gameState.updateState();
+            boolean didUpdate = gameState.updateState();
+            if (didUpdate) {
+                onGameStateUpdated.call(null);
+            }
 
             playSoundIfExists();
-            onGameStateUpdated.call(null);
 
             if (gameState.isEnded()) {
                 onGameEnded.call(null);
